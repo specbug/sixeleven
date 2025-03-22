@@ -78,20 +78,39 @@ const mdxComponents = {
   code: ({ children, className }: { children: React.ReactNode; className?: string }) => {
     // Check if this is an inline code block
     if (!className) {
-      return <code className="bg-gray-100 dark:bg-gray-800 rounded px-1.5 py-0.5 font-mono text-sm">{children}</code>
+      return (
+        <code className="bg-gray-100 dark:bg-[#1a1a1a] text-gray-900 dark:text-gray-100 rounded px-1.5 py-0.5 font-mono text-base">
+          {children}
+        </code>
+      )
     }
 
-    // This is a code block with language
+    // Special handling for PGP blocks
+    if (className?.includes("language-pgp")) {
+      return (
+        <code className="block whitespace-pre overflow-x-auto my-6 font-mono text-white bg-transparent">
+          {children}
+        </code>
+      )
+    }
+
+    // This is a regular code block with language
     return (
-      <pre className={className}>
-        <code className={className}>{children}</code>
-      </pre>
+      <code
+        className={`block p-4 rounded-lg bg-gray-100 dark:bg-[#1a1a1a] text-gray-900 dark:text-gray-100 overflow-x-auto my-6 font-mono ${className}`}
+      >
+        {children}
+      </code>
     )
   },
+  pre: ({ children }: { children: React.ReactNode }) => (
+    <pre className="bg-transparent overflow-x-auto my-6 font-mono text-sm">{children}</pre>
+  ),
   ul: ({ children }: { children: React.ReactNode }) => <ul className="list-disc pl-6 my-4 text-lg">{children}</ul>,
   ol: ({ children }: { children: React.ReactNode }) => <ol className="list-decimal pl-6 my-4 text-lg">{children}</ol>,
   li: ({ children }: { children: React.ReactNode }) => <li className="my-1">{children}</li>,
   hr: () => <hr className="my-8 border-t border-gray-200 dark:border-gray-800" />,
+  sup: ({ children }: { children: React.ReactNode }) => <sup className="text-xs">{children}</sup>,
 
   // Custom components
   Callout,

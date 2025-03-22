@@ -38,6 +38,16 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        code: {
+          light: {
+            background: "#f3f4f6",
+            text: "#111827",
+          },
+          dark: {
+            background: "#374151",
+            text: "#e5e7eb",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -81,6 +91,14 @@ const config: Config = {
               color: "#e2e8f0",
               overflow: "auto",
               padding: "1rem",
+            },
+          },
+        },
+        dark: {
+          css: {
+            code: {
+              color: "#e5e7eb",
+              backgroundColor: "#374151",
             },
           },
         },

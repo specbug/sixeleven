@@ -74,21 +74,46 @@
   border-bottom-color: rgba(255, 77, 6, 0.6);
 }
 
+/* Update code styling */
 .prose code {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.9em;
+  font-size: 0.95em;
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.dark .prose code {
+  background-color: #1a1a1a;
+  color: #f8fafc;
 }
 
 .prose pre {
   overflow-x: auto;
   border-radius: 0.375rem;
+  margin: 1.5rem 0;
+  background-color: transparent;
+}
+
+.dark .prose pre {
+  background-color: transparent;
+}
+
+.prose pre code {
+  background-color: #f1f5f9;
+  color: #0f172a;
   padding: 1.25rem;
   font-size: 0.9em;
   line-height: 1.7;
-  background-color: rgba(0, 0, 0, 0.05);
+  display: block;
+  border-radius: 0.375rem;
+}
+
+.dark .prose pre code {
+  background-color: #1a1a1a;
+  color: #f8fafc;
+  border: none;
 }
 
 .prose blockquote {
@@ -150,14 +175,6 @@
 .dark .prose blockquote {
   border-left-color: #4b5563;
   color: rgba(255, 255, 255, 0.8);
-}
-
-.dark .prose code {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.dark .prose pre {
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .dark .prose figcaption {
@@ -285,11 +302,17 @@
 
 /* Interactive code example */
 .interactive-code {
-  background-color: #1e293b;
-  color: #e2e8f0;
+  background-color: #f1f5f9;
+  color: #0f172a;
   border-radius: 0.5rem;
   padding: 1.5rem;
   margin: 1.5rem 0;
+}
+
+.dark .interactive-code {
+  background-color: #1a1a1a;
+  color: #f8fafc;
+  border: none;
 }
 
 .interactive-code pre {
@@ -301,30 +324,62 @@
 .interactive-code-output {
   margin-top: 1rem;
   padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
   border-radius: 0.375rem;
 }
 
-.dark .interactive-code {
-  background-color: #111827;
+.dark .interactive-code-output {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Code syntax highlighting */
+/* Update code syntax highlighting */
 pre.language-jsx,
 pre.language-js,
-pre.language-python {
-  background-color: #1e293b !important;
-  color: #e2e8f0 !important;
-  border-radius: 0.5rem !important;
-  padding: 1.5rem !important;
-  margin: 1.5rem 0 !important;
-  overflow-x: auto !important;
+pre.language-python,
+pre.language-bash,
+pre.language-txt,
+pre.language-pgp {
+  background-color: transparent !important;
 }
 
 .dark pre.language-jsx,
 .dark pre.language-js,
-.dark pre.language-python {
-  background-color: #111827 !important;
+.dark pre.language-python,
+.dark pre.language-bash,
+.dark pre.language-txt,
+.dark pre.language-pgp {
+  background-color: transparent !important;
+}
+
+.dark pre.language-jsx code,
+.dark pre.language-js code,
+.dark pre.language-python code,
+.dark pre.language-bash code,
+.dark pre.language-txt code,
+.dark pre.language-pgp code {
+  background-color: #1a1a1a !important;
+  color: #f8fafc !important;
+  border: none !important;
+}
+
+pre.language-jsx code,
+pre.language-js code,
+pre.language-python code,
+pre.language-bash code,
+pre.language-txt code {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Special case for PGP keys */
+pre.language-pgp code {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.dark pre.language-pgp code {
+  background-color: #1a1a1a !important;
+  color: #f8fafc !important;
 }
 
 /* Add responsive styles for mobile */
