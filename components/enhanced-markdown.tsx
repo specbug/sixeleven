@@ -1,14 +1,14 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Image from "next/image"
-import { useState, useEffect } from "react"
 import { CodeBlock } from "./code-block"
 
 // Custom components for ReactMarkdown
 const customComponents = {
-  // Handle paragraphs that might contain our custom components
+  // Override the default paragraph component
   p: ({ children, node, ...props }: any) => {
     // Check if children contains our custom component markers
     const text = String(children)
@@ -80,6 +80,16 @@ const customComponents = {
             <div className="text-sm sm:text-base">{content}</div>
           </div>
         )
+      }
+    }
+
+    // Check if children contains a code block
+    if (Array.isArray(children)) {
+      for (const child of children) {
+        if (child?.props?.node?.tagName === "code" && !child?.props?.inline) {
+          // If this paragraph contains a non-inline code block, render the children directly
+          return <>{children}</>
+        }
       }
     }
 
@@ -212,56 +222,71 @@ const customComponents = {
     </blockquote>
   ),
   code: ({ node, inline, className, children, ...props }: any) => {
+    const content = String(children).trim()
+
+    // Check if this is a code block that should be rendered inline
+    // We'll use multiple heuristics to determine this
+
+    // 1. If ReactMarkdown already identified it as inline, use that
+    // 3. Check if the content doesn't contain newlines (likely inline)
+    // 4. Check if the content is relatively short (likely inline)
+
+    const hasNoNewlines = !content.includes("\n")
+    const isShort = content.length < 100
+
+    // Determine if this should be rendered as inline code
+    const shouldBeInline = inline || (hasNoNewlines && isShort)
+
+    // For inline code blocks
+    if (shouldBeInline) {
+      return (
+        <code
+          className="bg-gray-100 dark:bg-[#171600] text-gray-900 dark:text-gray-100 rounded px-1.5 py-0.5 font-mono text-base"
+          {...props}
+        >
+          {children}
+        </code>
+      )
+    }
+
+    // For code blocks with language
     const match = /language-(\w+)/.exec(className || "")
     const language = match ? match[1] : ""
 
-    // For inline code blocks
-    if (inline) {
-      return (
-        <code
-          className="bg-gray-100 dark:bg-[#282c34] text-gray-900 dark:text-gray-100 px-1.5 py-0.5 font-mono text-base"
-          {...props}
-        >
-          {children}
-        </code>
-      )
-    }
-
-    // Check if this is a PGP code block
+    // Special case for PGP code blocks
     if (language === "pgp") {
       return (
-        <code
-          className="block p-4 bg-[#282c34] text-white overflow-x-auto my-4 font-mono text-sm whitespace-pre"
-          {...props}
-        >
-          {children}
-        </code>
+        <div className="my-6">
+          <code
+            className="block p-4 bg-[#171600] text-white overflow-x-auto font-mono text-sm whitespace-pre"
+            {...props}
+          >
+            {children}
+          </code>
+        </div>
       )
     }
 
-    // For Python and other code blocks, use our CodeBlock component
-    return <CodeBlock code={String(children).replace(/\n$/, "")} language={language || "text"} />
+    // For all other code blocks
+    return (
+      <div className="my-6">
+        <CodeBlock code={content.replace(/\n$/, "")} language={language || "text"} />
+      </div>
+    )
   },
-  pre: ({ children, className, ...props }: any) => {
+  // Completely override the pre component to prevent nesting issues
+  pre: ({ children, className }: any) => {
     // Special handling for PGP code blocks
     if (className === "language-pgp") {
       return (
-        <pre className="bg-transparent overflow-x-auto my-0 font-mono text-sm" {...props}>
-          {children}
-        </pre>
+        <div className="my-6">
+          <pre className="bg-transparent overflow-x-auto font-mono text-sm">{children}</pre>
+        </div>
       )
     }
 
-    // For Python and other code blocks, let the code component handle it
-    if (className && className.startsWith("language-")) {
-      return children
-    }
-
-    return (
-      <pre className="bg-transparent overflow-x-auto my-0 font-mono text-sm" {...props}>
-        {children}
-      </pre>
-    )
+    // For other code blocks, just return the children directly
+    return <>{children}</>
   },
   ul: ({ children, ...props }: any) => (
     <ul className="list-disc pl-6 my-4 text-lg" {...props}>

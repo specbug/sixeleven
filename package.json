@@ -64,9 +64,9 @@
     "gray-matter": "latest",
     "mdx": "latest",
     "next-mdx-remote": "latest",
+    "prism-react-renderer": "latest",
     "react-markdown": "latest",
-    "remark-gfm": "latest",
-    "prism-react-renderer": "latest"
+    "remark-gfm": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
