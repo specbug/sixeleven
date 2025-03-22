@@ -3,6 +3,7 @@ import { getAboutContent } from "@/lib/mdx"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import mdxComponents from "@/components/mdx-components"
+import SimpleSocialLinks from "@/components/SimpleSocialLinks"
 
 export const metadata: Metadata = {
   title: "About Me | sixeleven",
@@ -18,9 +19,12 @@ export default async function AboutPage() {
 
   return (
     <article className="prose dark:prose-invert max-w-none">
+      <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8">About Me</h1>
+
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdxComponents}>
         {content}
       </ReactMarkdown>
+      <SimpleSocialLinks />
     </article>
   )
 }
