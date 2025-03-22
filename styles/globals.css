@@ -5,7 +5,7 @@
 :root {
   --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
     "Open Sans", "Helvetica Neue", sans-serif;
-  --font-serif: "Warnock Pro", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+  --font-serif: warnock-pro,Palatino,"Palatino Linotype","Palatino LT STD","Book Antiqua",Georgia,serif;
 }
 
 @layer base {
@@ -65,35 +65,54 @@
 
 .prose a {
   text-decoration: none;
-  color: rgba(255, 77, 6, 0.6);
+  color: rgba(255, 77, 6, 0.75);
   border-bottom: 1px solid rgba(255, 77, 6, 0.2);
   transition: border-color 0.2s ease;
 }
 
 .prose a:hover {
-  border-bottom-color: rgba(255, 77, 6, 0.6);
+  border-bottom-color: rgba(255, 77, 6, 0.75);
 }
 
 /* Update code styling */
 .prose code {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-family: "R Plex Mono", "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.95em;
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
   background-color: #f1f5f9;
+  font-size: 0.85em;
   color: #1e293b;
 }
 
 .dark .prose code {
-  background-color: #1a1a1a;
+  background-color: #161616;
   color: #f8fafc;
 }
 
 .prose pre {
   overflow-x: auto;
   border-radius: 0.375rem;
-  margin: 1.5rem 0;
+  margin: 0.75rem 0;
   background-color: transparent;
+}
+
+/* Special styling for PGP code blocks */
+.prose pre.language-pgp {
+  margin: 0;
+}
+
+.prose pre.language-pgp code {
+  background-color: #161616;
+  color: #f8fafc;
+  padding: 1rem;
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+/* Adjust spacing for code blocks */
+pre code {
+  font-family: "R Plex Mono", "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
 .dark .prose pre {
@@ -111,9 +130,22 @@
 }
 
 .dark .prose pre code {
-  background-color: #1a1a1a;
+  background-color: #161616;
   color: #f8fafc;
   border: none;
+}
+
+/* Override any tailwind classes that might be affecting code blocks */
+.dark code,
+.dark pre code,
+.dark .prose code,
+.dark .prose pre code {
+  background-color: #161616 !important;
+}
+
+/* Fix specific case for PGP key */
+.prose pre.language-pgp code {
+  background-color: #161616 !important;
 }
 
 .prose blockquote {
@@ -164,12 +196,12 @@
 
 /* Dark mode adjustments */
 .dark .prose a {
-  color: rgba(255, 77, 6, 0.6);
+  color: rgba(255, 77, 6, 0.75);
   border-bottom-color: rgba(255, 77, 6, 0.2);
 }
 
 .dark .prose a:hover {
-  border-bottom-color: rgba(255, 77, 6, 0.6);
+  border-bottom-color: rgba(255, 77, 6, 0.75);
 }
 
 .dark .prose blockquote {
@@ -227,7 +259,7 @@
 }
 
 .table-of-contents a:hover {
-  color: rgba(255, 77, 6, 0.6);
+  color: rgba(255, 77, 6, 0.75);
 }
 
 .dark .table-of-contents a {
@@ -235,7 +267,7 @@
 }
 
 .dark .table-of-contents a:hover {
-  color: rgba(255, 77, 6, 0.6);
+  color: rgba(255, 77, 6, 0.75);
 }
 
 /* Custom MDX components */
@@ -284,8 +316,8 @@
 }
 
 .tab-button.active {
-  border-bottom-color: rgba(255, 77, 6, 0.6);
-  color: rgba(255, 77, 6, 0.6);
+  border-bottom-color: rgba(255, 77, 6, 0.75);
+  color: rgba(255, 77, 6, 0.75);
 }
 
 .tab-button:hover:not(.active) {
@@ -310,7 +342,7 @@
 }
 
 .dark .interactive-code {
-  background-color: #1a1a1a;
+  background-color: #161616;
   color: #f8fafc;
   border: none;
 }
@@ -332,100 +364,25 @@
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Update code syntax highlighting */
-pre.language-jsx,
-pre.language-js,
-pre.language-python,
-pre.language-bash,
-pre.language-txt,
-pre.language-pgp {
-  background-color: transparent !important;
+/* Better spacing between elements on about page */
+.prose > div:last-child {
+  margin-top: 1rem;
 }
 
-.dark pre.language-jsx,
-.dark pre.language-js,
-.dark pre.language-python,
-.dark pre.language-bash,
-.dark pre.language-txt,
-.dark pre.language-pgp {
-  background-color: transparent !important;
+/* Improve spacing between social links and code block */
+.mt-4 {
+  margin-top: 1rem;
 }
 
-.dark pre.language-jsx code,
-.dark pre.language-js code,
-.dark pre.language-python code,
-.dark pre.language-bash code,
-.dark pre.language-txt code,
-.dark pre.language-pgp code {
-  background-color: #1a1a1a !important;
-  color: #f8fafc !important;
-  border: none !important;
+.mb-4 {
+  margin-bottom: 1rem;
 }
 
-pre.language-jsx code,
-pre.language-js code,
-pre.language-python code,
-pre.language-bash code,
-pre.language-txt code {
-  background-color: #f1f5f9 !important;
-  color: #0f172a !important;
-}
-
-/* Special case for PGP keys */
-pre.language-pgp code {
-  background-color: #f1f5f9 !important;
-  color: #0f172a !important;
-}
-
-.dark pre.language-pgp code {
-  background-color: #1a1a1a !important;
-  color: #f8fafc !important;
-}
-
-/* Add responsive styles for mobile */
-@media (max-width: 640px) {
-  html {
-    font-size: 16px;
-  }
-
-  .prose h1 {
-    font-size: 2rem;
-  }
-
-  .prose h2 {
-    font-size: 1.5rem;
-  }
-
-  .prose h3 {
-    font-size: 1.25rem;
-  }
-
-  .prose p {
-    font-size: 1rem;
-  }
-
-  .callout {
-    padding: 0.75rem 1rem;
-  }
-
-  .tab-button {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.9rem;
-  }
-}
-
-/* Improve tabs on mobile */
-@media (max-width: 640px) {
-  .tab-list {
-    flex-wrap: wrap;
-  }
-
-  .tab-button {
-    flex-grow: 1;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+/* Override any tailwind background colors for code */
+.dark code[class*="language-"],
+.dark pre[class*="language-"],
+.dark code,
+.dark pre code {
+  background-color: #161616 !important;
 }
 

@@ -44,7 +44,7 @@ const config: Config = {
             text: "#111827",
           },
           dark: {
-            background: "#374151",
+            background: "#161616",
             text: "#e5e7eb",
           },
         },
