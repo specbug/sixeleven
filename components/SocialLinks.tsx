@@ -4,12 +4,12 @@ export default function SocialLinks() {
   return (
     <div className="flex flex-wrap gap-x-6 gap-y-2 text-lg">
       <a
-        href="https://twitter.com/irishvora"
+        href="https://x.com/irishvora"
         target="_blank"
         rel="noopener noreferrer"
         className="text-accent/60 transition-colors"
       >
-        Twitter
+        X
       </a>
       <a
         href="https://github.com/specbug"
