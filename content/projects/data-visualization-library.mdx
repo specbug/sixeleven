@@ -1,0 +1,54 @@
+---
+title: "Interactive Data Visualization Library"
+excerpt: "A lightweight, customizable library for creating interactive data visualizations with minimal configuration."
+technologies: ["TypeScript", "React", "D3.js", "CSS"]
+link: "https://github.com/example/data-viz-library"
+---
+
+# Interactive Data Visualization Library
+
+## Project Overview
+
+This library provides a set of React components for creating beautiful, interactive data visualizations with minimal configuration. It's designed to be lightweight, customizable, and easy to integrate into existing projects.
+
+## Features
+
+- **Chart Components**: Line, bar, area, scatter, and pie charts
+- **Interactive Elements**: Tooltips, zooming, panning, and filtering
+- **Responsive Design**: Visualizations that adapt to any screen size
+- **Theming System**: Easily customize colors, fonts, and styles
+- **Accessibility**: WCAG 2.1 AA compliant components
+
+## Technical Implementation
+
+The library is built with:
+
+- **TypeScript**: For type safety and better developer experience
+- **D3.js**: For data manipulation and visualization calculations
+- **React**: For component-based rendering
+- **CSS Variables**: For theming and customization
+
+## Usage Example
+
+```jsx
+import { LineChart } from 'data-viz-library';
+
+function MyComponent() {
+  const data = [
+    { date: '2023-01', value: 30 },
+    { date: '2023-02', value: 45 },
+    { date: '2023-03', value: 60 },
+    // ...more data
+  ];
+
+  return (
+    <LineChart
+      data={data}
+      xKey="date"
+      yKey="value"
+      height={400}
+      animate={true}
+    />
+  );
+}
+
