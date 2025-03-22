@@ -1,0 +1,51 @@
+---
+title: "OpenAI Codex: First Impressions"
+date: "August 13, 2021"
+excerpt: "OpenAI organised a challenge to solve coding problems with the aid of an AI assistant. This is a review of the challenge, and first impressions on working with an AI pair-programmer."
+readingTime: "7"
+tags: ["ai ", "programming"]
+---
+
+### OpenAI Codex
+[OpenAI](https://openai.com/) is an AI research and development company. You might have heard some buzz about one of its products: [GPT-3](https://paperswithcode.com/method/gpt-3). GPT-3 is a language model that can generate human-like text. It can be used for chatting, text auto-completion, text summarisation, grammar correction, translation, etc.
+![ChatGPT Demo](/images/codex1.gif)
+
+[Codex](https://openai.com/blog/openai-codex/) is a descendant of GPT-3, trained on natural language data and publicly available source-codes (e.g. from public GitHub repos). **Codex translates a natural language prompt to code**. It is the very model that powers [GitHub Copilot](https://copilot.github.com/) — an AI pair-programmer (checkout the site for demos, it is fascinating).
+![Codex Demo](/images/codex2.gif)
+
+OpenAI recently released an API to access Codex (in beta). The [demos](https://youtu.be/SGUCcjHTmGY) attached with the release were a cause for consternation. Codex is proficient in a dozen (programming) languages. It can be used for code generation, refactoring, autocompletion, transpilation (translating source-code b/w languages), code explanation, etc. To show off Codex, OpenAI recently organised a challenge.
+
+### The Challenge
+The [challenge](https://challenge.openai.com/) was to solve a series of (five) programming puzzles in [Python](https://xkcd.com/353/). The only twist — you can use Codex as a pair-programmer. It was a time-judged competition, with a temporal cap. Not surprisingly, Codex itself was a participant (not just as a helper).
+![Challenge](/images/codex3.png)
+The problems were simple. ~830 "people" (Codex included) were able to solve all five of them. I had to solve the first two challenges manually (OpenAI server issues). "Had to" because it was a race against time (& top 500 win an OpenAI t-shirt). For the other three, however, I was able to call in the cavalry (it was pretty climactic).
+
+The novel experience of watching an AI auto-generate code is amazing. Just type a docstring — describing the procedure — and watch the code develop. If you're an old-time programmer, you'll get the notion when you experience it.
+
+### Illustration
+I've illustrated one problem statement where I used Codex to generate a solution.
+
+```
+PROBLEM
+Parse the given Python source code and return the list of full-qualified paths for all imported symbols, sorted in ascending lexicographic order.
+
+CONSTRAINTS
+The input will not contain any wildcard imports (from ... import *).
+Ignore aliases (renamings): from x import y as z should be represented as x.y.
+
+LIBRARY SUGGESTION
+Consider using the ast module.
+
+EXAMPLES
+Input
+import os
+import concurrent.futures
+from os import path as renamed_path
+from typing import (
+List, Tuple
+)
+
+
+Output
+['concurrent.futures', 'os', 'os.path', 'typing.List', 'typing.Tuple']
+```

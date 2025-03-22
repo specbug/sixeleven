@@ -1,0 +1,33 @@
+/* Python Syntax Highlighting */
+.python-keyword {
+  color: #569cd6;
+  font-weight: bold;
+}
+
+.python-builtin {
+  color: #4ec9b0;
+}
+
+.python-string {
+  color: #ce9178;
+}
+
+.python-number {
+  color: #b5cea8;
+}
+
+.python-comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.python-function {
+  color: #dcdcaa;
+}
+
+.python-operator {
+  color: #d4d4d4;
+}
+
+/* Dark mode is already handled by the classes above since we're using inline styles */
+

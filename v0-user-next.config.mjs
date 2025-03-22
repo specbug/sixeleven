@@ -7,6 +7,8 @@ const nextConfig = {
     domains: ['v0.blob.com'],
     unoptimized: process.env.NODE_ENV !== 'production',
   },
+  // Add transpilePackages to handle ESM modules properly
+  transpilePackages: ['react-syntax-highlighter'],
 }
 
 export default nextConfig

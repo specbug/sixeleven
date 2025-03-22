@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { CodeBlock } from "./code-block"
 
 // Custom components for ReactMarkdown
 const customComponents = {
@@ -210,12 +211,15 @@ const customComponents = {
       {children}
     </blockquote>
   ),
-  code: ({ children, className, ...props }: any) => {
-    // Check if this is an inline code block
-    if (!className) {
+  code: ({ node, inline, className, children, ...props }: any) => {
+    const match = /language-(\w+)/.exec(className || "")
+    const language = match ? match[1] : ""
+
+    // For inline code blocks
+    if (inline) {
       return (
         <code
-          className="bg-gray-100 dark:bg-[#161616] text-gray-900 dark:text-gray-100 rounded px-1.5 py-0.5 font-mono text-base"
+          className="bg-gray-100 dark:bg-[#282c34] text-gray-900 dark:text-gray-100 px-1.5 py-0.5 font-mono text-base"
           {...props}
         >
           {children}
@@ -224,10 +228,10 @@ const customComponents = {
     }
 
     // Check if this is a PGP code block
-    if (className === "language-pgp") {
+    if (language === "pgp") {
       return (
         <code
-          className="block p-4 rounded-lg bg-[#161616] text-white overflow-x-auto my-4 font-mono text-sm whitespace-pre"
+          className="block p-4 bg-[#282c34] text-white overflow-x-auto my-4 font-mono text-sm whitespace-pre"
           {...props}
         >
           {children}
@@ -235,15 +239,8 @@ const customComponents = {
       )
     }
 
-    // This is a regular code block with language
-    return (
-      <code
-        className={`block p-4 rounded-lg bg-gray-100 dark:bg-[#161616] text-gray-900 dark:text-gray-100 overflow-x-auto my-6 font-mono ${className}`}
-        {...props}
-      >
-        {children}
-      </code>
-    )
+    // For Python and other code blocks, use our CodeBlock component
+    return <CodeBlock code={String(children).replace(/\n$/, "")} language={language || "text"} />
   },
   pre: ({ children, className, ...props }: any) => {
     // Special handling for PGP code blocks
@@ -255,8 +252,13 @@ const customComponents = {
       )
     }
 
+    // For Python and other code blocks, let the code component handle it
+    if (className && className.startsWith("language-")) {
+      return children
+    }
+
     return (
-      <pre className="bg-transparent overflow-x-auto my-3 font-mono text-sm" {...props}>
+      <pre className="bg-transparent overflow-x-auto my-0 font-mono text-sm" {...props}>
         {children}
       </pre>
     )
