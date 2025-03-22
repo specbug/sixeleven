@@ -53,6 +53,35 @@ const customComponents = {
       return null // Skip rendering this paragraph, it will be handled separately
     }
 
+    if (text.includes("{{callout:")) {
+      // Extract callout type and content
+      const match = text.match(/{{callout:(info|warning|error)\|(.*?)}}/)
+      if (match && match[1] && match[2]) {
+        const type = match[1]
+        const content = match[2]
+
+        // Define icon based on type
+        let icon = "ℹ️" // Default info icon
+        if (type === "warning") icon = "⚠️"
+        if (type === "error") icon = "❌"
+
+        return (
+          <div
+            className={`callout ${type} flex items-start p-4 my-6 rounded-md ${
+              type === "info"
+                ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500"
+                : type === "warning"
+                  ? "bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500"
+                  : "bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500"
+            }`}
+          >
+            <div className="mr-3 text-xl">{icon}</div>
+            <div className="text-sm sm:text-base">{content}</div>
+          </div>
+        )
+      }
+    }
+
     return <p {...props}>{children}</p>
   },
 

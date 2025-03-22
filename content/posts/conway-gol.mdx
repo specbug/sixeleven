@@ -8,7 +8,7 @@ tags: ["computation ", "philosophy", "complexity-theory"]
 
 Life, devised by John Conway, is a zero-player game that, while simple, has roots in automata theory, evolution, chaos theory, AI, Gödel's incompleteness theorems, free will, etc.
 
-> A cellular automaton is a collection of cells on a grid that evolves through discrete time steps, according to a set of rules, based on the states of neighbouring cells.
+{{callout:info|A cellular automaton is a collection of cells on a grid that evolves through discrete time steps, according to a set of rules, based on the states of neighbouring cells.}}
 
 The universe of **Life** is an infinite, 2D cellular automaton where each element (a square cell) is either *dead* or *live* (*0* or *1*). Every cell interacts with its eight neighbours. And at each tick, the following rules follow:
 
@@ -53,7 +53,7 @@ For our case, the system halts after 7 epochs (as all cells are Dead):
 ### Undecidability
 But ultimately, the Game of Life is [undecidable](https://en.wikipedia.org/wiki/Undecidable_problem) — given an initial pattern and a later pattern, no algorithm can be devised to predict whether the latter is ever going to appear. Patterns in the GoL might come to a halt, get stuck in a loop, grow chaotic and proliferate (like microorganisms) — with or without an eventual convergence. As such, the GoL demonstrates how simplicity generates complexity, providing an analogy for all mathematics (& the universe).
 
-> It is also a corollary to the halting problem — the problem of determining whether a given program will finish running or continue to run forever from an initial input.
+{{callout:info|It is also a corollary to the halting problem — the problem of determining whether a given program will finish running or continue to run forever from an initial input.}}
 
 ### Samples
 I went through the trouble of simulating the experiment like 100 times. Some results were interesting, but eventually, I just scouted cool-looking seeds and tacked on their results (you're welcome!).
