@@ -68,7 +68,14 @@ const customComponents = {
     // For regular images without captions
     return (
       <span className="block my-6">
-        <Image src={src || "/placeholder.svg"} alt={imageAlt} width={800} height={450} className="rounded-lg" />
+        <Image
+          src={src || "/placeholder.svg"}
+          alt={imageAlt}
+          width={800}
+          height={450}
+          className="rounded-lg"
+          unoptimized={src.startsWith("http")} // Skip optimization for external images
+        />
       </span>
     )
   },
@@ -239,7 +246,14 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
       {captionedImages.map((img, index) => (
         <div key={index} className="my-8">
           <div className="block">
-            <Image src={img.src || "/placeholder.svg"} alt={img.alt} width={800} height={450} className="rounded-lg" />
+            <Image
+              src={img.src || "/placeholder.svg"}
+              alt={img.alt}
+              width={800}
+              height={450}
+              className="rounded-lg"
+              unoptimized={img.src.startsWith("http")} // Skip optimization for external images
+            />
             <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">{img.caption}</div>
           </div>
         </div>
