@@ -15,7 +15,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "sixeleven",
   description: "A clean, content-focused blog",
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -36,6 +36,4 @@ export default function RootLayout({
   )
 }
 
-
-
-import './globals.css'
+import "./globals.css"

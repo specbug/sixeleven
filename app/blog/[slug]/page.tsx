@@ -3,9 +3,7 @@ import { notFound } from "next/navigation"
 import { getPostBySlug, getAllPosts } from "@/lib/mdx"
 import TableOfContents from "@/components/TableOfContents"
 import ReadingProgressBar from "@/components/ReadingProgressBar"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
-import mdxComponents from "@/components/mdx-components"
+import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 
 interface BlogPostPageProps {
   params: {
@@ -70,11 +68,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <TableOfContents content={post.content} />
       </div>
 
-      {/* Render content */}
+      {/* Render content with EnhancedMarkdown */}
       <div className="prose dark:prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdxComponents}>
-          {post.content}
-        </ReactMarkdown>
+        <EnhancedMarkdown content={post.content} />
       </div>
     </article>
   )

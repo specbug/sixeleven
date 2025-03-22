@@ -2,9 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getProjectBySlug, getAllProjects } from "@/lib/mdx"
 import ReadingProgressBar from "@/components/ReadingProgressBar"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
-import mdxComponents from "@/components/mdx-components"
+import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 
 interface ProjectPageProps {
   params: {
@@ -78,9 +76,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* Render content */}
       <div className="prose dark:prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdxComponents}>
-          {project.content}
-        </ReactMarkdown>
+        <EnhancedMarkdown content={project.content} />
       </div>
     </article>
   )
