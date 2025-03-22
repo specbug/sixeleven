@@ -20,7 +20,7 @@ The universe of **Life** is an infinite, 2D cellular automaton where each elemen
 Let's [build this](https://github.com/specbug/simulation-theory/tree/master/game-of-life) block by block.
 
 Firstly, we need an infinite, two-dimensional orthogonal grid of square cells to contain our *population*. Unfortunately, my system can't simulate infinity, so ours will be a bounded `m x n` grid as you see here:
-![CA Grid](/images/cgol1.png?height=150&width=150)
+![CA Grid](/images/cgol1.png?width=300&height=300)
 
 This is a random seed. A red cell indicates Live. Meanwhile, all other cells are Dead.
 
@@ -30,29 +30,36 @@ This is a random seed. A red cell indicates Live. Meanwhile, all other cells are
 Any dead cell with three live neighbours becomes a live cell.
 
 If we simulate the next generation (iteration) basis the above rules, we can enumerate all the cells that will be Live in the next iteration (Interim Live):
+![Interim Live](/images/cgol2.png?width=300&height=300)
 
 ### Death
 
 > All other cells die or stay dead.
 
 To complete the tick (phase iteration), we also need to assess all the cells that will be Dead by the next tick (Interim Dead):
+![Interim Dead](/images/cgol3.png?width=300&height=300)
 
 ### The Cycle
 
 Applying the above rules simultaneously, we get the following phase after one iteration:
+![Epoch](/images/cgol4.png?width=300&height=300)
 
 ### N Epochs
 Estimating phase value after one tick was simple enough. But can you estimate the phase value after 10 epochs? What about 100? Does the system ever halt?
 
 For our case, the system halts after 7 epochs (as all cells are Dead):
+![Sample Case](/images/cgol5.gif?width=300&height=300)
 
 ### Undecidability
-But ultimately, the Game of Life is undecidable — given an initial pattern and a later pattern, no algorithm can be devised to predict whether the latter is ever going to appear. Patterns in the GoL might come to a halt, get stuck in a loop, grow chaotic and proliferate (like microorganisms) — with or without an eventual convergence. As such, the GoL demonstrates how simplicity generates complexity, providing an analogy for all mathematics (& the universe).
+But ultimately, the Game of Life is [undecidable](https://en.wikipedia.org/wiki/Undecidable_problem) — given an initial pattern and a later pattern, no algorithm can be devised to predict whether the latter is ever going to appear. Patterns in the GoL might come to a halt, get stuck in a loop, grow chaotic and proliferate (like microorganisms) — with or without an eventual convergence. As such, the GoL demonstrates how simplicity generates complexity, providing an analogy for all mathematics (& the universe).
 
 > It is also a corollary to the halting problem — the problem of determining whether a given program will finish running or continue to run forever from an initial input.
 
 ### Samples
 I went through the trouble of simulating the experiment like 100 times *. Some results were interesting, but eventually, I just scouted cool-looking seeds and tacked on their results (you're welcome!).
+
+![Interim Live](/images/cgol6.gif?width=300&height=300) 
+![Interim Live 2](/images/cgol7.gif?width=300&height=300)
 
 As **GoL** is Turing complete, it can be used to simulate a [Turing machine](https://en.wikipedia.org/wiki/Turing_machine). [This](https://www.ics.uci.edu/~welling/teaching/271fall09/Turing-Machine-Life.pdf) paper demonstrates the same; it is fascinating.
 

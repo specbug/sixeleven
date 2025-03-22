@@ -28,7 +28,7 @@ const customComponents = {
       if (match && match[1]) {
         const videoId = match[1]
         return (
-          <div className="my-8 aspect-video w-full overflow-hidden rounded-lg">
+          <div className="my-8 aspect-video w-full overflow-hidden">
             <iframe
               width="560"
               height="315"
@@ -45,6 +45,11 @@ const customComponents = {
 
     // Check if this paragraph contains only an image with caption marker
     if (text.includes("{{image-with-caption:")) {
+      return null // Skip rendering this paragraph, it will be handled separately
+    }
+
+    // Check if this paragraph contains side-by-side images
+    if (text.includes("{{side-by-side:")) {
       return null // Skip rendering this paragraph, it will be handled separately
     }
 
@@ -65,16 +70,46 @@ const customComponents = {
       return null
     }
 
+    // Parse dimensions from URL query parameters if present
+    let width = 800
+    let height = 450
+    let finalSrc = src
+
+    try {
+      // Check if the URL has query parameters for width and height
+      if (src.includes("?")) {
+        const urlObj = new URL(src, "http://example.com") // Base URL doesn't matter for parsing
+        const params = new URLSearchParams(urlObj.search)
+
+        // Get width and height from query params if they exist
+        const widthParam = params.get("width")
+        const heightParam = params.get("height")
+
+        if (widthParam) width = Number.parseInt(widthParam, 10)
+        if (heightParam) height = Number.parseInt(heightParam, 10)
+
+        // Remove the query parameters from the src for Next.js Image component
+        // Only if it's a local image (not starting with http)
+        if (!src.startsWith("http")) {
+          finalSrc = urlObj.pathname
+        }
+      }
+    } catch (error) {
+      console.error("Error parsing image dimensions:", error)
+    }
+
+    // Check if it's a GIF (ensure unoptimized is true for GIFs)
+    const isGif = finalSrc.toLowerCase().endsWith(".gif")
+
     // For regular images without captions
     return (
       <span className="block my-6">
         <Image
-          src={src || "/placeholder.svg"}
+          src={finalSrc || "/placeholder.svg"}
           alt={imageAlt}
-          width={800}
-          height={450}
-          className="rounded-lg"
-          unoptimized={src.startsWith("http")} // Skip optimization for external images
+          width={width}
+          height={height}
+          unoptimized={src.startsWith("http") || isGif} // Skip optimization for external images and GIFs
         />
       </span>
     )
@@ -221,14 +256,164 @@ interface EnhancedMarkdownProps {
 
 export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
   const [processedContent, setProcessedContent] = useState(content)
-  const [captionedImages, setCaptionedImages] = useState<Array<{ src: string; alt: string; caption: string }>>([])
+  const [captionedImages, setCaptionedImages] = useState<
+    Array<{ src: string; alt: string; caption: string; width: number; height: number }>
+  >([])
+  const [sideBySideImages, setSideBySideImages] = useState<
+    Array<{ images: Array<{ src: string; alt: string; width: number; height: number }> }>
+  >([])
 
   useEffect(() => {
+    // Process side-by-side images first
+    let processedWithSideBySide = content
+    const sideBySideGroups: Array<{ images: Array<{ src: string; alt: string; width: number; height: number }> }> = []
+
+    // Match {{side-by-side}} blocks
+    processedWithSideBySide = processedWithSideBySide.replace(
+      /\{\{side-by-side\}\}([\s\S]*?)\{\{\/side-by-side\}\}/g,
+      (match, imagesContent) => {
+        const images: Array<{ src: string; alt: string; width: number; height: number }> = []
+
+        // Extract images from the content
+        const imageMatches = [...imagesContent.matchAll(/!\[(.*?)\]$$(.+?)$$/g)]
+        for (const imageMatch of imageMatches) {
+          const alt = imageMatch[1] || ""
+          let src = imageMatch[2] || ""
+
+          // Parse dimensions
+          let width = 400 // Default width for side-by-side images
+          let height = 300 // Default height for side-by-side images
+
+          try {
+            if (src.includes("?")) {
+              const urlObj = new URL(src, "http://example.com")
+              const params = new URLSearchParams(urlObj.search)
+
+              const widthParam = params.get("width")
+              const heightParam = params.get("height")
+
+              if (widthParam) width = Number.parseInt(widthParam, 10)
+              if (heightParam) height = Number.parseInt(heightParam, 10)
+
+              // Remove query params for local images
+              if (!src.startsWith("http")) {
+                src = urlObj.pathname
+              }
+            }
+          } catch (error) {
+            console.error("Error parsing image dimensions:", error)
+          }
+
+          images.push({ src, alt, width, height })
+        }
+
+        if (images.length > 0) {
+          const id = sideBySideGroups.length
+          sideBySideGroups.push({ images })
+          return `{{side-by-side:${id}}}`
+        }
+
+        return match // Return original if no images found
+      },
+    )
+
+    // Also support the pipe syntax for side-by-side images
+    processedWithSideBySide = processedWithSideBySide.replace(
+      /!\[(.*?)\]$$(.+?)$$\s*\|\s*!\[(.*?)\]$$(.+?)$$/g,
+      (match, alt1, src1, alt2, src2) => {
+        const images: Array<{ src: string; alt: string; width: number; height: number }> = []
+
+        // Process first image
+        let width1 = 400
+        let height1 = 300
+        let finalSrc1 = src1
+
+        try {
+          if (src1.includes("?")) {
+            const urlObj = new URL(src1, "http://example.com")
+            const params = new URLSearchParams(urlObj.search)
+
+            const widthParam = params.get("width")
+            const heightParam = params.get("height")
+
+            if (widthParam) width1 = Number.parseInt(widthParam, 10)
+            if (heightParam) height1 = Number.parseInt(heightParam, 10)
+
+            if (!src1.startsWith("http")) {
+              finalSrc1 = urlObj.pathname
+            }
+          }
+        } catch (error) {
+          console.error("Error parsing image dimensions:", error)
+        }
+
+        // Process second image
+        let width2 = 400
+        let height2 = 300
+        let finalSrc2 = src2
+
+        try {
+          if (src2.includes("?")) {
+            const urlObj = new URL(src2, "http://example.com")
+            const params = new URLSearchParams(urlObj.search)
+
+            const widthParam = params.get("width")
+            const heightParam = params.get("height")
+
+            if (widthParam) width2 = Number.parseInt(widthParam, 10)
+            if (heightParam) height2 = Number.parseInt(heightParam, 10)
+
+            if (!src2.startsWith("http")) {
+              finalSrc2 = urlObj.pathname
+            }
+          }
+        } catch (error) {
+          console.error("Error parsing image dimensions:", error)
+        }
+
+        images.push({ src: finalSrc1, alt: alt1, width: width1, height: height1 })
+        images.push({ src: finalSrc2, alt: alt2, width: width2, height: height2 })
+
+        const id = sideBySideGroups.length
+        sideBySideGroups.push({ images })
+        return `{{side-by-side:${id}}}`
+      },
+    )
+
+    setSideBySideImages(sideBySideGroups)
+
     // Extract images with captions and replace them with markers
-    const images: Array<{ src: string; alt: string; caption: string }> = []
-    const processed = content.replace(/!\[(.*?)::(.+?)\]$$(.+?)$$/g, (match, alt, caption, src) => {
+    const images: Array<{ src: string; alt: string; caption: string; width: number; height: number }> = []
+    const processed = processedWithSideBySide.replace(/!\[(.*?)::(.+?)\]$$(.+?)$$/g, (match, alt, caption, src) => {
+      // Default dimensions
+      let width = 800
+      let height = 450
+      let finalSrc = src
+
+      // Parse dimensions from URL query parameters if present
+      try {
+        if (src.includes("?")) {
+          const urlObj = new URL(src, "http://example.com")
+          const params = new URLSearchParams(urlObj.search)
+
+          const widthParam = params.get("width")
+          const heightParam = params.get("height")
+
+          if (widthParam) width = Number.parseInt(widthParam, 10)
+          if (heightParam) height = Number.parseInt(heightParam, 10)
+
+          // Remove the query parameters from the src for Next.js Image component
+          // Only if it's a local image (not starting with http)
+          if (!src.startsWith("http")) {
+            finalSrc = urlObj.pathname
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing image dimensions:", error)
+      }
+
       const id = images.length
-      images.push({ src, alt, caption })
+      images.push({ src: finalSrc, alt, caption, width, height })
       return `{{image-with-caption:${id}}}`
     })
 
@@ -249,13 +434,29 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
             <Image
               src={img.src || "/placeholder.svg"}
               alt={img.alt}
-              width={800}
-              height={450}
-              className="rounded-lg"
-              unoptimized={img.src.startsWith("http")} // Skip optimization for external images
+              width={img.width}
+              height={img.height}
+              unoptimized={img.src.startsWith("http") || img.src.toLowerCase().endsWith(".gif")}
             />
             <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">{img.caption}</div>
           </div>
+        </div>
+      ))}
+
+      {/* Render side-by-side images */}
+      {sideBySideImages.map((group, groupIndex) => (
+        <div key={groupIndex} className="my-8 flex flex-col md:flex-row gap-4">
+          {group.images.map((img, imgIndex) => (
+            <div key={imgIndex} className="flex-1 flex items-center justify-center">
+              <Image
+                src={img.src || "/placeholder.svg"}
+                alt={img.alt}
+                width={img.width}
+                height={img.height}
+                unoptimized={img.src.startsWith("http") || img.src.toLowerCase().endsWith(".gif")}
+              />
+            </div>
+          ))}
         </div>
       ))}
     </>
