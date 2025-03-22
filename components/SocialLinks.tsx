@@ -53,21 +53,21 @@ export default function SocialLinks() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
       <SocialLink
-        href="https://twitter.com/yourusername"
+        href="https://twitter.com/irishvora"
         icon={<Twitter size={24} className="text-blue-500" />}
         label="Twitter"
         color="blue-500"
         hoverColor="blue-600"
       />
       <SocialLink
-        href="https://github.com/yourusername"
+        href="https://github.com/specbug"
         icon={<Github size={24} className="text-gray-800 dark:text-gray-200" />}
         label="GitHub"
         color="gray-500"
         hoverColor="gray-600"
       />
       <SocialLink
-        href="https://goodreads.com/yourusername"
+        href="https://www.goodreads.com/user/show/71020611-specbug"
         icon={<BookOpen size={24} className="text-amber-600" />}
         label="Goodreads"
         color="amber-500"
