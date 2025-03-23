@@ -21,7 +21,6 @@ export default async function AboutPage() {
 
       <div className="mt-8">
         <SocialLinks />
-        <SpecialCode />
       </div>
     </div>
   )
