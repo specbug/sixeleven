@@ -85,30 +85,16 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         )
       }
 
-      // Check if this is a PGP code block
-      if (className === "language-pgp") {
-        return (
-          <code className="block p-4 rounded-lg bg-[rgba(33,33,33,0.9);] text-white overflow-x-auto my-4 font-mono text-sm whitespace-pre">
-            {children}
-          </code>
-        )
-      }
-
-      // This is a regular code block with language
+      // This is a code block with language
       return (
         <code
-          className={`block p-4 rounded-lg bg-gray-100 dark:bg-[rgba(33,33,33,0.9);] text-gray-900 dark:text-gray-100 overflow-x-auto my-6 font-mono ${className}`}
+          className={`block p-4 rounded-lg bg-gray-100 dark:bg-[#171600] text-gray-900 dark:text-gray-100 overflow-x-auto my-6 font-mono ${className}`}
         >
           {children}
         </code>
       )
     },
-    pre: ({ children, className }) => {
-      // Special handling for PGP code blocks
-      if (className === "language-pgp") {
-        return <pre className="bg-transparent overflow-x-auto my-0 font-mono text-sm">{children}</pre>
-      }
-
+    pre: ({ children }) => {
       return <pre className="bg-transparent overflow-x-auto my-3 font-mono text-sm">{children}</pre>
     },
     ul: ({ children }) => <ul className="list-disc pl-6 my-4 text-lg">{children}</ul>,

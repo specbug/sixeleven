@@ -96,28 +96,7 @@
   background-color: transparent;
 }
 
-/* Special styling for PGP code blocks */
-.prose pre.language-pgp {
-  margin: 0;
-}
-
-.prose pre.language-pgp code {
-  background-color: rgba(33,33,33,0.9);
-  color: #f8fafc;
-  padding: 1rem;
-  font-size: 0.85em;
-  line-height: 1.4;
-}
-
-/* Adjust spacing for code blocks */
-pre code {
-  font-family: "R Plex Mono", "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-}
-
-.dark .prose pre {
-  background-color: transparent;
-}
-
+/* Remove special styling for PGP code blocks */
 .prose pre code {
   background-color: #f1f5f9;
   color: #0f172a;
@@ -132,7 +111,6 @@ pre code {
   background-color: rgba(33,33,33,0.9);
   color: #f8fafc;
   border: none;
-  text-align: justify;
 }
 
 /* Override any tailwind classes that might be affecting code blocks */
@@ -140,11 +118,6 @@ pre code {
 .dark pre code,
 .dark .prose code,
 .dark .prose pre code {
-  background-color: rgba(33,33,33,0.9) !important;
-}
-
-/* Fix specific case for PGP key */
-.prose pre.language-pgp code {
   background-color: rgba(33,33,33,0.9) !important;
 }
 

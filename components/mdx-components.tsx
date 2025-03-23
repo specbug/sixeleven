@@ -87,15 +87,6 @@ p: ({ children }: { children: React.ReactNode }) => <p className="my-4 text-lg l
       )
     }
 
-    // Check if this is a PGP code block
-    if (className === "language-pgp") {
-      return (
-        <code className="block p-4 rounded-lg bg-[rgba(33,33,33,0.9);] text-white overflow-x-auto my-4 font-mono text-sm whitespace-pre">
-          {children}
-        </code>
-      )
-    }
-
     // This is a regular code block with language
     return (
       <code
@@ -105,12 +96,7 @@ p: ({ children }: { children: React.ReactNode }) => <p className="my-4 text-lg l
       </code>
     )
   },
-  pre: ({ children, className }: { children: React.ReactNode; className?: string }) => {
-    // Special handling for PGP code blocks
-    if (className === "language-pgp") {
-      return <pre className="bg-transparent overflow-x-auto my-0 font-mono text-sm">{children}</pre>
-    }
-
+  pre: ({ children }: { children: React.ReactNode }) => {
     return <pre className="bg-transparent overflow-x-auto my-3 font-mono text-sm">{children}</pre>
   },
   ul: ({ children }: { children: React.ReactNode }) => <ul className="list-disc pl-6 my-4 text-lg">{children}</ul>,

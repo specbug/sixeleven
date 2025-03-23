@@ -225,11 +225,9 @@ const customComponents = {
     const content = String(children).trim()
 
     // Check if this is a code block that should be rendered inline
-    // We'll use multiple heuristics to determine this
-
     // 1. If ReactMarkdown already identified it as inline, use that
-    // 3. Check if the content doesn't contain newlines (likely inline)
-    // 4. Check if the content is relatively short (likely inline)
+    // 2. Check if the content doesn't contain newlines (likely inline)
+    // 3. Check if the content is relatively short (likely inline)
 
     const hasNoNewlines = !content.includes("\n")
     const isShort = content.length < 100
@@ -253,21 +251,7 @@ const customComponents = {
     const match = /language-(\w+)/.exec(className || "")
     const language = match ? match[1] : ""
 
-    // Special case for PGP code blocks
-    if (language === "pgp") {
-      return (
-        <div className="my-6">
-          <code
-            className="block p-4 bg-[#171600] text-white overflow-x-auto font-mono text-sm whitespace-pre"
-            {...props}
-          >
-            {children}
-          </code>
-        </div>
-      )
-    }
-
-    // For all other code blocks
+    // For all code blocks, including PGP
     return (
       <div className="my-6">
         <CodeBlock code={content.replace(/\n$/, "")} language={language || "text"} />
@@ -275,17 +259,8 @@ const customComponents = {
     )
   },
   // Completely override the pre component to prevent nesting issues
-  pre: ({ children, className }: any) => {
-    // Special handling for PGP code blocks
-    if (className === "language-pgp") {
-      return (
-        <div className="my-6">
-          <pre className="bg-transparent overflow-x-auto font-mono text-sm">{children}</pre>
-        </div>
-      )
-    }
-
-    // For other code blocks, just return the children directly
+  pre: ({ children }: any) => {
+    // For all code blocks, just return the children directly
     return <>{children}</>
   },
   ul: ({ children, ...props }: any) => (
