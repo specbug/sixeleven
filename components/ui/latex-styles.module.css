@@ -1,0 +1,8 @@
+/* Basic KaTeX styling */
+.katexMath {
+  font-family: KaTeX_Main, "Times New Roman", serif;
+}
+
+/* This is a minimal subset of KaTeX styles needed for basic rendering */
+/* For full styling, KaTeX CSS will be loaded dynamically */
+

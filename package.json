@@ -62,11 +62,12 @@
     "fs": "latest",
     "path": "latest",
     "gray-matter": "latest",
-    "mdx": "latest",
     "next-mdx-remote": "latest",
     "prism-react-renderer": "latest",
+    "mdx": "latest",
     "react-markdown": "latest",
-    "remark-gfm": "latest"
+    "remark-gfm": "latest",
+    "katex": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

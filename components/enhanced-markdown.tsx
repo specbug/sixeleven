@@ -1,18 +1,31 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Fragment } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Image from "next/image"
 import { CodeBlock } from "./code-block"
+import { BlockMath, InlineMath } from "./ui/LaTeX-alt"
 
 // Custom components for ReactMarkdown
-const customComponents = {
+const createCustomComponents = (blockMathExpressions: string[]) => ({
   // Override the default paragraph component
   p: ({ children, node, ...props }: any) => {
-    // Check if children contains our custom component markers
-    const text = String(children)
+    // Check if children is a string or can be converted to a string
+    const text = children ? String(children) : ""
 
+    // Check if this paragraph contains a block math marker
+    if (text.includes("{{block-math:")) {
+      const match = text.match(/\{\{block-math:(\d+)\}\}/)
+      if (match && match[1]) {
+        const index = Number.parseInt(match[1], 10)
+        if (blockMathExpressions[index]) {
+          return <BlockMath>{blockMathExpressions[index]}</BlockMath>
+        }
+      }
+    }
+
+    // Check if children contains our custom component markers
     if (text.includes("{{color:")) {
       // Process colored text
       const processed = text.replace(/{{color:([^}]+)}}/g, (_, color) => {
@@ -88,9 +101,44 @@ const customComponents = {
       for (const child of children) {
         if (child?.props?.node?.tagName === "code" && !child?.props?.inline) {
           // If this paragraph contains a non-inline code block, render the children directly
-          return <>{children}</>
+          return <Fragment>{children}</Fragment>
         }
       }
+    }
+
+    // Check for inline LaTeX
+    if (typeof text === "string" && text.includes("$") && !text.includes("$$")) {
+      const parts = []
+      let lastIndex = 0
+      let inMath = false
+      let mathContent = ""
+
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === "$") {
+          // Add text before the math delimiter
+          if (!inMath) {
+            if (i > lastIndex) {
+              parts.push(text.substring(lastIndex, i))
+            }
+            inMath = true
+            mathContent = ""
+          } else {
+            // End of math content
+            parts.push(<InlineMath key={`math-${i}`}>{mathContent}</InlineMath>)
+            inMath = false
+          }
+          lastIndex = i + 1
+        } else if (inMath) {
+          mathContent += text[i]
+        }
+      }
+
+      // Add any remaining text
+      if (lastIndex < text.length) {
+        parts.push(text.substring(lastIndex))
+      }
+
+      return <p {...props}>{parts}</p>
     }
 
     return <p {...props}>{children}</p>
@@ -261,7 +309,7 @@ const customComponents = {
   // Completely override the pre component to prevent nesting issues
   pre: ({ children }: any) => {
     // For all code blocks, just return the children directly
-    return <>{children}</>
+    return <Fragment>{children}</Fragment>
   },
   ul: ({ children, ...props }: any) => (
     <ul className="list-disc pl-6 my-4 text-lg" {...props}>
@@ -279,7 +327,7 @@ const customComponents = {
     </li>
   ),
   hr: (props: any) => <hr className="my-8 border-t border-gray-200 dark:border-gray-800" {...props} />,
-}
+})
 
 interface EnhancedMarkdownProps {
   content: string
@@ -293,10 +341,24 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
   const [sideBySideImages, setSideBySideImages] = useState<
     Array<{ images: Array<{ src: string; alt: string; width: number; height: number }> }>
   >([])
+  const [blockMathExpressions, setBlockMathExpressions] = useState<string[]>([])
 
   useEffect(() => {
+    // First, extract block math expressions
+    let contentWithoutBlockMath = content
+    const mathBlocks: string[] = []
+
+    // Extract block math expressions ($$..$$)
+    contentWithoutBlockMath = contentWithoutBlockMath.replace(/\$\$([\s\S]*?)\$\$/g, (match, expr) => {
+      const id = mathBlocks.length
+      mathBlocks.push(expr)
+      return `{{block-math:${id}}}`
+    })
+
+    setBlockMathExpressions(mathBlocks)
+
     // Process side-by-side images first
-    let processedWithSideBySide = content
+    let processedWithSideBySide = contentWithoutBlockMath
     const sideBySideGroups: Array<{ images: Array<{ src: string; alt: string; width: number; height: number }> }> = []
 
     // Match {{side-by-side}} blocks
@@ -452,8 +514,11 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
     setCaptionedImages(images)
   }, [content])
 
+  // Create custom components with access to blockMathExpressions
+  const customComponents = createCustomComponents(blockMathExpressions)
+
   return (
-    <>
+    <Fragment>
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={customComponents}>
         {processedContent}
       </ReactMarkdown>
@@ -490,7 +555,7 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
           ))}
         </div>
       ))}
-    </>
+    </Fragment>
   )
 }
 

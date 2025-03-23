@@ -1,0 +1,48 @@
+/* Essential KaTeX styles */
+.katex {
+  font: normal 1.21em KaTeX_Main, Times New Roman, serif;
+  line-height: 1.2;
+  text-indent: 0;
+  text-rendering: auto;
+}
+
+.katex-display {
+  display: block;
+  margin: 1em 0;
+  text-align: center;
+}
+
+.katex-html {
+  /* Prevent flickering of the math when the page loads */
+  visibility: hidden;
+}
+
+/* Basic math symbols */
+.katex .mord {
+  font-family: KaTeX_Main;
+}
+
+.katex .mbin {
+  font-family: KaTeX_Main;
+}
+
+.katex .mrel {
+  font-family: KaTeX_Main;
+}
+
+.katex .mopen {
+  font-family: KaTeX_Main;
+}
+
+.katex .mclose {
+  font-family: KaTeX_Main;
+}
+
+.katex .mpunct {
+  font-family: KaTeX_Main;
+}
+
+.katex .minner {
+  font-family: KaTeX_Main;
+}
+
