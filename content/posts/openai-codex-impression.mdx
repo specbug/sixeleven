@@ -45,7 +45,73 @@ from typing import (
 List, Tuple
 )
 
-
 Output
 ['concurrent.futures', 'os', 'os.path', 'typing.List', 'typing.Tuple']
 ```
+
+#### Codex it!
+I just formulated the docstring. Using the doc, imported libs and function signature, it generated an (almost) functional code:
+![Challenge](/images/codex4.gif?width=500&height=600)
+
+Pretty impressive. After just one or two manual bug sweeps, the code passed all testcases! Final script:
+```python
+import ast
+from typing import List
+
+
+def parse_imports(code: str) -> List[str]:
+    """
+    Parse all the imports in the code using ast module.
+    Imports of the form 'from x import y' should be appended as 'x.y'. 
+		Ignore any alias. Append each import type to a list 
+		and return the sorted list.
+    """
+    symbols = []
+    for node in ast.walk(ast.parse(code)):
+        if isinstance(node, ast.Import):
+            for name in node.names:
+                symbols.append(name.name)
+        elif isinstance(node, ast.ImportFrom):
+            for name in node.names:
+                symbols.append(node.module + '.' + name.name)
+    print(code, symbols)
+    return sorted(symbols)
+    
+
+# Examples
+print(parse_imports('import os'))
+print(parse_imports('import os\nfrom typing import List'))
+```
+
+### Implications
+Although it could not beat all its human counterparts, it ranked an impressive #96 on the [leaderboard](https://challenge.openai.com/codex/leaderboard). In all fairness, the competition paradigm was many-to-some — everyone faced the same five problems. So, Codex will have a rich data of differentiated prompts for the same set of problems. It might give the AI a learning edge (in the case of concurrent active learning). Still, for competing against top-notch programmers, top 100 is quite a feat. I mean, contrast the statistics below (Codex vs Avg. player):
+![Challenge](/images/codex5.png?width=600&height=300)
+
+Does this mean I should start scouting career options? Can Codex just self-optimise and outcompete all programmers? I doubt it.
+
+Okay, let us go first-principles. Codex trained on public code repos. Now the underlying framework of weights and biases is impossible to entertain. So let us take a spherical cow approach. The constituents of its dataset will probably form a logarithmic distribution. Majority of the train split comprised of overlapping, generic, non-complex solutions (like database CRUDs). Basis this (sensible) hypothesis, we can assert that 80% of its statistical prowess lies in solving small, low cognitive, well-defined, pure functions.
+
+Building webpages, APIs, 3rd party integrations, database CRUDs, etc. — 80% of non-creative, repetitive tasks can probably be automated. Going by the Pareto principle, the rest 20% — non-generalisable, complex, abstract problems — that take up 80% of cognitive bandwidth, will survive. But this is good news. Codex will handle all the tedious tasks, while programmers focus on the most creative jobs.
+
+> Once a programmer knows what to build, the act of writing code can be thought of as (1) breaking a problem down into simpler problems, and (2) mapping those simple problems to existing code (libraries, APIs, or functions) that already exist. The latter activity is probably the least fun part of programming (and the highest barrier to entry), and it’s where OpenAI Codex excels most.
+
+#### Individual Problem Comparison
+
+| Problem | Team        | Solved In (Me) | Solved In (Codex) |
+|---------|-------------|----------------|--------------------|
+| 1       | Me          | 50:04          | 22:09              |
+| 2       | Me          | 15:16          | 07:22              |
+| 3       | Me, Codex   | 18:20          | 19:24              |
+| 4       | Me, Codex   | 10:47          | 25:43              |
+| 5       | Me, Codex   | 11:49          | 14:13              |
+
+### Conclusion
+
+[Software is eating the world](https://a16z.com/2011/08/20/why-software-is-eating-the-world/). Apparently, [at the expense of atoms](https://youtu.be/nM9f0W2KD5s). Yet, this asymmetrically entitled ecosystem is inaccessible to most; programming demands a logical constitution and tools like OpenAI Codex can loosen these constraints, dissolve the clique.
+
+> I think Codex gets close to what most of us really want from computers—we say what we want, and they do it.
+> Programming languages are an artifact of computers not being able to actually understand us, and humans and computers relying on a lingua franca to understand each other.
+> 
+> — Sam Altman (@sama), [X](https://x.com/sama/status/1425149577179635723)
+
+For programmers, these tools act as excellent appendages. Programming languages are, by definition, means of communication with computers. Consider Codex to be a [level-n](https://en.wikipedia.org/wiki/High-level_programming_language) programming language (with intermediate transpilation). One step closer towards symbiosis.
