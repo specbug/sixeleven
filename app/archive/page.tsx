@@ -26,7 +26,6 @@ export default async function ArchivePage() {
 
   return (
     <div>
-      <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8">Archive</h1>
       <SearchPosts posts={posts} />
     </div>
   )

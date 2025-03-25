@@ -5,7 +5,7 @@ import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import SpecialCode from "@/components/SpecialCode"
 
 export const metadata: Metadata = {
-  title: "About Me | sixeleven",
+  title: "About | sixeleven",
   description: "Learn more about me and this blog",
 }
 

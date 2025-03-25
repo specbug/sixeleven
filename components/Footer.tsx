@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="px-3 sm:px-6 md:px-8 max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0 text-center md:text-left">
-            <p className="text-gray-600 dark:text-gray-400">© {currentYear} sixeleven</p>
+            <p className="text-gray-600 dark:text-gray-400 font-tip">© {currentYear} sixeleven</p>
           </div>
           <div className="flex space-x-6 sm:space-x-8">
             <a

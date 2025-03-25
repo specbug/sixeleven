@@ -76,7 +76,7 @@ export default function Navigation() {
     { href: "/", label: "Home" },
     { href: "/archive", label: "Archive" },
     // { href: "/projects", label: "Projects" },
-    { href: "/about", label: "About Me" },
+    { href: "/about", label: "About" },
   ]
 
   return (
@@ -86,7 +86,7 @@ export default function Navigation() {
       }`}
     >
       <div className="px-4 sm:px-6 md:px-8 max-w-5xl mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2 font-logo">
           <div className="w-8 h-8 flex items-center justify-center">
             <Image src="/logo.png" alt="sixeleven logo" width={24} height={24} className="w-5 h-5" />
           </div>
@@ -100,7 +100,7 @@ export default function Navigation() {
               key={link.href}
               href={link.href}
               className={`hover:text-accent/80 transition-colors ${
-                pathname === link.href ? "text-accent/80 font-medium" : "text-gray-600 dark:text-gray-400"
+                pathname === link.href ? "text-accent/80 font-medium" : "text-gray-600 dark:text-gray-400 font-tip"
               }`}
             >
               {link.label}

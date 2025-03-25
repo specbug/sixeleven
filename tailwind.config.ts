@@ -57,12 +57,35 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)"],
         serif: ["var(--font-serif)"],
+        mono: ["var(--font-mono)"],
+        logo: ["var(--font-logo)"], // Add the logo font
+        blogTitle: ["var(--font-blogTitle)"], // Add the blog title font
+        tip: ["var(--font-tip)"],
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: "none",
             color: "inherit",
+            fontFamily: "var(--font-serif)",
+            h1: {
+              fontFamily: "var(--font-sans)",
+            },
+            h2: {
+              fontFamily: "var(--font-sans)",
+            },
+            h3: {
+              fontFamily: "var(--font-sans)",
+            },
+            h4: {
+              fontFamily: "var(--font-sans)",
+            },
+            h5: {
+              fontFamily: "var(--font-sans)",
+            },
+            h6: {
+              fontFamily: "var(--font-sans)",
+            },
             a: {
               color: "rgba(255, 77, 6, 0.6)",
               textDecoration: "none",
@@ -75,6 +98,7 @@ const config: Config = {
               fontStyle: "italic",
             },
             code: {
+              fontFamily: "var(--font-mono)",
               color: "#111827",
               backgroundColor: "#f3f4f6",
               borderRadius: "0.25rem",
@@ -87,6 +111,7 @@ const config: Config = {
               content: '""',
             },
             pre: {
+              fontFamily: "var(--font-mono)",
               backgroundColor: "#1e293b",
               color: "#e2e8f0",
               overflow: "auto",

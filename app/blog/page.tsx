@@ -13,7 +13,7 @@ export default async function BlogPage() {
   if (posts.length === 0) {
     return (
       <div>
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8">Blog</h1>
+        <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8 font-sans">Blog</h1>
         <div className="text-center py-10">
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             No posts found. Please add MDX files to the content/posts directory.
@@ -25,13 +25,13 @@ export default async function BlogPage() {
 
   return (
     <div>
-      <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8">Blog</h1>
+      <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8 font-sans">Blog</h1>
 
       <div className="space-y-8">
         {posts.map((post) => (
           <article key={post.slug} className="border-b border-gray-200 dark:border-gray-800 pb-8">
             <Link href={`/blog/${post.slug}`} className="block group">
-              <h2 className="text-2xl md:text-3xl font-bold group-hover:text-accent/60 transition-colors mb-2">
+              <h2 className="text-2xl md:text-3xl font-bold group-hover:text-accent/60 transition-colors mb-2 font-sans">
                 {post.title}
               </h2>
               <div className="article-meta mb-2">

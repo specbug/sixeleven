@@ -1,26 +1,15 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "@/styles/globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
-
-// Load Inter for UI elements only
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-})
+import { serifFont, sansFont, monoFont, logoFont, blogTitleFont } from "@/lib/fonts"
 
 export const metadata: Metadata = {
   title: "sixeleven",
-  description: "Personal blog of Rishit Vora.",
+  description: "A clean, content-focused blog",
   generator: "v0.dev",
-  icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-  },
 }
 
 export default function RootLayout({
@@ -29,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
+    <html lang="en" className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable} ${logoFont.variable} ${blogTitleFont.variable}`}>
       <body className="bg-white text-gray-900 dark:bg-black dark:text-gray-100 min-h-screen flex flex-col">
         <KaTeXLoader />
         <div className="w-full max-w-full flex-grow">
@@ -43,3 +32,4 @@ export default function RootLayout({
 }
 
 import "./globals.css"
+

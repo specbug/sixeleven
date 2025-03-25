@@ -260,7 +260,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
               className={`${index !== filteredPosts.length - 1 ? "border-b border-gray-200 dark:border-gray-800" : ""} pb-8`}
             >
               <Link href={`/blog/${post.slug}`} className="block group">
-                <h2 className="text-2xl md:text-3xl font-bold group-hover:text-accent/80 transition-colors mb-2">
+                <h2 className="text-2xl md:text-3xl font-bold group-hover:text-accent/80 transition-colors mb-2 font-sans">
                   {post.title}
                 </h2>
                 <div className="article-meta mb-2">

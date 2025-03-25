@@ -51,7 +51,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <ReadingProgressBar />
 
       <header className="mb-6">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-2">{post.title}</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-2 font-sans">{post.title}</h1>
         <div className="article-meta">
           <time dateTime={post.date}>{post.date}</time>
           {post.readingTime && <span className="reading-time"> · {post.readingTime} min read</span>}

@@ -2,7 +2,7 @@ const fs = require("fs")
 const path = require("path")
 
 // Content for the about page
-const aboutContent = `# About Me
+const aboutContent = `# About
 
 I'm a writer, developer, and thinker interested in technology, design, and the intersection of human cognition and digital interfaces. This blog is where I share my thoughts, ideas, and projects.
 
