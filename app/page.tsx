@@ -18,12 +18,12 @@ export default async function Home() {
           >
             About
           </Link>
-          <Link
+          {/* <Link
             href="/projects"
             className="text-accent/60 border-b border-accent/20 hover:border-accent/60 transition-colors"
           >
             Projects
-          </Link>
+          </Link> */}
         </div>
       </div>
     )
