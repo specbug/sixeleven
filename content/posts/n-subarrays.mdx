@@ -1,0 +1,90 @@
+---
+title: "Deriving The Count of Subarrays"
+date: "October 26, 2022"
+excerpt: "A first-principles dive into deriving the count of of subarrays in an array."
+readingTime: "7"
+tags: ["mathematics"]
+---
+
+Can you find the number of subarrays of the following array?
+
+$$\text{[1 2 3 4 5 6 7 8]}$$
+
+If you’ve even had a rudimentary scuffle with Math or CS, you know how to approach the question; it is almost too easy. The general formula for the count of subarrays, of an array with $n$ elements, is
+
+$$
+\frac {n(n+1)} {2}
+$$
+
+While the question is pretty simple, the formula isn’t quite as trivially intuitive. Googling `number of subarrays proof` emits an answer distribution with a more significant variance than I predicted.
+
+For instance, https://math.stackexchange.com/questions/1194584/the-total-number-of-subarrays.
+
+In the above discussion, there are *five* distinct approaches to prove the above problem! Considering the apparent triviality of the problem, I was intrigued by the fat-tailed distribution and set upon derived it myself. I came up with two approaches that look intuitive to me (both also offered in the reference above).
+
+Consider an array $A$ with $n$ elements. The indices of the above array fall within the range $[1…n]$ (1-indexed).
+
+$$
+A: int[n] \\
+i\in \text{[1 2 3 ... n]}\ (i \rightarrow \text{index of A})
+$$
+
+To slice a subarray, we need the start & end indices of the subarray, termed $s$ & $e$ respectively, such that $s \le e\ (s, e \in i)$.
+
+### Proof 1: Counting
+
+So consider the following chain of logic:
+
+$$
+\begin{aligned}
+&\text{If the subarray starts from the first index } (s = 1), \text{ there are } n \text{ possibilities for the end index } (e \in [1 \ldots n]) \\
+&\Downarrow \\
+&\text{If } s = 2,\ e \in [2 \ldots n] \text{ (n - 1 possibilities)} \\
+&\Downarrow \\
+&\text{If } s = 3,\ e \in [3 \ldots n] \text{ (n - 2 possibilities)}
+\end{aligned}
+$$
+
+and so on…
+
+| s | e (range of possibilities) | possibilities |
+| --- | --- | --- |
+| 1 | [1…n] | n |
+| 2 | [2…n] | n-1 |
+| 3 | [3…n] | n-2 |
+| k | [k…n] | n-(k-1) |
+| n-2 | [n-2…n] | n-((n-2)-1) = 3 |
+| n-1 | [n-1….n] | 2 |
+| n | [n] | 1 |
+
+**Hence, the total choices (total count of subarrays) are** $\sum \text{(possibilities)}$ **=**
+
+$$
+1 + 2 + 3 + ... + (n-(k-1)) + ... + (n-1) + n = \\
+\bold{\frac {n(n+1)}{2}}
+$$
+
+### Proof 2: Selecting
+
+Alternatively, you can frame the above approach as *selecting* any two indices from $[1…n]$, essentially:
+
+$$
+n \choose 2
+$$
+
+Which is the total number of ways to select two elements out of $n$. However, this only includes subarrays with at least two elements; distinct start & end index ($s\ != e$). We also need to factor in all the singleton subarrays ($s == e$), which are:
+
+$$
+n \choose 1
+$$
+
+**Hence, the total count of subarrays**
+
+$$
+\begin{align*}
+&= \text{no. of subarrays where }s\ != e + \text{no. of subarrays where } s == e \\
+&= {n \choose 2 } + {n \choose 1} \\
+&= {n + 1 \choose 2} \\
+&= \bold{\frac {n(n+1)}{2}}
+\end{align*}
+$$
