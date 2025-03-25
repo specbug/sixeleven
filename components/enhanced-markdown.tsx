@@ -1,112 +1,197 @@
 "use client"
 
-import { useState, useEffect, Fragment } from "react"
+import { useState, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Image from "next/image"
 import { CodeBlock } from "./code-block"
 import { BlockMath, InlineMath } from "./ui/LaTeX-alt"
+import React, { Fragment } from "react"
 
 // Custom components for ReactMarkdown
 const createCustomComponents = (blockMathExpressions: string[]) => ({
   // Override the default paragraph component
   p: ({ children, node, ...props }: any) => {
-    // Check if children is a string or can be converted to a string
-    const text = children ? String(children) : ""
+    // Check if children is an array of React elements
+    if (Array.isArray(children)) {
+      // Process each child to handle special cases
+      const processedChildren = children.map((child, index) => {
+        // If child is a string, check for our custom markers
+        if (typeof child === "string") {
+          if (child.includes("{{block-math:")) {
+            const match = child.match(/\{\{block-math:(\d+)\}\}/)
+            if (match && match[1]) {
+              const index = Number.parseInt(match[1], 10)
+              if (blockMathExpressions[index]) {
+                return <BlockMath key={`math-${index}`}>{blockMathExpressions[index]}</BlockMath>
+              }
+            }
+          }
 
-    // Check if this paragraph contains a block math marker
-    if (text.includes("{{block-math:")) {
-      const match = text.match(/\{\{block-math:(\d+)\}\}/)
-      if (match && match[1]) {
-        const index = Number.parseInt(match[1], 10)
-        if (blockMathExpressions[index]) {
-          return <BlockMath>{blockMathExpressions[index]}</BlockMath>
+          if (child.includes("{{color:")) {
+            // Process colored text
+            const processed = child.replace(/{{color:([^}]+)}}/g, (_, color) => {
+              const [colorValue, content] = color.split("|")
+              return `<span style="color:${colorValue}">${content}</span>`
+            })
+            return <span key={`color-${index}`} dangerouslySetInnerHTML={{ __html: processed }} />
+          }
+
+          if (child.includes("{{youtube:")) {
+            // Extract YouTube ID
+            const match = child.match(/{{youtube:([^}]+)}}/)
+            if (match && match[1]) {
+              const videoId = match[1]
+              return (
+                <div key={`youtube-${index}`} className="my-8 aspect-video w-full overflow-hidden">
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full aspect-video"
+                  ></iframe>
+                </div>
+              )
+            }
+          }
+
+          // Check for inline LaTeX
+          if (child.includes("$") && !child.includes("$$")) {
+            const parts = []
+            let lastIndex = 0
+            let inMath = false
+            let mathContent = ""
+
+            for (let i = 0; i < child.length; i++) {
+              if (child[i] === "$") {
+                // Add text before the math delimiter
+                if (!inMath) {
+                  if (i > lastIndex) {
+                    parts.push(child.substring(lastIndex, i))
+                  }
+                  inMath = true
+                  mathContent = ""
+                } else {
+                  // End of math content
+                  parts.push(<InlineMath key={`math-${i}`}>{mathContent}</InlineMath>)
+                  inMath = false
+                }
+                lastIndex = i + 1
+              } else if (inMath) {
+                mathContent += child[i]
+              }
+            }
+
+            // Add any remaining text
+            if (lastIndex < child.length) {
+              parts.push(child.substring(lastIndex))
+            }
+
+            return <React.Fragment key={`latex-${index}`}>{parts}</React.Fragment>
+          }
         }
-      }
-    }
 
-    // Check if children contains our custom component markers
-    if (text.includes("{{color:")) {
-      // Process colored text
-      const processed = text.replace(/{{color:([^}]+)}}/g, (_, color) => {
-        const [colorValue, content] = color.split("|")
-        return `<span style="color:${colorValue}">${content}</span>`
+        // Return the child as is if it's not a special case
+        return child
       })
 
-      return <p {...props} dangerouslySetInnerHTML={{ __html: processed }} />
+      return <p {...props}>{processedChildren}</p>
     }
 
-    if (text.includes("{{youtube:")) {
-      // Extract YouTube ID
-      const match = text.match(/{{youtube:([^}]+)}}/)
-      if (match && match[1]) {
-        const videoId = match[1]
-        return (
-          <div className="my-8 aspect-video w-full overflow-hidden">
-            <iframe
-              width="560"
-              height="315"
-              src={`https://www.youtube.com/embed/${videoId}`}
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full aspect-video"
-            ></iframe>
-          </div>
-        )
+    // Handle string children (simple case)
+    const text = children ? String(children) : ""
+
+    // Check for special markers in the text
+    if (
+      text.includes("{{block-math:") ||
+      text.includes("{{color:") ||
+      text.includes("{{youtube:") ||
+      text.includes("{{image-with-caption:") ||
+      text.includes("{{side-by-side:") ||
+      text.includes("{{callout:")
+    ) {
+      // Use the existing logic for these special cases
+
+      // Check if this paragraph contains a block math marker
+      if (text.includes("{{block-math:")) {
+        const match = text.match(/\{\{block-math:(\d+)\}\}/)
+        if (match && match[1]) {
+          const index = Number.parseInt(match[1], 10)
+          if (blockMathExpressions[index]) {
+            return <BlockMath>{blockMathExpressions[index]}</BlockMath>
+          }
+        }
       }
-    }
 
-    // Check if this paragraph contains only an image with caption marker
-    if (text.includes("{{image-with-caption:")) {
-      return null // Skip rendering this paragraph, it will be handled separately
-    }
+      // Process colored text
+      if (text.includes("{{color:")) {
+        const processed = text.replace(/{{color:([^}]+)}}/g, (_, color) => {
+          const [colorValue, content] = color.split("|")
+          return `<span style="color:${colorValue}">${content}</span>`
+        })
 
-    // Check if this paragraph contains side-by-side images
-    if (text.includes("{{side-by-side:")) {
-      return null // Skip rendering this paragraph, it will be handled separately
-    }
-
-    if (text.includes("{{callout:")) {
-      // Extract callout type and content
-      const match = text.match(/{{callout:(info|warning|error)\|(.*?)}}/)
-      if (match && match[1] && match[2]) {
-        const type = match[1]
-        const content = match[2]
-
-        // Define icon based on type
-        let icon = "ℹ️" // Default info icon
-        if (type === "warning") icon = "⚠️"
-        if (type === "error") icon = "❌"
-
-        return (
-          <div
-            className={`callout ${type} flex items-start p-4 my-6 rounded-md ${
-              type === "info"
-                ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500"
-                : type === "warning"
-                  ? "bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500"
-                  : "bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500"
-            }`}
-          >
-            <div className="mr-3 text-xl">{icon}</div>
-            <div className="text-sm sm:text-base">{content}</div>
-          </div>
-        )
+        return <p {...props} dangerouslySetInnerHTML={{ __html: processed }} />
       }
-    }
 
-    // Check if children contains a code block
-    if (Array.isArray(children)) {
-      for (const child of children) {
-        if (child?.props?.node?.tagName === "code" && !child?.props?.inline) {
-          // If this paragraph contains a non-inline code block, render the children directly
-          return <Fragment>{children}</Fragment>
+      // Process YouTube embeds
+      if (text.includes("{{youtube:")) {
+        const match = text.match(/{{youtube:([^}]+)}}/)
+        if (match && match[1]) {
+          const videoId = match[1]
+          return (
+            <div className="my-8 aspect-video w-full overflow-hidden">
+              <iframe
+                width="560"
+                height="315"
+                src={`https://www.youtube.com/embed/${videoId}`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full aspect-video"
+              ></iframe>
+            </div>
+          )
+        }
+      }
+
+      // Skip rendering for image with caption or side-by-side markers
+      if (text.includes("{{image-with-caption:") || text.includes("{{side-by-side:")) {
+        return null
+      }
+
+      // Process callouts
+      if (text.includes("{{callout:")) {
+        const match = text.match(/{{callout:(info|warning|error)\|(.*?)}}/)
+        if (match && match[1] && match[2]) {
+          const type = match[1]
+          const content = match[2]
+
+          let icon = "ℹ️"
+          if (type === "warning") icon = "⚠️"
+          if (type === "error") icon = "❌"
+
+          return (
+            <div
+              className={`callout ${type} flex items-start p-4 my-6 rounded-md ${
+                type === "info"
+                  ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500"
+                  : type === "warning"
+                    ? "bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500"
+                    : "bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500"
+              }`}
+            >
+              <div className="mr-3 text-xl">{icon}</div>
+              <div className="text-sm sm:text-base">{content}</div>
+            </div>
+          )
         }
       }
     }
 
-    // Check for inline LaTeX
+    // Check for inline LaTeX in simple string
     if (typeof text === "string" && text.includes("$") && !text.includes("$$")) {
       const parts = []
       let lastIndex = 0
@@ -141,6 +226,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       return <p {...props}>{parts}</p>
     }
 
+    // Default case: just render the paragraph normally
     return <p {...props}>{children}</p>
   },
 
