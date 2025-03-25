@@ -1,1 +1,1 @@
-[sixeleven](https://sixeleven.in)
+Personal blog of Rishit Vora.
