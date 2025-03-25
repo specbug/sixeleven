@@ -58,16 +58,16 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
+    "@tailwindcss/typography": "latest",
     "katex": "latest",
     "prism-react-renderer": "latest",
-    "react-markdown": "latest",
-    "remark-gfm": "latest",
     "next-mdx-remote": "latest",
     "fs": "latest",
     "path": "latest",
     "gray-matter": "latest",
     "mdx": "latest",
-    "@tailwindcss/typography": "latest"
+    "react-markdown": "latest",
+    "remark-gfm": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

@@ -10,6 +10,13 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Hide browser's default clear button */
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="text"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    display: none;
+  }
 }
 
 @layer base {
