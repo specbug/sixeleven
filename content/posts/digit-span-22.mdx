@@ -1,0 +1,105 @@
+---
+title: "Digit Span"
+date: "July 20, 2022"
+excerpt: "A synopsis of the literature, methodology & self-assessment of using Digit Span to quantify & evaluate short-term memory."
+readingTime: "7"
+tags: ["self-experimentation", "science"]
+---
+
+{{callout:warning|I've had this drafted for a while and decided to publish the descriptive summary. Analysis & Conclusion TBD.}}
+
+## Abstract
+
+The philosophical construct of a finite span of memory dates back to Leibniz; he suggested that individuals have a finite capacity to process or hold information. He termed this capacity the span of apperception [1]. Digit Span is a psychological test to assess working memory and/or the ability to cache a circumscribed amount of information for a short period of time.
+
+The classical methodology accrues to Wechsler [2], when he included Digit Span in the Wechsler Adult Intelligence Scale (WAIS) – an IQ test designed to measure intelligence and cognitive ability in adults. The Digit Span test has been shown to load on verbal comprehension, working memory, attention & information processing [3, 4, 5].
+
+## Experiment
+
+### Methodology
+
+I’ve followed the experimental design of [this paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2978794/), which improves upon the original Wechsler test.
+
+The subject is shown an increasing length of list of digits (e.g. {1, 4}, {5, 1, 3}). For each list, the digits are flashed sequentially with a delay of one second b/w each digit. The experiment follows a 1:2 staircase approach; a single correct response increases the length of the subsequent list by one digit, while two consecutive incorrect responses decrease the subsequent list length by one.
+
+In Forward Span (FS), the participant responds with the recalled order of the digit list. In Backward Span (BS), the participant responds in reverse order of the original list.
+![FS Demo](/images/ds221.gif)
+
+Each test (FS & BS) carries till 15 trials. The entire experiment is repeated after a random period (b/w 15-20 days). A total of three experiments are carried out to minimise any dispositional errors such as fatigue, distraction, etc.
+
+#### Experiment log
+
+| Experiment | Mode | Date       |
+|------------|------|------------|
+| 1          | FS   | 2022-06-12 |
+|            | BS   | 2022-06-12 |
+| 2          | FS   | 2022-06-29 |
+|            | BS   | 2022-06-29 |
+| 3          | FS   | 2022-07-20 |
+|            | BS   | 2022-07-20 |
+
+### Scoring
+
+Four measures were tracked for each experiment. Two of these (TE-TL & TE-ML) can be used for baseline comparison with the original test per WMS-III. MS is shown to be the most effective measure [6].
+
+#### Table 1: a sample of one experiment (BS).
+
+| Trial | Length | Presented        | Response (mirrored) | Outcome |
+|-------|--------|------------------|----------------------|---------|
+| 1     | 3      | 8 5 3            | 8 5 3                | 1       |
+| 2     | 4      | 6 0 7 4          | 6 0 7 4              | 1       |
+| 3     | 5      | 0 4 5 4 2        | 4 0 5 4 2            | 0       |
+| 4     | 5      | 8 6 7 7 4        | 8 6 7 7 4            | 1       |
+| 5     | 6      | 2 3 2 7 9 5      | 2 3 2 7 9 5          | 1       |
+| 6     | 7      | 1 9 3 0 7 6 8    | 1 9 3 0 7 6 8        | 1       |
+| 7     | 8      | 7 9 4 2 2 0 9 9  | 7 9 4 2 2 0 9 9      | 1       |
+| 8     | 9      | 3 8 1 1 4 1 9 1 8| 3 8 1 1 4 1 9 1 8    | 1       |
+| 9     | 10     | 8 0 9 8 6 1 6 5 9 8 | 8 0 9 8 6 1 6 5 9 8| 1       |
+| 10    | 11     | 9 3 6 4 4 6 3 3 9 2 3 | 9 3 6 4 4 6 3 4 9 2 3 | 0   |
+| 11    | 11     | 5 6 4 1 2 9 3 8 8 8 8| 6 5 4 1 2 9 6 3 8 8 8| 0       |
+| 12    | 10     | 3 2 9 2 8 0 7 0 6 5| 3 2 9 2 8 0 7 0 6 5  | 1       |
+| 13    | 11     | 8 0 4 8 1 4 9 7 4 4 2| 8 0 4 8 1 4 4 9 1 8 7 2| 0     |
+| 14    | 11     | 3 9 4 6 9 9 4 9 3 9 1| 9 3 4 6 9 9 4 9 3 1 2| 0      |
+| 15    | 10     | 4 5 5 8 4 7 6 1 3 1| 4 5 5 8 4 7 6 1 3 1  | 1       |
+
+**Two error maximum list length (TE-ML)**\
+Measures the maximum list length prior to the first two consecutive misses. In `Table 1`, the TE-ML score is 10 (reached length 10, prior to two consecutive misses at length 11).
+
+**Two error total trials (TE-TL)**\
+Measures the total number of trials prior to the first two consecutive misses. In `Table 1`, the TE-TL score is 9 (reached trial 9, prior to two consecutive misses at length 11).
+
+**Maximum length (ML)**\
+Measures the maximum successful length. In `Table 1`, the ML is 10.
+
+**Mean span (MS)**\
+Measures the outcome-weighted average of all lengths (plus a baseline offset). In `Table 1`, the MS score is 9.0;
+
+$$\small {(3=1, 4=1, 5=0.5, 6=1, 7=1, 8=1, 9=1, 10=1, 11=0, sum = 7.5)} \\ \text{\small{{MS = 7.5(sum) + 1.5(baseline) = 9.0}}}$$.
+
+$$\text{MS} = \sum_{l=3}^{n}{{(\sum_{t; i=l}\text{outcome}}})/\text t + \text{baseline value}\text{ (l = lengths, t = trials)}
+\\ \text{Baseline: FS = 2.5, BS = 1.5}$$
+
+### Results
+
+Following is the result log & comparison with the touchstone study by Woods (2011, Exp - II) [7]:
+
+| Mode | Metric  | E1    | E2    | E3    | Mean (Self) | Woods |
+|------|---------|-------|-------|-------|-------------|--------|
+| FS   | MS      | 11.33 | 10.83 | 11.25 | 11.1        | 6.5    |
+| FS   | TE-ML   | 12    | 10    | 10    | 10.7        | 6.4    |
+| FS   | TE-TL   | 11    | 9     | 8     | 9.3         | 2.9    |
+| FS   | ML      | 12    | 12    | 12    | 12          | 6.8    |
+| BS   | MS      | 9.0   | 9.33  | 9.5   | 9.3         | 4.9    |
+| BS   | TE-ML   | 10    | 8     | 10    | 9.3         | 4.6    |
+| BS   | TE-TL   | 9     | 6     | 8     | 7.7         | 2.7    |
+| BS   | ML      | 10    | 11    | 11    | 10.7        | 5.2    |
+
+## References
+
+1. https://plato.stanford.edu/entries/leibniz-mind/
+2. [Ryan, J.J., Lopez, S.J. (2001). Wechsler Adult Intelligence Scale-III. In: Dorfman, W.I., Hersen, M. (eds) Understanding Psychological Assessment. Perspectives on Individual Differences.](https://link.springer.com/chapter/10.1007/978-1-4615-1185-4_2)
+3. [Tulsky, D. S., & Price, L. R. (2003)](https://psycnet.apa.org/record/2003-06188-005)
+4. [John T.E. Richardson (2007). Measures of Short-Term Memory: A Historical Review.](https://sci-hub.hkvisa.net/10.1016/s0010-9452(08)70493-3)
+5. [Richardson JT. Measures of short-term memory: a historical review. Cortex. 2007 Jul](https://pubmed.ncbi.nlm.nih.gov/17715798/)
+6. [Woods DL, Kishiyamaa MM, Lund EW, Herron TJ, Edwards B, Poliva O, Hink RF, Reed B. Improving digit span assessment of short-term verbal memory. J Clin Exp Neuropsychol. 2011 Jan](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2978794/)
+7. [Woods DL, Kishiyamaa MM, Lund EW, Herron TJ, Edwards B, Poliva O, Hink RF, Reed B. Improving digit span assessment of short-term verbal memory. J Clin Exp Neuropsychol. 2011 Jan](https://pubmed.ncbi.nlm.nih.gov/20680884/)
