@@ -18,6 +18,14 @@ export default function Footer() {
               GitHub
             </a>
             <a
+              href="https://x.com/irishvora"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 dark:text-gray-400 hover:text-accent/60 dark:hover:text-accent/60"
+            >
+              X
+            </a>
+            <a
               href="mailto:rishitv@proton.me"
               className="text-gray-600 dark:text-gray-400 hover:text-accent/60 dark:hover:text-accent/60"
             >
