@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Sun, Moon, Menu, X } from "lucide-react"
 
@@ -85,8 +86,11 @@ export default function Navigation() {
       }`}
     >
       <div className="px-4 sm:px-6 md:px-8 max-w-5xl mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold tracking-tight">
-          sixeleven
+        <Link href="/" className="flex items-center space-x-2">
+          <div className="w-8 h-8 flex items-center justify-center">
+            <Image src="/logo.png" alt="sixeleven logo" width={24} height={24} className="w-5 h-5" />
+          </div>
+          <span className="text-2xl font-bold tracking-tight">sixeleven</span>
         </Link>
 
         {/* Desktop Navigation */}

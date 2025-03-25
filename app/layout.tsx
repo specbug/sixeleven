@@ -15,8 +15,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "sixeleven",
-  description: "A clean, content-focused blog",
+  description: "Personal blog of Rishit Vora.",
   generator: "v0.dev",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 }
 
 export default function RootLayout({
