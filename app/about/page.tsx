@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { getAboutContent } from "@/lib/mdx"
 import SocialLinks from "@/components/SocialLinks"
-import SpecialCode from "@/components/SpecialCode"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 
 export const metadata: Metadata = {

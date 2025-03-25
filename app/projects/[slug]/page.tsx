@@ -11,7 +11,9 @@ interface ProjectPageProps {
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  const project = await getProjectBySlug(params.slug)
+  // Await params before accessing its properties
+  const resolvedParams = await Promise.resolve(params)
+  const project = await getProjectBySlug(resolvedParams.slug)
 
   if (!project) {
     return {
@@ -35,7 +37,9 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  const project = await getProjectBySlug(params.slug)
+  // Await params before accessing its properties
+  const resolvedParams = await Promise.resolve(params)
+  const project = await getProjectBySlug(resolvedParams.slug)
 
   if (!project) {
     notFound()

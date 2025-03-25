@@ -12,7 +12,9 @@ interface BlogPostPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug)
+  // Await params before accessing its properties
+  const resolvedParams = await Promise.resolve(params)
+  const post = await getPostBySlug(resolvedParams.slug)
 
   if (!post) {
     return {
@@ -36,7 +38,9 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getPostBySlug(params.slug)
+  // Await params before accessing its properties
+  const resolvedParams = await Promise.resolve(params)
+  const post = await getPostBySlug(resolvedParams.slug)
 
   if (!post) {
     notFound()

@@ -11,13 +11,22 @@ export default function KaTeXLoader() {
       if (!document.querySelector('link[href*="katex.min.css"]')) {
         const link = document.createElement("link")
         link.rel = "stylesheet"
-        link.href = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
-        link.integrity = "sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+        link.href = "https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
         link.crossOrigin = "anonymous"
 
+        link.onload = () => {
+          console.log("KaTeX CSS loaded successfully")
+          setLoaded(true)
+        }
+
+        link.onerror = (e) => {
+          console.error("Error loading KaTeX CSS:", e)
+        }
+
         document.head.appendChild(link)
+      } else {
+        setLoaded(true)
       }
-      setLoaded(true)
     }
   }, [loaded])
 

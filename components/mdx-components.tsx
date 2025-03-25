@@ -39,7 +39,9 @@ const mdxComponents = {
       </h3>
     )
   },
-p: ({ children }: { children: React.ReactNode }) => <p className="my-4 text-lg leading-relaxed text-justify">{children}</p>,
+  p: ({ children }: { children: React.ReactNode }) => (
+    <p className="my-4 text-lg leading-relaxed text-justify">{children}</p>
+  ),
   a: ({ href, children }: { href?: string; children: React.ReactNode }) => {
     if (!href) return <span>{children}</span>
 
@@ -73,7 +75,7 @@ p: ({ children }: { children: React.ReactNode }) => <p className="my-4 text-lg l
     )
   },
   blockquote: ({ children }: { children: React.ReactNode }) => (
-  <blockquote className="border-l-4 border-gray-300 dark:border-gray-700 pl-4 my-6 italic text-lg text-justify">
+    <blockquote className="border-l-4 border-gray-300 dark:border-gray-700 pl-4 my-6 italic text-lg text-justify">
       {children}
     </blockquote>
   ),
@@ -101,7 +103,7 @@ p: ({ children }: { children: React.ReactNode }) => <p className="my-4 text-lg l
   },
   ul: ({ children }: { children: React.ReactNode }) => <ul className="list-disc pl-6 my-4 text-lg">{children}</ul>,
   ol: ({ children }: { children: React.ReactNode }) => <ol className="list-decimal pl-6 my-4 text-lg">{children}</ol>,
-li: ({ children }: { children: React.ReactNode }) => <li className="my-1 text-justify">{children}</li>,
+  li: ({ children }: { children: React.ReactNode }) => <li className="my-1 text-justify">{children}</li>,
   hr: () => <hr className="my-8 border-t border-gray-200 dark:border-gray-800" />,
   sup: ({ children }: { children: React.ReactNode }) => <sup className="text-xs">{children}</sup>,
 
