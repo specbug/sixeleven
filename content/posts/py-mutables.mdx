@@ -1,0 +1,111 @@
+---
+title: "A Curious Case of The Mutable’s"
+date: "November 18, 2022"
+excerpt: "A clear breakdown of how Python handles object references — and why mutating a list of lists doesn’t always do what you expect."
+readingTime: "8"
+tags: ["programming"]
+---
+
+In Python, the code `a = [1] * 5` evals to $[1, 1, 1, 1, 1]$; essentially five *copies* of the same object. Consider the following code:
+
+```python
+# init a 2D list of zeros
+matrix = [[0] * 5] * 5
+```
+
+It simply creates a $5 X 5$ matrix with all values defaulted to zero.
+![Matrix](/images/pymut1.svg?width=300&height=300)
+
+Now, if we simply change the element at $(0, 0)$ to $2$,
+
+```python
+# change the element at (0, 0) to 2
+matrix[0][0] = 2
+```
+
+and plot the array:
+![Matrix](/images/pymut2.svg?width=300&height=300)
+
+The output is not what you expect. Instead of changing the element at $(0, 0)$ to $2$, the entire first row is updated to $2$!
+
+### The Curious Case of Mutables
+
+Alright let’s unravel this. The line `[0] * 5` creates five references to the object $0$. An object is just some data residing in some memory location. And a reference is a pointer to that object. In the above case, all five copies point to the same memory location (which contains an object $"0"$).
+![Obj Ref](/images/pymut3.png)
+
+And `[[0] * 5] * 5` just creates five references to that object (the internal list $[0, 0, 0, 0, 0]$).
+![Obj Ref](/images/pymut4.png)
+
+As a consequence, mutating any one list affects all the lists.
+
+```python
+matrix[0] is matrix[1] # compares if two objects are infact the same object
+# True
+matrix[0][0] is matrix[1][0]
+# True
+```
+
+Now, consider the following case
+
+```python
+# init a vector of zeros
+vector = [0] * 5
+```
+
+![Vector](/images/pymut5.svg?width=300&height=300)
+
+Again, Python just creates five references to the same $”0”$, as seen above (& below).
+![Obj Ref](/images/pymut6.png)
+
+```python
+vector[0] is vector[1]
+# True
+```
+
+So, if we change the first element to $2$, it should essentially change the list to $[2, 2, 2, 2, 2]$, right?
+
+```python
+# change the first element to 2
+vector[0] = 2
+```
+
+Which actually results in
+![Vector](/images/pymut7.svg?width=300&height=300)
+
+Huh. How come mutating the object didn’t affect the other copies, in this case?
+
+Because integers are **immutable** objects, i.e., you cannot mutate them (okay poor use of ‘i.e.’). Whereas Python lists are **mutable** objects. **If you mutate an immutable object, it snaps all existing references (pointers) to that object & creates a new object instead (with a new reference).**
+
+Hence, when we mutated a `list` it overrode the original object & all pointers continued pointing to the same location, ignorant. But mutating an `int` de-referenced existing pointers & created a new object with a new reference to it.
+
+```python
+vector[0] is vector[1]
+# False
+```
+
+### Visualising Stackframes
+
+**Case 1: mutating a mutable object**
+
+```python
+l = [[0] * 5] * 5
+l[0][0] = 2
+fcol = [x[0] for x in l]
+print(fcol)
+```
+
+![PyViz](/images/pymut8.gif)
+[playground](https://pythontutor.com/render.html#code=l%20%3D%20%5B%5B0%5D%20*%205%5D%20*%205%0Al%5B0%5D%5B0%5D%20%3D%202%0Afcol%20%3D%20%5Bx%5B0%5D%20for%20x%20in%20l%5D%0Aprint%28fcol%29&cumulative=true&curInstr=12&heapPrimitives=true&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false)
+
+**Case 2: mutating an immutable object**
+
+```python
+l = [0] * 5
+l[0] = 2
+f = l[0]
+print(l)
+```
+
+![PyViz](/images/pymut9.gif)
+
+[playground](https://pythontutor.com/render.html#code=l%20%3D%20%5B0%5D%20*%205%0Al%5B0%5D%20%3D%202%0Af%20%3D%20l%5B0%5D%0Aprint%28l%29&cumulative=true&curInstr=4&heapPrimitives=true&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false)
