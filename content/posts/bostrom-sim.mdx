@@ -1,0 +1,130 @@
+---
+title: "Are We Living in a Computer Simulation?"
+date: "November 18, 2022"
+excerpt: "A paper review of Nick Bostrom's provocative \"Simulation Argument\", formally analyzing the probabilistic framework, philosophical premises, computational assumptions, and implications."
+readingTime: "11"
+tags: ["journal-club", "philosophy", "computation"]
+---
+
+{{callout:info|This is part of my 'Journal Club' series, where I review and break down interesting papers. Here, I'm reviewing "Are You Living In A Computer Simulation?" by Nick Bostrom.}}
+
+> https://web.archive.org/web/20221111020804/https://www.simulation-argument.com/simulation.pdf
+> 
+> **Nick Bostrom**\
+> Published in Philosophical Quarterly (2003) Vol. 53, No. 211, pp. 243‐255. (First version: 2001)
+
+The simulation argument states that unless we are now living in a simulation, we shall either go extinct or our descendants will almost certainly never run an ancestral-simulation.
+
+Assume that a simulated civilisation is indeed possible. And a posthuman civilisation may perform such ancestor simulations (to some utility). Such an assumption denominates two factors –
+(a) consciousness & (b) computability.
+
+**Consciousness**
+
+An implicit assumption of the argument is that consciousness is substrate independent, i.e., our biological wetware is not a necessary property of consciousness. Bostrom doesn’t delineate sufficient conditions to attain consciousness. Rather, the simulation should generate subjective experiences such that the computational processes map to human brains to a sufficiently fine-grained detail, such as on the level of individual synapses.
+
+**Computability**
+
+Another assumption is that future humans would wield the required computational capability to perform such ancestor simulations.
+
+**Human brain FLOPS**
+
+$$
+\begin{align*}
+\text{neurons} &= 10^{11} \\
+\text{synapses/neuron} &= 10^3 \\
+\text{synapse freq} &\approx \text{500 HZ} \\
+\therefore \text{no.\ of\ brain\ FLOPS} &\approx 10^{16}
+\end{align*}
+$$
+
+**Total computer operations to simulate *all* brain FLOPS**
+
+It is difficult to estimate the population & duration of the simulation, as it is contextual. But we can assume a relative upper-bound to gauge pessimistic estimates.
+
+$$
+\begin{align*}
+&\bm {simulation\ parameters} \\ &
+\text{population} = 10^{10} \ \text{people}\\ &
+\text{duration} = 10^{10}\text{s (}\sim \text{300 years)} \\
+\end{align*}
+$$
+
+$$
+\bold {total\ computational\ operations \approx 10^{36}} \\
+OR\\
+\sim \bold{10^{26}\ operations/s}
+$$
+
+The fastest supercomputer ([as of 2022](https://www.top500.org/lists/top500/2022/11/)) can perform $\sim 10^{18}$ FLOPS. Of course, the rate of technological progress will bump this magnitude, notwithstanding any fundamental breakthroughs in Physics or Computer Science. Bostrom cites computational capabilities in the order of $10^{42}$ operations/s that only presume known nanotech designs. 
+
+One such computer can run the entire ancestral simulation using a millionth of its processing power. Thus we can safely conclude that a posthuman civilisation would possess enough computational prowess to run simulations.
+
+**Formal interpretation**
+
+Let’s assume $f_p$ is the fraction of all posthuman civilisations. $n$ is the number of avg ancestral simulations. $h$ is the avg number of humans before civilisations reach a posthuman era.
+
+$$
+\begin{align*}
+f_p &\rightarrow  \text{prob of posthuman civilisation} \\ 
+n  &\rightarrow \text{avg no. of simulations }\\
+h  &\rightarrow \text{total humans before posthuman era}
+\end{align*}
+$$
+
+The fraction of humans living inside a simulation ($f_{sim}$):
+
+$$
+\begin{align*}
+f_{sim} &= \frac{\text{total humans in a simulation}}{\text{total humans before posthuman era}} \\
+&= \frac{(f_p \times n \times h)}{(f_p \times n \times h) + h} \\
+f_{sim}&= \frac{(f_p \times n)}{(f_p \times n) + 1}
+\end{align*}
+$$
+
+Although, not all posthuman civilisations would run ancestral simulations; $f_{actual} \le f_p$. And actual simulations ($n_{actual}$) would likewise be $n_{actual} \le n$.
+
+$$
+\begin{align*}
+f_{actual} &\rightarrow \text{fraction of } f_p \text{ who actually run simulations} \\
+n_{actual} &\rightarrow \text{avg. simulations run by } f_{actual} \\
+
+\therefore n &= n_{actual} \times f_{actual}
+\end{align*}
+$$
+
+Substituting,
+
+$$
+\begin{align*}
+f_{sim}&= \frac{(f_p \times n)}{(f_p \times n) + 1} \\
+\therefore \bold { f_{sim}} &= \bold{\frac{(f_p \times n_{actual} \times f_{actual})}{(f_p \times n_{actual} \times f_{actual}) + 1}}
+\end{align*}
+$$
+
+As empirically noted, posthuman civilisations have a large computational capability, i.e., $n_{actual}$ is domineeringly large. Corollary to this, there are two possibilities:
+![Possibilities](/images/bsim1.svg?width=300&height=200)
+
+Essentially, if we do not live in a simulation, it succeeds that almost no posthuman civilisations (could/would) perform ancestral simulations. Au contraire, even a marginally sufficient probability of potential simulations predict that we currently live in one.
+
+That is, at least one of these possibilities must be true:
+
+$$
+\begin{align*}
+1. \quad & f_p \approx 0 \\
+2. \quad & f_{\text{actual}} \approx 0 \\
+3. \quad & f_{\text{sim}} \approx 1
+\end{align*}
+$$
+
+**Implications**
+
+(1) implies that we may fail to reach a posthuman level. This case lends credence to the doomsday argument; perhaps humanity goes extinct before transcending. Another hypothesis for (1) is technological collapse; we continue indefinitely as a primitive species.
+
+(2) implies a consensus disinterest among a posthuman civilisation to perform ancestral simulations. Perhaps due to moral implications or lack of expected utility. In any case, (2) implies that there are simply no collectives in the future that wield enough clout & intrigue for such simulations.
+
+(3), of course, is the most conceptually intriguing possibility. Boston describes & underlines some psychological, theological & philosophical measures for/against the inference.
+
+**Conclusion**
+
+> If (1) is true, then we will almost certainly go extinct before reaching posthumanity. If (2) is true, then there must be a strong convergence among the courses of advanced civilisations so that virtually none contains any relatively wealthy individuals who desire to run ancestor simulations and are free to do so. If (3) is true, then we almost certainly live in a simulation. In the dark forest of our current ignorance, it seems sensible to apportion one’s credence roughly evenly between (1), (2), and (3).
+>
