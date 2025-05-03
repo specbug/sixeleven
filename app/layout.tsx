@@ -6,6 +6,42 @@ import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
 import { serifFont, sansFont, monoFont, logoFont, blogTitleFont } from "@/lib/fonts"
 
+function WebsiteSchema() {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "sixeleven",
+    url: baseUrl,
+    description: "Personal blog of Rishit Vora.",
+    author: {
+      "@type": "Person",
+      name: "Rishit Vora",
+      url: `${baseUrl}/about`,
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Rishit Vora",
+      url: `${baseUrl}/about`,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${baseUrl}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(jsonLd, null, 2),
+      }}
+    />
+  )
+}
+
 export const metadata: Metadata = {
   title: "sixeleven",
   description: "Personal blog of Rishit Vora.",
@@ -43,6 +79,9 @@ export default function RootLayout({
       lang="en"
       className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable} ${logoFont.variable} ${blogTitleFont.variable}`}
     >
+      <head>
+        <WebsiteSchema />
+      </head>
       <body className="bg-white text-gray-900 dark:bg-black dark:text-gray-100 min-h-screen flex flex-col">
         <KaTeXLoader />
         <div className="w-full max-w-full flex-grow">
@@ -56,4 +95,3 @@ export default function RootLayout({
 }
 
 import "./globals.css"
-
