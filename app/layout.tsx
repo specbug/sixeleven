@@ -14,6 +14,23 @@ export const metadata: Metadata = {
     icon: "/logo.png",
     apple: "/logo.png",
   },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in",
+    title: "sixeleven",
+    description: "Personal blog of Rishit Vora.",
+    siteName: "sixeleven",
+  },
+  twitter: {
+    card: "summary",
+    title: "sixeleven",
+    description: "Personal blog of Rishit Vora.",
+    creator: "Rishit Vora",
+  },
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in",
+  },
 }
 
 export default function RootLayout({
@@ -22,7 +39,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable} ${logoFont.variable} ${blogTitleFont.variable}`}>
+    <html
+      lang="en"
+      className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable} ${logoFont.variable} ${blogTitleFont.variable}`}
+    >
       <body className="bg-white text-gray-900 dark:bg-black dark:text-gray-100 min-h-screen flex flex-col">
         <KaTeXLoader />
         <div className="w-full max-w-full flex-grow">

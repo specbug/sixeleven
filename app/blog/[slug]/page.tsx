@@ -4,6 +4,7 @@ import { getPostBySlug, getAllPosts } from "@/lib/mdx"
 import TableOfContents from "@/components/TableOfContents"
 import ReadingProgressBar from "@/components/ReadingProgressBar"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
+import BlogPostSchema from "@/components/blog-schema"
 
 interface BlogPostPageProps {
   params: {
@@ -15,6 +16,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   // Await params before accessing its properties
   const resolvedParams = await Promise.resolve(params)
   const post = await getPostBySlug(resolvedParams.slug)
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
 
   if (!post) {
     return {
@@ -23,9 +25,38 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     }
   }
 
+  const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`
+
   return {
     title: `${post.title} | sixeleven`,
     description: post.excerpt,
+    authors: [{ name: "Rishit Vora" }],
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      publishedTime: post.date,
+      url: `${baseUrl}/blog/${post.slug}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      siteName: "sixeleven",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [ogImageUrl],
+      creator: "Rishit Vora",
+    },
+    alternates: {
+      canonical: `${baseUrl}/blog/${post.slug}`,
+    },
   }
 }
 
@@ -48,10 +79,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <article className="max-w-none relative">
+      <BlogPostSchema title={post.title} excerpt={post.excerpt} date={post.date} slug={post.slug} />
       <ReadingProgressBar />
 
       <header className="mb-6">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-2 font-sans">{post.title}</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-2 font-sans">
+          {post.title}
+        </h1>
         <div className="article-meta">
           <time dateTime={post.date}>{post.date}</time>
           {post.readingTime && <span className="reading-time"> · {post.readingTime} min read</span>}
@@ -79,4 +113,3 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     </article>
   )
 }
-
