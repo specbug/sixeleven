@@ -67,7 +67,7 @@ iptables -t nat -A PREROUTING -i wlp4s0 -p tcp --dport 8096 \
 iptables -A FORWARD -p tcp -d 10.10.10.10 --dport 8096 -j ACCEPT
 netfilter-persistent save
 ```
-http://192.168.1.50:8096 now loads from every browser in the house!
+http://{{privateIp}}:8096 now loads from every browser in the house!
 
 ### 6. Dialing in Jellyfin
 Inside Jellyfin's dashboard, I pointed its hardware acceleration (VA-API) to `/dev/dri/renderD128`—the device file for Intel's integrated GPU. I enabled H.264 and HEVC for both decoding and encoding, activated OpenCL tone mapping for faithful HDR-to-SDR colour conversion, and raised the default bitrate ceiling to a generous 50 Mbps. Disabling excess metadata providers trimmed scan time, and a 03 : 00 cron‑style scan keeps the library fresh without interrupting movie noon.
