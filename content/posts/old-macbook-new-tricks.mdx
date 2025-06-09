@@ -1,0 +1,80 @@
+---
+title: "You Can Teach an Old MacBook New Tricks"
+date: "June 09, 2025"
+excerpt: "Resurrecting a 2013 MacBook Pro into a silent, powerful media server with Proxmox, LXC, and Jellyfin."
+readingTime: "14"
+tags: ["diy", "self-hosting", "privacy"]
+---
+
+### But Why?
+My 2013 MacBook Pro—an Haswell i7‑4870HQ (eight logical cores), 16 GB of DDR3, 500 GB of still‑sprightly SSD—had been gathering dust for years. To be honest, I've always wanted to repurpose the Mac into something more productive – with previous ventures into BTC mining (educational undertaking ofc, imagine!), [volunteer computing](https://boinc.berkeley.edu/) and the usual tinkering rites of passage. Also, to be _completely_ honest, I've been watching too many DIY & self-hosting videos lately. So, the end-goal of running a media-server felt just right. The only hiccup? An ethernet able across the study doesn't go well with a cat in the house.
+So I spun up my own media-server using Jellyfin in an unprivileged Debian LXC, on a [Proxmox VE](https://proxmox.com/en/products/proxmox-virtual-environment/overview) host (my Mac).
+
+### LXC or VM?
+Virtual-machine purists might [argue](https://www.reddit.com/r/homelab/comments/z3pa8z/best_way_to_run_jellyfin_in_proxmox/) that a full QEMU/KVM guest would have worked just as well (or better). But for a single-host deployment like this, there are practical reasons to prefer containers. I'm no expert, but—on a single-GPU laptop—GPU passthrough is either GVT‑g (a complex method for sharing the GPU with VMs) or exclusive PCI passthrough (which steals the console entirely, rendering the laptop's own screen unusable). An unprivileged LXC, by contrast, needs only a simple bind‐mount of `/dev/dri` to let Jellyfin use Intel's Quick Sync via VA‐API for hardware-accelerated transcoding. This lightweight approach keeps CPU overhead to a rounding‐error. For a trust‐level of "family only", that trade‑off felt sane. Containers also waste little RAM on an extra kernel — a welcome bonus for my 16 gig machine, thank you very much!
+
+### 1. Installing Proxmox 8.4 on bare metal
+Installation was straightforward: flash the ISO, boot, and click _Next_ until done. A short ethernet tether was unavoidable during installation (as was controlling my cat). Afterward, I disabled the paid repository to stop apt from complaining:
+```bash
+sed -i 's/^deb/#deb/' /etc/apt/sources.list.d/pve-enterprise.list
+printf '%s\n' \
+  'deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription' \
+  > /etc/apt/sources.list.d/pve-no-subscription.list
+apt update && apt full-upgrade -y
+```
+
+### 2. Trading Ethernet for Wi-Fi NAT
+Proxmox works best with wired connections. Wired setups do not work well with pets.
+
+Bridging WiFi directly onto a Proxmox bridge requires both the driver and access point to support 4-address WDS frames—a special mode for wireless distribution systems that most consumer routers don't handle. So I opted for a [routed setup](https://www.reddit.com/r/Proxmox/comments/1d0ts04/howto_proxmox_ve_8xx_wifi_with_routed/); the laptop keeps its DHCP lease, while containers sit behind `vmbr0` on a private `10.10.10.0/24` network.
+```bash
+# /etc/network/interfaces (excerpt)
+auto wlp4s0
+iface wlp4s0 inet dhcp
+    wpa-ssid "YourSSID"
+    wpa-psk  "YourPassword"
+
+auto vmbr0
+iface vmbr0 inet static
+    address 10.10.10.1/24
+    bridge-ports none
+```
+Outbound masquerade—making all container traffic appear to come from the laptop itself—is handled by a single `iptables` rule, persisted across reboots with `iptables-persistent`:
+```bash
+iptables -t nat -A POSTROUTING -s 10.10.10.0/24 -o wlp4s0 -j MASQUERADE
+netfilter-persistent save
+```
+
+### 3. Setting up Jellyfin CT
+I spun up a container using the Debian 12 template: four vCPUs, 4 GB RAM & 20 GB root disk (non-ZFS). Two small feature toggles—`keyctl` and `nesting`—allowed `systemd` and VA-API to behave normally within the container's restricted environment.
+The MacBook's SSD already had a `/media` directory full of movies, so I bind-mounted it to the container:
+```bash
+pct set 9000 -mp0 /media,mp=/mnt/media
+pct restart 9000
+```
+### 4. Unprivileged containers and the UID dance
+For security, Proxmox maps user IDs in unprivileged containers to a different, higher-numbered range on the host. Inside my container, the Jellyfin process ran as user 103 and group 112; on the host, these were mapped to 100103 and 100112. Until the `/media` directory on the host was owned by these mapped IDs, Jellyfin couldn't see its files. A recursive `chown` fixed it.
+```bash
+chown -R 100103:100112 /media
+chmod -R 755 /media
+```
+
+### 5. Exposing Jellyfin to the LAN
+NAT solves outbound traffic, but inbound access from other devices on the LAN requires either a static route on the router or DNAT on the laptop. A quick port-forward via DNAT was the simplest path forward. These rules tell the laptop's firewall to forward any traffic arriving on port 8096 to the Jellyfin container's IP (`10.10.10.10`), and to allow that forwarded traffic through.
+```bash
+iptables -t nat -A PREROUTING -i wlp4s0 -p tcp --dport 8096 \
+        -j DNAT --to 10.10.10.10:8096
+iptables -A FORWARD -p tcp -d 10.10.10.10 --dport 8096 -j ACCEPT
+netfilter-persistent save
+```
+http://192.168.1.50:8096 now loads from every browser in the house!
+
+### 6. Dialing in Jellyfin
+Inside Jellyfin's dashboard, I pointed its hardware acceleration (VA-API) to `/dev/dri/renderD128`—the device file for Intel's integrated GPU. I enabled H.264 and HEVC for both decoding and encoding, activated OpenCL tone mapping for faithful HDR-to-SDR colour conversion, and raised the default bitrate ceiling to a generous 50 Mbps. Disabling excess metadata providers trimmed scan time, and a 03 : 00 cron‑style scan keeps the library fresh without interrupting movie noon.
+
+### Epilogue
+The ex‑laptop now streams 4 K HDR over Wi‑Fi with CPU utilisation seldom above 25 % during two simultaneous transcodes; the fan rarely spins above a gentle sigh. It is impressive what time-tested open-source software, and a bit of elbow grease can achieve with old scraps.
+
+![SCRAPS!](/images/tonyscrap.gif)
+
+And, more importantly, we can achieve all this while our cat overlords roam free & untangled from ethernet cables. A win-win-win.

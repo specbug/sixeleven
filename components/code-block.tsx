@@ -1,6 +1,7 @@
 "use client"
 
 import { Highlight, themes } from "prism-react-renderer"
+import Prism from "@/lib/prism"
 
 interface CodeBlockProps {
   code: string
@@ -11,7 +12,7 @@ interface CodeBlockProps {
 export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockProps) {
   return (
     <div className="not-prose">
-      <Highlight theme={themes.oneDark} code={code} language={language as any}>
+      <Highlight theme={themes.oneDark} code={code} language={language as any} prism={Prism}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={`${className} p-4 rounded-md overflow-auto my-6`} style={style}>
             {tokens.map((line, i) => {
@@ -20,7 +21,7 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
               const { key: lineKey, ...restLineProps } = lineProps
 
               return (
-                <div key={lineKey} {...restLineProps} className="table-row">
+                <div key={lineKey as React.Key} {...restLineProps} className="table-row">
                   {showLineNumbers && (
                     <span className="table-cell text-right pr-4 select-none opacity-50 text-xs">{i + 1}</span>
                   )}
@@ -29,7 +30,7 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
                       // Extract the key from token props and pass it separately
                       const tokenProps = getTokenProps({ token, key })
                       const { key: tokenKey, ...restTokenProps } = tokenProps
-                      return <span key={tokenKey} {...restTokenProps} />
+                      return <span key={tokenKey as React.Key} {...restTokenProps} />
                     })}
                   </span>
                 </div>
