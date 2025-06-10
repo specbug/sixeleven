@@ -16,7 +16,7 @@ So I spun up my own media-server using Jellyfin in an unprivileged Debian LXC, o
 Virtual-machine purists might [argue](https://www.reddit.com/r/homelab/comments/z3pa8z/best_way_to_run_jellyfin_in_proxmox/) that a full QEMU/KVM guest would have worked just as well (or better). But for a single-host deployment like this, there are practical reasons to prefer containers. I'm no expert, but—on a single-GPU laptop—GPU passthrough is either GVT‑g (a complex method for sharing the GPU with VMs) or exclusive PCI passthrough (which steals the console entirely). An unprivileged LXC, by contrast, needs only a simple bind‐mount of `/dev/dri` to let Jellyfin use Intel's Quick Sync via VA‐API for hardware-accelerated transcoding. This lightweight approach keeps CPU overhead to a rounding‐error. For a trust‐level of "family only", that trade‑off felt sane. Containers also waste little RAM on an extra kernel — a welcome bonus for my 16 gig machine, thank you very much!
 
 ### 1. Installing Proxmox 8.4 on bare metal
-Installation was straightforward: flash the ISO, boot, and click _Next_ until done. A short ethernet tether was unavoidable during installation (as was controlling my cat). Afterward, I disabled the paid repository to stop apt from complaining:
+Installation was straightforward: flash the ISO, boot, and click _Next_ until done. Avoiding an ethernet tether was impossible during installation (as was controlling my cat). Afterward, I disabled the paid repository to stop apt from complaining:
 ```bash
 sed -i 's/^deb/#deb/' /etc/apt/sources.list.d/pve-enterprise.list
 printf '%s\n' \
