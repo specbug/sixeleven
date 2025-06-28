@@ -7,6 +7,7 @@ import Image from "next/image"
 import { CodeBlock } from "./code-block"
 import { BlockMath, InlineMath } from "./ui/LaTeX-alt"
 import React, { Fragment } from "react"
+import { CreativeCommons } from "./ui/CreativeCommons"
 
 // Custom components for ReactMarkdown
 const createCustomComponents = (blockMathExpressions: string[]) => ({
@@ -111,7 +112,8 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       text.includes("{{youtube:") ||
       text.includes("{{image-with-caption:") ||
       text.includes("{{side-by-side:") ||
-      text.includes("{{callout:")
+      text.includes("{{callout:") ||
+      text.includes("{{creativecommons}}")
     ) {
       // Use the existing logic for these special cases
 
@@ -160,6 +162,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       // Skip rendering for image with caption or side-by-side markers
       if (text.includes("{{image-with-caption:") || text.includes("{{side-by-side:")) {
         return null
+      }
+
+      if (text.includes("{{creativecommons}}")) {
+        return <CreativeCommons />
       }
 
       // Process callouts

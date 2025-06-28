@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ColoredText } from "@/components/ui/ColoredText"
 import { YouTube } from "@/components/ui/YouTube"
 import { ImageWithCaption } from "@/components/ui/ImageWithCaption"
+import { CreativeCommons } from "@/components/ui/CreativeCommons"
 
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -107,6 +108,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ColoredText,
     YouTube,
     ImageWithCaption,
+    CreativeCommons,
     ...components,
   }
 }
