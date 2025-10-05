@@ -14,7 +14,7 @@ export default async function ArchivePage() {
   if (posts.length === 0) {
     return (
       <div>
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8">Archive</h1>
+        <h1 className="text-3xl md:text-4xl font-medium mb-8 font-styrene" style={{ letterSpacing: "-0.045em", lineHeight: "1.15" }}>Archive</h1>
         <div className="text-center py-10">
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             No posts found. Please add MDX files to the content/posts directory.

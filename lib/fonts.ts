@@ -105,4 +105,57 @@ export const blogTitleFont = localFont({
   preload: true,
 })
 
+// Tiempos Text font for body text
+export const tiemposText = localFont({
+  src: [
+    {
+      path: "../public/fonts/test-tiempos-text-regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/test-tiempos-text-regular-italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/test-tiempos-text-bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/test-tiempos-text-bold-italic.woff2",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  display: "swap",
+  variable: "--font-tiempos",
+  preload: true,
+})
+
+// Styrene B font for headings (more condensed than Styrene A)
+export const styreneB = localFont({
+  src: [
+    {
+      path: "../public/fonts/StyreneB-Regular-Trial.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/StyreneB-Medium-Trial.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/StyreneB-Bold-Trial.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-styrene",
+  preload: true,
+})
+
 

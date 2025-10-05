@@ -61,30 +61,62 @@ const config: Config = {
         logo: ["var(--font-logo)"], // Add the logo font
         blogTitle: ["var(--font-blogTitle)"], // Add the blog title font
         tip: ["var(--font-tip)"],
+        tiempos: ["var(--font-tiempos)"], // Tiempos Text font
+        styrene: ["var(--font-styrene)"], // Styrene A font for headings
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: "none",
             color: "inherit",
-            fontFamily: "var(--font-serif)",
+            fontFamily: "var(--font-tiempos)",
+            fontSize: "16px",
+            fontWeight: "400",
+            lineHeight: "1.6",
+            letterSpacing: "-0.01em",
+            "--tw-prose-body": "#191919",
+            "--tw-prose-invert-body": "#e5e7eb",
+            p: {
+              marginTop: "1.25em",
+              marginBottom: "1.25em",
+              fontWeight: "400",
+              color: "inherit",
+            },
             h1: {
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-styrene)",
+              fontWeight: "500",
+              letterSpacing: "-0.05em",
+              lineHeight: "1.15",
             },
             h2: {
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-styrene)",
+              fontWeight: "500",
+              letterSpacing: "-0.04em",
+              lineHeight: "1.2",
             },
             h3: {
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-styrene)",
+              fontWeight: "500",
+              letterSpacing: "-0.03em",
+              lineHeight: "1.25",
             },
             h4: {
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-styrene)",
+              fontWeight: "500",
+              letterSpacing: "-0.025em",
+              lineHeight: "1.3",
             },
             h5: {
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-styrene)",
+              fontWeight: "500",
+              letterSpacing: "-0.02em",
+              lineHeight: "1.3",
             },
             h6: {
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--font-styrene)",
+              fontWeight: "500",
+              letterSpacing: "-0.015em",
+              lineHeight: "1.3",
             },
             a: {
               color: "rgba(255, 77, 6, 0.6)",
@@ -119,12 +151,14 @@ const config: Config = {
             },
           },
         },
-        dark: {
+        invert: {
           css: {
-            code: {
-              color: "#e5e7eb",
-              backgroundColor: "#374151",
-            },
+            "--tw-prose-body": "#e5e7eb",
+            "--tw-prose-headings": "#fff",
+            "--tw-prose-links": "rgba(255, 77, 6, 0.8)",
+            "--tw-prose-bold": "#fff",
+            "--tw-prose-code": "#e5e7eb",
+            "--tw-prose-quotes": "#e5e7eb",
           },
         },
       },

@@ -81,7 +81,7 @@ export default function Navigation() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-transform duration-300 ${
+      className={`sticky top-0 z-50 py-4 border-b border-gray-200 dark:border-gray-800 bg-[#faf9f7] dark:bg-black transition-transform duration-300 ${
         !isVisible ? "-translate-y-full" : "translate-y-0"
       }`}
     >
@@ -139,7 +139,7 @@ export default function Navigation() {
 
           {/* Mobile menu dropdown */}
           {mobileMenuOpen && (
-            <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-md shadow-lg py-1 z-50">
+            <div className="absolute top-full right-0 mt-2 w-48 bg-[#faf9f7] dark:bg-black border border-gray-200 dark:border-gray-800 rounded-md shadow-lg py-1 z-50">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}

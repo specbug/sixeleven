@@ -88,7 +88,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <ReadingProgressBar />
 
         <header className="mb-6">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-2 font-sans">
+          <h1 className="text-2xl sm:text-3xl md:text-3xl font-medium mb-2 font-styrene" style={{ letterSpacing: "-0.045em", lineHeight: "1.15" }}>
             {post.title}
           </h1>
           <div className="article-meta">

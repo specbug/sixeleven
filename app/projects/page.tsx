@@ -13,7 +13,7 @@ export default async function ProjectsPage() {
   if (projects.length === 0) {
     return (
       <div>
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-10">Projects</h1>
+        <h1 className="text-4xl md:text-5xl font-medium mb-10 font-styrene" style={{ letterSpacing: "-0.045em", lineHeight: "1.15" }}>Projects</h1>
         <div className="text-center py-10">
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             No projects found. Please add MDX files to the content/projects directory.
@@ -25,7 +25,7 @@ export default async function ProjectsPage() {
 
   return (
     <div>
-      <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-10">Projects</h1>
+      <h1 className="text-4xl md:text-5xl font-medium mb-10 font-styrene" style={{ letterSpacing: "-0.045em", lineHeight: "1.15" }}>Projects</h1>
 
       <div className="space-y-10">
         {projects.map((project, index) => (
@@ -33,7 +33,7 @@ export default async function ProjectsPage() {
             key={project.slug}
             className={`${index !== projects.length - 1 ? "border-b border-gray-200 dark:border-gray-800" : ""} pb-10`}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">{project.title}</h2>
+            <h2 className="text-2xl md:text-3xl font-medium mb-2 font-styrene" style={{ letterSpacing: "-0.04em" }}>{project.title}</h2>
             <p className="text-gray-700 dark:text-gray-300 text-lg mb-4">{project.excerpt}</p>
             <div className="flex flex-wrap gap-2 mb-4">
               {project.technologies?.map((tech) => (

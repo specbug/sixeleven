@@ -4,7 +4,7 @@ import "@/styles/globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
-import { serifFont, sansFont, monoFont, logoFont, blogTitleFont } from "@/lib/fonts"
+import { serifFont, sansFont, monoFont, logoFont, blogTitleFont, tiemposText, styreneB } from "@/lib/fonts"
 
 function WebsiteSchema() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
@@ -77,12 +77,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable} ${logoFont.variable} ${blogTitleFont.variable}`}
+      className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable} ${logoFont.variable} ${blogTitleFont.variable} ${tiemposText.variable} ${styreneB.variable}`}
     >
       <head>
         <WebsiteSchema />
       </head>
-      <body className="bg-white text-gray-900 dark:bg-black dark:text-gray-100 min-h-screen flex flex-col">
+      <body className="bg-[#faf9f7] text-gray-900 dark:bg-black dark:text-gray-100 min-h-screen flex flex-col">
         <KaTeXLoader />
         <div className="w-full max-w-full flex-grow">
           <Navigation />
