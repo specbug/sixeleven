@@ -23,7 +23,7 @@ export default async function AboutPage() {
       <SpecialCode />
 
       {/* Subtle separator before social links */}
-      <div className="mt-12 pt-8 border-t border-[var(--border)]">
+      <div className="mt-6 pt-6 border-t border-[var(--border)]">
         <SocialLinks />
       </div>
     </div>

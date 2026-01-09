@@ -150,6 +150,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       }
 
       // Callouts - Rams style: left border only, no icons, subtle background
+      // Uses Dieter Rams / Braun color palette
       if (text.includes("{{callout:")) {
         const match = text.match(/{{callout:(info|warning|error)\|(.*?)}}/)
         if (match && match[1] && match[2]) {
@@ -160,10 +161,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
             <div
               className={`my-6 pl-4 py-3 border-l-[3px] ${
                 type === "info"
-                  ? "border-[var(--braun-orange)] bg-[var(--braun-orange-muted)]"
+                  ? "border-[var(--braun-orange)] bg-[var(--braun-grey-muted)]"
                   : type === "warning"
-                    ? "border-amber-500 bg-amber-50 dark:bg-amber-900/10"
-                    : "border-red-500 bg-red-50 dark:bg-red-900/10"
+                    ? "border-[var(--braun-cream)] bg-[var(--braun-cream-muted)]"
+                    : "border-[var(--braun-red)] bg-[var(--braun-red-muted)]"
               }`}
             >
               <p className="text-[var(--foreground)] m-0">{content}</p>
@@ -332,18 +333,19 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   ),
 
   // Inline code - no rounded corners
-  code: ({ node, inline, className, children, ...props }: any) => {
+  // Note: In react-markdown v9+, `inline` prop is removed. Code blocks have language-* class.
+  code: ({ node, className, children, ...props }: any) => {
     const content = String(children).trim()
+    const match = /language-(\w+)/.exec(className || "")
 
-    const hasNoNewlines = !content.includes("\n")
-    const isShort = content.length < 100
+    // If it has a language class, it's a code block (from ```lang ... ```)
+    // Otherwise it's inline code (from `...`)
+    const isCodeBlock = match !== null
 
-    const shouldBeInline = inline || (hasNoNewlines && isShort)
-
-    if (shouldBeInline) {
+    if (!isCodeBlock) {
       return (
         <code
-          className="bg-[var(--surface)] text-[var(--foreground)] px-1.5 py-0.5 font-mono text-[0.9em]"
+          className="bg-[var(--surface)] text-[var(--foreground)] px-1.5 py-0.5 font-mono text-[0.9em] before:content-none after:content-none"
           {...props}
         >
           {children}
@@ -351,7 +353,6 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       )
     }
 
-    const match = /language-(\w+)/.exec(className || "")
     const language = match ? match[1] : ""
 
     return (

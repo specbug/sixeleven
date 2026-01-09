@@ -51,7 +51,7 @@
     "katex": "latest",
     "lucide-react": "^0.454.0",
     "mdx": "latest",
-    "next": "15.2.4",
+    "next": "^15.3.3",
     "next-mdx-remote": "latest",
     "next-themes": "latest",
     "path": "latest",

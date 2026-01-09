@@ -73,7 +73,7 @@ export default function TableOfContents({ content }: { content: string }) {
             >
               <a
                 href={`#${item.id}`}
-                className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+                className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
               >
                 {item.text}
               </a>

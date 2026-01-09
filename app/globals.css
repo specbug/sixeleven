@@ -12,6 +12,14 @@
     --braun-orange-hover: #d67307;
     --braun-orange-muted: rgba(237, 128, 8, 0.12);
 
+    /* Dieter Rams / Braun callout palette */
+    --braun-grey: #d9d2c6;
+    --braun-grey-muted: #f5f3ef;
+    --braun-cream: #bf7c2a;
+    --braun-cream-muted: #faf6ed;
+    --braun-red: #ad1d1d;
+    --braun-red-muted: #faf0f0;
+
     /* Light mode colors */
     --background: #ffffff;
     --surface: #f8f8f8;
@@ -51,6 +59,14 @@
     --foreground-subtle: #666666;
     --border: #262626;
     --input: #262626;
+
+    /* Dieter Rams / Braun callout palette - dark mode */
+    --braun-grey: #736356;
+    --braun-grey-muted: rgba(115, 99, 86, 0.15);
+    --braun-cream: #bf7c2a;
+    --braun-cream-muted: rgba(191, 124, 42, 0.12);
+    --braun-red: #ad1d1d;
+    --braun-red-muted: rgba(173, 29, 29, 0.12);
 
     /* Legacy variables for compatibility */
     --card: #141414;
