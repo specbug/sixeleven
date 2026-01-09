@@ -5,8 +5,8 @@ import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import SpecialCode from "@/components/SpecialCode"
 
 export const metadata: Metadata = {
-  title: "About | sixeleven",
-  description: "Learn more about me and this blog",
+  title: "about | sixeleven",
+  description: "learn more about me and this blog",
 }
 
 export default async function AboutPage() {
@@ -15,14 +15,17 @@ export default async function AboutPage() {
 
   return (
     <div>
+      {/* No heading - URL provides context (Rams: no unnecessary elements) */}
       <article className="prose dark:prose-invert max-w-none">
         <EnhancedMarkdown content={content} />
       </article>
+
       <SpecialCode />
-      <div className="mt-8">
+
+      {/* Subtle separator before social links */}
+      <div className="mt-12 pt-8 border-t border-[var(--border)]">
         <SocialLinks />
       </div>
     </div>
   )
 }
-

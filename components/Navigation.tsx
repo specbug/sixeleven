@@ -4,7 +4,44 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Sun, Moon, Menu, X } from "lucide-react"
+
+// Minimal, geometric icons inspired by Braun/Rams design
+// Simple circles and lines - no unnecessary detail
+function SunIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  )
+}
+
+function MoonIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  )
+}
+
+function MenuIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  )
+}
+
+function CloseIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  )
+}
 
 export default function Navigation() {
   const [isDarkMode, setIsDarkMode] = useState(false)
@@ -14,7 +51,6 @@ export default function Navigation() {
   const pathname = usePathname()
   const isBlogPost = pathname.startsWith("/blog/") && pathname !== "/blog"
 
-  // Initialize dark mode based on user preference
   useEffect(() => {
     if (typeof window !== "undefined") {
       const isDark =
@@ -30,7 +66,6 @@ export default function Navigation() {
     }
   }, [])
 
-  // Handle scroll for auto-hiding header on blog posts
   useEffect(() => {
     if (!isBlogPost) {
       setIsVisible(true)
@@ -41,13 +76,10 @@ export default function Navigation() {
       const currentScrollY = window.scrollY
 
       if (currentScrollY <= 10) {
-        // Always show at top of page
         setIsVisible(true)
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up - show header
         setIsVisible(true)
       } else {
-        // Scrolling down - hide header
         setIsVisible(false)
       }
 
@@ -58,7 +90,6 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [lastScrollY, isBlogPost])
 
-  // Toggle dark mode
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
     if (typeof window !== "undefined") {
@@ -73,24 +104,23 @@ export default function Navigation() {
   }
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/archive", label: "Archive" },
-    // { href: "/projects", label: "Projects" },
-    { href: "/about", label: "About" },
+    { href: "/archive", label: "archive" },
+    { href: "/about", label: "about" },
   ]
 
   return (
     <nav
-      className={`sticky top-0 z-50 py-4 border-b border-gray-200 dark:border-gray-800 bg-[#faf9f7] dark:bg-black transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-md transition-transform duration-300 ${
         !isVisible ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="px-4 sm:px-6 md:px-8 max-w-5xl mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-2 font-logo">
-          <div className="w-8 h-8 flex items-center justify-center">
-            <Image src="/logo.png" alt="sixeleven logo" width={24} height={24} className="w-5 h-5" />
-          </div>
-          <span className="text-2xl font-bold tracking-tight">sixeleven</span>
+      <div className="h-full max-w-[680px] mx-auto px-6 md:px-0 flex justify-between items-center">
+        {/* Logo with image and text */}
+        <Link href="/" className="flex items-center gap-2 font-logo hover:opacity-80 transition-opacity">
+          <Image src="/logo.png" alt="sixeleven logo" width={20} height={20} className="w-5 h-5" />
+          <span className="text-xl font-bold tracking-tight text-[var(--foreground)] lowercase">
+            sixeleven
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -99,64 +129,67 @@ export default function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className={`hover:text-accent/80 transition-colors ${
-                pathname === link.href ? "text-accent/80 font-medium" : "text-gray-600 dark:text-gray-400 font-tip"
+              className={`text-sm transition-colors lowercase ${
+                pathname === link.href
+                  ? "text-[var(--braun-orange)]"
+                  : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
               }`}
             >
               {link.label}
             </Link>
           ))}
 
-          {/* Dark mode toggle - desktop */}
+          {/* Dark mode toggle */}
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="p-2 text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            {isDarkMode ? <SunIcon size={18} /> : <MoonIcon size={18} />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden flex items-center">
-          {/* Dark mode toggle - mobile */}
+        <div className="md:hidden flex items-center space-x-2">
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 mr-2"
+            className="p-2 text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            {isDarkMode ? <SunIcon size={18} /> : <MoonIcon size={18} />}
           </button>
 
-          {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="p-2 text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
             aria-label="Toggle mobile menu"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <CloseIcon size={18} /> : <MenuIcon size={18} />}
           </button>
-
-          {/* Mobile menu dropdown */}
-          {mobileMenuOpen && (
-            <div className="absolute top-full right-0 mt-2 w-48 bg-[#faf9f7] dark:bg-black border border-gray-200 dark:border-gray-800 rounded-md shadow-lg py-1 z-50">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`block px-4 py-2 text-sm ${
-                    pathname === link.href ? "text-accent/80 font-medium" : "text-gray-600 dark:text-gray-400"
-                  } hover:bg-gray-100 dark:hover:bg-gray-800`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Mobile menu dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md py-4">
+          <div className="max-w-[680px] mx-auto px-6 flex flex-col space-y-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm transition-colors lowercase ${
+                  pathname === link.href
+                    ? "text-[var(--braun-orange)]"
+                    : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
-

@@ -23,13 +23,12 @@ export default function ReadingProgressBar() {
   }, [])
 
   return (
-    // Make the reading progress bar more visible on mobile
-    <div className="fixed left-0 top-0 bottom-0 w-1.5 bg-gray-200 dark:bg-gray-800 z-40">
+    // Horizontal progress bar at very top - Rams style (thin, unobtrusive)
+    <div className="fixed left-0 top-0 right-0 h-0.5 bg-[var(--border)] z-50">
       <div
-        className="bg-accent/60 dark:bg-accent/60 h-full transition-all duration-150 ease-out"
-        style={{ height: `${scrollPercentage}%` }}
+        className="bg-[var(--braun-orange)] h-full transition-all duration-150 ease-out"
+        style={{ width: `${scrollPercentage}%` }}
       />
     </div>
   )
 }
-

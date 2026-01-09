@@ -1,10 +1,10 @@
 import type React from "react"
 import type { Metadata } from "next"
-import "@/styles/globals.css"
+import "./globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
-import { serifFont, sansFont, monoFont, logoFont, blogTitleFont, tiemposText, styreneB } from "@/lib/fonts"
+import { manrope, monoFont, logoFont } from "@/lib/fonts"
 
 function WebsiteSchema() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
@@ -45,7 +45,6 @@ function WebsiteSchema() {
 export const metadata: Metadata = {
   title: "sixeleven",
   description: "Personal blog of Rishit Vora.",
-  generator: "v0.dev",
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
@@ -75,23 +74,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html
-      lang="en"
-      className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable} ${logoFont.variable} ${blogTitleFont.variable} ${tiemposText.variable} ${styreneB.variable}`}
-    >
+    <html lang="en" className={`${manrope.variable} ${monoFont.variable} ${logoFont.variable}`}>
       <head>
         <WebsiteSchema />
       </head>
-      <body className="bg-[#faf9f7] text-gray-900 dark:bg-black dark:text-gray-100 min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <KaTeXLoader />
-        <div className="w-full max-w-full flex-grow">
-          <Navigation />
-          <main className="py-4 sm:py-6 px-3 sm:px-4 md:px-8 max-w-5xl mx-auto">{children}</main>
-        </div>
+        <Navigation />
+        <main className="flex-grow pt-16">
+          <div className="max-w-[680px] mx-auto px-6 md:px-0 py-12">
+            {children}
+          </div>
+        </main>
         <Footer />
       </body>
     </html>
   )
 }
-
-import "./globals.css"

@@ -13,22 +13,21 @@ interface BlogPostPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  // Await params before accessing its properties
   const resolvedParams = await Promise.resolve(params)
   const post = await getPostBySlug(resolvedParams.slug)
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
 
   if (!post) {
     return {
-      title: "Post Not Found | sixeleven",
-      description: "The requested post could not be found.",
+      title: "post not found | sixeleven",
+      description: "the requested post could not be found.",
     }
   }
 
   const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`
 
   return {
-    title: `${post.title} | sixeleven`,
+    title: `${post.title.toLowerCase()} | sixeleven`,
     description: post.excerpt,
     authors: [{ name: "Rishit Vora" }],
     openGraph: {
@@ -69,7 +68,6 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  // Await params before accessing its properties
   const resolvedParams = await Promise.resolve(params)
   const post = await getPostBySlug(resolvedParams.slug)
 
@@ -77,28 +75,37 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound()
   }
 
-  // Make sure the date is in ISO format for schema
   const isoDate = new Date(post.date).toISOString()
 
   return (
     <>
-      {/* Place the schema at the top level */}
       <BlogPostSchema title={post.title} excerpt={post.excerpt} date={isoDate} slug={post.slug} />
       <article className="max-w-none relative">
         <ReadingProgressBar />
 
-        <header className="mb-6">
-          <h1 className="text-2xl sm:text-3xl md:text-3xl font-medium mb-2 font-styrene" style={{ letterSpacing: "-0.045em", lineHeight: "1.15" }}>
+        <header className="mb-10">
+          {/* Date and reading time - uppercase meta */}
+          <div className="uppercase-meta text-[var(--foreground-subtle)] mb-3">
+            <time dateTime={post.date}>
+              {new Date(post.date).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              }).toLowerCase()}
+            </time>
+            {post.readingTime && <span> · {post.readingTime} min read</span>}
+          </div>
+
+          {/* Title - lowercase for Rams aesthetic */}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-4 lowercase">
             {post.title}
           </h1>
-          <div className="article-meta">
-            <time dateTime={post.date}>{post.date}</time>
-            {post.readingTime && <span className="reading-time"> · {post.readingTime} min read</span>}
-          </div>
+
+          {/* Tags - plain text, lowercase */}
           {post.tags && post.tags.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-x-3 gap-y-1">
               {post.tags.map((tag: string) => (
-                <span key={tag} className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-sm rounded">
+                <span key={tag} className="tag">
                   {tag}
                 </span>
               ))}
@@ -111,7 +118,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <TableOfContents content={post.content} />
         </div>
 
-        {/* Render content with EnhancedMarkdown */}
+        {/* Article content */}
         <div className="prose dark:prose-invert max-w-none">
           <EnhancedMarkdown content={post.content} />
         </div>

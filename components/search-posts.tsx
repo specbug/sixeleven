@@ -1,18 +1,36 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
-import { Search, X, ArrowUpDown } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
+// Minimal, geometric icons inspired by Braun/Rams design
+function SearchIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  )
+}
+
+function CloseIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  )
+}
+
+function SortIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <polyline points="19 12 12 19 5 12" />
+    </svg>
+  )
+}
 
 interface Post {
   slug: string
@@ -36,13 +54,13 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [sortOption, setSortOption] = useState<SortOption>("newest")
   const [showTagFilter, setShowTagFilter] = useState(false)
+  const [showSortMenu, setShowSortMenu] = useState(false)
 
-  // Extract all unique tags from posts - fixed to properly deduplicate
+  // Extract all unique tags from posts
   const allTags = useMemo(() => {
     const tagsSet = new Set<string>()
     posts.forEach((post) => {
       post.tags?.forEach((tag) => {
-        // Normalize tag (lowercase, trim) before adding to ensure proper deduplication
         const normalizedTag = tag.toLowerCase().trim()
         tagsSet.add(normalizedTag)
       })
@@ -50,11 +68,10 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
     return Array.from(tagsSet).sort()
   }, [posts])
 
-  // Filter and sort posts based on search query, selected tags, and sort option
+  // Filter and sort posts
   useEffect(() => {
     let filtered = [...posts]
 
-    // Apply search filter
     if (searchQuery.trim() !== "") {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
@@ -65,7 +82,6 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       )
     }
 
-    // Apply tag filter
     if (selectedTags.length > 0) {
       filtered = filtered.filter(
         (post) =>
@@ -76,7 +92,6 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       )
     }
 
-    // Apply sorting
     filtered.sort((a, b) => {
       switch (sortOption) {
         case "newest":
@@ -106,7 +121,6 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
   }
 
   const toggleTag = (tag: string) => {
-    // Normalize tag before toggling
     const normalizedTag = tag.toLowerCase().trim()
     setSelectedTags((prev) =>
       prev.includes(normalizedTag) ? prev.filter((t) => t !== normalizedTag) : [...prev, normalizedTag],
@@ -121,69 +135,77 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
   const getSortLabel = (option: SortOption): string => {
     switch (option) {
       case "newest":
-        return "Newest"
+        return "newest"
       case "oldest":
-        return "Oldest"
+        return "oldest"
       case "title":
-        return "Title"
+        return "title"
       case "readingTime":
-        return "Reading Time"
+        return "reading time"
     }
   }
 
-  // Helper to check if a tag is selected (case-insensitive)
   const isTagSelected = (tag: string) => {
     const normalizedTag = tag.toLowerCase().trim()
     return selectedTags.some((t) => t.toLowerCase().trim() === normalizedTag)
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Search and sort controls */}
       <div className="flex flex-col md:flex-row gap-4">
-        {/* Search input */}
+        {/* Search input - underline style */}
         <div className="relative flex-grow">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
+          <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+            <SearchIcon size={16} />
           </div>
-          <Input
+          <input
             type="text"
-            placeholder="Search posts..."
+            placeholder="search posts..."
             value={searchQuery}
             onChange={handleSearch}
-            className="pl-9 pr-9 py-2 h-10 text-base border-gray-200 dark:border-gray-800 focus:ring-0 focus:border-gray-300 dark:focus:border-gray-700 w-full rounded-md"
+            className="w-full pl-6 pr-8 py-2 bg-transparent border-b border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--braun-orange)] transition-colors lowercase"
           />
           {searchQuery && (
             <button
               onClick={clearSearch}
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              className="absolute inset-y-0 right-0 flex items-center"
               aria-label="Clear search"
             >
-              <X className="h-4 w-4 text-gray-400 hover:text-[#FF4D06]/60" />
+              <CloseIcon size={16} />
             </button>
           )}
         </div>
 
         {/* Sort dropdown */}
-        <div className="flex-shrink-0">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center justify-between w-full md:w-auto px-3 py-2 h-10 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900">
-                <span className="flex items-center">
-                  <ArrowUpDown className="h-3.5 w-3.5 mr-2 text-gray-500" />
-                  <span>{getSortLabel(sortOption)}</span>
-                </span>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuRadioGroup value={sortOption} onValueChange={(value) => setSortOption(value as SortOption)}>
-                <DropdownMenuRadioItem value="newest">Newest</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="oldest">Oldest</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="title">Title</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="readingTime">Reading Time</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="relative flex-shrink-0">
+          <button
+            onClick={() => setShowSortMenu(!showSortMenu)}
+            className="flex items-center gap-2 px-0 py-2 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+          >
+            <SortIcon size={14} />
+            <span>{getSortLabel(sortOption)}</span>
+          </button>
+          {showSortMenu && (
+            <div className="absolute top-full right-0 mt-2 bg-[var(--background)] border border-[var(--border)] py-2 z-10 min-w-[140px]">
+              {(["newest", "oldest", "title", "readingTime"] as SortOption[]).map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    setSortOption(option)
+                    setShowSortMenu(false)
+                  }}
+                  className={`block w-full text-left px-4 py-1.5 text-sm lowercase transition-colors ${
+                    sortOption === option
+                      ? "text-[var(--braun-orange)]"
+                      : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
+                  }`}
+                >
+                  {getSortLabel(option)}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -191,22 +213,18 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       <div>
         <button
           onClick={() => setShowTagFilter(!showTagFilter)}
-          className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#FF4D06]/60 mb-2 flex items-center"
+          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
         >
-          {showTagFilter ? "Hide tags" : "Filter by tags"}
+          {showTagFilter ? "hide tags" : "filter by tags"}
         </button>
 
         {showTagFilter && (
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="flex flex-wrap gap-x-3 gap-y-2 mt-4">
             {allTags.map((tag) => (
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                  isTagSelected(tag)
-                    ? "bg-[#FF4D06]/10 text-[#FF4D06]/80 border border-[#FF4D06]/20"
-                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
-                }`}
+                className={`tag-interactive ${isTagSelected(tag) ? "active" : ""}`}
               >
                 {tag}
               </button>
@@ -215,22 +233,25 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
         )}
 
         {selectedTags.length > 0 && (
-          <div className="flex items-center mt-3">
-            <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Active filters:</span>
-            <div className="flex flex-wrap gap-1.5">
+          <div className="flex items-center mt-4 gap-2">
+            <span className="text-sm text-[var(--foreground-subtle)]">active:</span>
+            <div className="flex flex-wrap gap-x-3 gap-y-1">
               {selectedTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#FF4D06]/10 text-[#FF4D06]/80"
-                >
+                <span key={tag} className="tag text-[var(--braun-orange)] flex items-center gap-1">
                   {tag}
-                  <button onClick={() => toggleTag(tag)} className="ml-1 text-[#FF4D06]/60 hover:text-[#FF4D06]">
-                    <X className="h-3 w-3" />
+                  <button
+                    onClick={() => toggleTag(tag)}
+                    className="hover:opacity-70 transition-opacity"
+                  >
+                    <CloseIcon size={12} />
                   </button>
                 </span>
               ))}
-              <button onClick={clearFilters} className="text-xs text-[#FF4D06]/60 hover:text-[#FF4D06] ml-1">
-                Clear
+              <button
+                onClick={clearFilters}
+                className="text-xs text-[var(--foreground-subtle)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+              >
+                clear
               </button>
             </div>
           </div>
@@ -238,42 +259,56 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       </div>
 
       {/* Results count */}
-      <div className="text-sm text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-2">
+      <div className="text-sm text-[var(--foreground-subtle)] border-b border-[var(--border)] pb-2 lowercase">
         {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"} found
       </div>
 
       {/* Results */}
       {filteredPosts.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-600 dark:text-gray-400">No posts found matching your criteria.</p>
+          <p className="text-[var(--foreground-muted)] lowercase">no posts found.</p>
           {(searchQuery || selectedTags.length > 0) && (
-            <button onClick={clearFilters} className="mt-2 text-[#FF4D06]/60 hover:text-[#FF4D06] text-sm">
-              Clear filters
+            <button
+              onClick={clearFilters}
+              className="mt-2 text-[var(--braun-orange)] hover:underline text-sm lowercase"
+            >
+              clear filters
             </button>
           )}
         </div>
       ) : (
-        <div className="space-y-8">
-          {filteredPosts.map((post, index) => (
-            <article
-              key={post.slug}
-              className={`${index !== filteredPosts.length - 1 ? "border-b border-gray-200 dark:border-gray-800" : ""} pb-8`}
-            >
+        <div className="space-y-16">
+          {filteredPosts.map((post) => (
+            <article key={post.slug}>
               <Link href={`/blog/${post.slug}`} className="block group">
-                <h2 className="text-xl md:text-2xl font-medium group-hover:text-accent/80 transition-colors mb-2 font-styrene" style={{ letterSpacing: "-0.04em" }}>
+                {/* Date and reading time */}
+                <div className="uppercase-meta text-[var(--foreground-subtle)] mb-2">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    }).toLowerCase()}
+                  </time>
+                  {post.readingTime && <span> · {post.readingTime} min</span>}
+                </div>
+
+                {/* Title */}
+                <h2 className="text-2xl md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] transition-colors mb-3">
                   {post.title}
                 </h2>
-                <div className="article-meta mb-2">
-                  <time dateTime={post.date}>{post.date}</time>
-                  {post.readingTime && <span className="reading-time"> · {post.readingTime} min read</span>}
-                </div>
-                <p className="text-gray-700 dark:text-gray-300">{post.excerpt}</p>
+
+                {/* Excerpt */}
+                <p className="text-[var(--foreground-muted)] mb-3">
+                  {post.excerpt}
+                </p>
+
+                {/* Tags */}
                 {post.tags && post.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-x-3 gap-y-1">
                     {post.tags.map((tag: string) => (
                       <span
                         key={`${post.slug}-${tag}`}
-                        className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-sm rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                        className="tag-interactive"
                         onClick={(e) => {
                           e.preventDefault()
                           toggleTag(tag)
@@ -292,4 +327,3 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
     </div>
   )
 }
-

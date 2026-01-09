@@ -11,19 +11,18 @@ interface ProjectPageProps {
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  // Await params before accessing its properties
   const resolvedParams = await Promise.resolve(params)
   const project = await getProjectBySlug(resolvedParams.slug)
 
   if (!project) {
     return {
-      title: "Project Not Found | sixeleven",
-      description: "The requested project could not be found.",
+      title: "project not found | sixeleven",
+      description: "the requested project could not be found.",
     }
   }
 
   return {
-    title: `${project.title} | sixeleven`,
+    title: `${project.title.toLowerCase()} | sixeleven`,
     description: project.excerpt,
   }
 }
@@ -37,7 +36,6 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  // Await params before accessing its properties
   const resolvedParams = await Promise.resolve(params)
   const project = await getProjectBySlug(resolvedParams.slug)
 
@@ -49,40 +47,40 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <article className="max-w-none relative">
       <ReadingProgressBar />
 
-      <header className="mb-6">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-2">
+      <header className="mb-10">
+        {/* Title - project content uses normal case for readability */}
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-4">
           {project.title}
         </h1>
 
+        {/* Technologies - plain text tags */}
         {project.technologies && project.technologies.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mb-4">
             {project.technologies.map((tech) => (
-              <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-sm rounded">
+              <span key={tech} className="tag">
                 {tech}
               </span>
             ))}
           </div>
         )}
 
+        {/* External link - orange */}
         {project.link && (
-          <div className="mt-4">
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent/60 border-b border-accent/20 hover:border-accent/60 transition-colors"
-            >
-              View Project →
-            </a>
-          </div>
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-[var(--braun-orange)] hover:underline lowercase"
+          >
+            view project
+          </a>
         )}
       </header>
 
-      {/* Render content */}
+      {/* Project content */}
       <div className="prose dark:prose-invert max-w-none">
         <EnhancedMarkdown content={project.content} />
       </div>
     </article>
   )
 }
-

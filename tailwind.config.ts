@@ -1,164 +1,216 @@
 import type { Config } from "tailwindcss"
+
 const config: Config = {
   darkMode: ["class"],
   content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      // Dieter Rams / Braun inspired color palette
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        // The iconic Braun orange - ONLY for interactive elements
+        braun: {
+          orange: "#ed8008",
+          "orange-hover": "#d67307",
+          "orange-muted": "rgba(237, 128, 8, 0.12)",
+        },
+        // Light mode neutrals
+        rams: {
+          white: "#ffffff",
+          "off-white": "#f8f8f8",
+          "near-black": "#1a1a1a",
+          "dark-gray": "#666666",
+          "light-gray": "#e0e0e0",
+          "muted-gray": "#999999",
+          // Dark mode
+          "dark-bg": "#0a0a0a",
+          "dark-surface": "#141414",
+          "dark-text": "#f0f0f0",
+          "dark-muted": "#888888",
+        },
+        // Legacy color mappings for compatibility
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: {
-          DEFAULT: "rgba(255, 77, 6, 0.6)",
-          foreground: "#FFFFFF",
+          DEFAULT: "#ed8008",
+          foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "#f8f8f8",
+          foreground: "#1a1a1a",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "#f8f8f8",
+          foreground: "#666666",
         },
         accent: {
-          DEFAULT: "rgba(255, 77, 6, 0.6)",
-          foreground: "#FFFFFF",
+          DEFAULT: "#ed8008",
+          foreground: "#ffffff",
+        },
+        destructive: {
+          DEFAULT: "#dc2626",
+          foreground: "#ffffff",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "#ffffff",
+          foreground: "#1a1a1a",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        code: {
-          light: {
-            background: "#f3f4f6",
-            text: "#111827",
-          },
-          dark: {
-            background: "rgba(33,33,33,0.9);",
-            text: "#e5e7eb",
-          },
+          DEFAULT: "#ffffff",
+          foreground: "#1a1a1a",
         },
       },
+      // No rounded corners - Rams aesthetic
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0",
+        md: "0",
+        sm: "0",
+        DEFAULT: "0",
       },
+      // Manrope as primary font
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
-        mono: ["var(--font-mono)"],
-        logo: ["var(--font-logo)"], // Add the logo font
-        blogTitle: ["var(--font-blogTitle)"], // Add the blog title font
-        tip: ["var(--font-tip)"],
-        tiempos: ["var(--font-tiempos)"], // Tiempos Text font
-        styrene: ["var(--font-styrene)"], // Styrene A font for headings
+        sans: ["var(--font-manrope)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        logo: ["var(--font-logo)", "var(--font-manrope)", "system-ui", "sans-serif"],
       },
+      // Type scale based on 1.333 perfect fourth
+      fontSize: {
+        "xs": ["0.75rem", { lineHeight: "1.5", letterSpacing: "0.05em" }],
+        "sm": ["0.875rem", { lineHeight: "1.5" }],
+        "base": ["1.125rem", { lineHeight: "1.7" }],
+        "lg": ["1.5rem", { lineHeight: "1.4" }],
+        "xl": ["2rem", { lineHeight: "1.2" }],
+        "2xl": ["2.5rem", { lineHeight: "1.15" }],
+        "3xl": ["3rem", { lineHeight: "1.1" }],
+        "4xl": ["4rem", { lineHeight: "1.05" }],
+      },
+      // 8px base spacing system
+      spacing: {
+        "18": "4.5rem",
+        "22": "5.5rem",
+      },
+      // Prose / Typography plugin configuration
       typography: {
         DEFAULT: {
           css: {
-            maxWidth: "none",
-            color: "inherit",
-            fontFamily: "var(--font-tiempos)",
-            fontSize: "16px",
+            maxWidth: "680px",
+            color: "#1a1a1a",
+            fontFamily: "var(--font-manrope), system-ui, sans-serif",
+            fontSize: "1.125rem",
             fontWeight: "400",
-            lineHeight: "1.6",
-            letterSpacing: "-0.01em",
-            "--tw-prose-body": "#191919",
-            "--tw-prose-invert-body": "#e5e7eb",
+            lineHeight: "1.7",
+            letterSpacing: "0",
+            "--tw-prose-body": "#1a1a1a",
+            "--tw-prose-headings": "#1a1a1a",
+            "--tw-prose-links": "#ed8008",
+            "--tw-prose-bold": "#1a1a1a",
+            "--tw-prose-quotes": "#666666",
+            "--tw-prose-code": "#1a1a1a",
+            "--tw-prose-pre-bg": "#f8f8f8",
             p: {
-              marginTop: "1.25em",
-              marginBottom: "1.25em",
-              fontWeight: "400",
-              color: "inherit",
+              marginTop: "1.5em",
+              marginBottom: "1.5em",
             },
+            // Blog content headings stay normal case
             h1: {
-              fontFamily: "var(--font-styrene)",
-              fontWeight: "500",
-              letterSpacing: "-0.05em",
-              lineHeight: "1.15",
+              fontWeight: "600",
+              letterSpacing: "-0.02em",
+              marginTop: "0",
+              marginBottom: "0.5em",
             },
             h2: {
-              fontFamily: "var(--font-styrene)",
-              fontWeight: "500",
-              letterSpacing: "-0.04em",
-              lineHeight: "1.2",
+              fontWeight: "600",
+              letterSpacing: "-0.01em",
+              marginTop: "2em",
+              marginBottom: "0.5em",
             },
             h3: {
-              fontFamily: "var(--font-styrene)",
-              fontWeight: "500",
-              letterSpacing: "-0.03em",
-              lineHeight: "1.25",
+              fontWeight: "600",
+              letterSpacing: "0",
+              marginTop: "1.5em",
+              marginBottom: "0.5em",
             },
             h4: {
-              fontFamily: "var(--font-styrene)",
               fontWeight: "500",
-              letterSpacing: "-0.025em",
-              lineHeight: "1.3",
+              marginTop: "1.25em",
+              marginBottom: "0.5em",
             },
-            h5: {
-              fontFamily: "var(--font-styrene)",
-              fontWeight: "500",
-              letterSpacing: "-0.02em",
-              lineHeight: "1.3",
-            },
-            h6: {
-              fontFamily: "var(--font-styrene)",
-              fontWeight: "500",
-              letterSpacing: "-0.015em",
-              lineHeight: "1.3",
-            },
+            // Links - orange, underline on hover
             a: {
-              color: "rgba(255, 77, 6, 0.6)",
+              color: "#ed8008",
               textDecoration: "none",
+              fontWeight: "400",
               "&:hover": {
                 textDecoration: "underline",
+                textUnderlineOffset: "3px",
               },
             },
-            blockquote: {
-              borderLeftColor: "#e5e7eb",
-              fontStyle: "italic",
+            strong: {
+              fontWeight: "600",
             },
+            // Blockquote - left border, no italics (Rams preferred clean type)
+            blockquote: {
+              borderLeftWidth: "3px",
+              borderLeftColor: "#e0e0e0",
+              paddingLeft: "1.5rem",
+              fontStyle: "normal",
+              color: "#666666",
+              quotes: "none",
+            },
+            // Code - left border accent, no border-radius
             code: {
               fontFamily: "var(--font-mono)",
-              color: "#111827",
-              backgroundColor: "#f3f4f6",
-              borderRadius: "0.25rem",
-              padding: "0.2em 0.4em",
-            },
-            "code::before": {
-              content: '""',
-            },
-            "code::after": {
-              content: '""',
+              fontWeight: "400",
+              backgroundColor: "#f8f8f8",
+              padding: "0.15em 0.4em",
+              borderRadius: "0",
+              "&::before": { content: "none" },
+              "&::after": { content: "none" },
             },
             pre: {
               fontFamily: "var(--font-mono)",
-              backgroundColor: "#1e293b",
-              color: "#e2e8f0",
+              backgroundColor: "#f8f8f8",
+              borderRadius: "0",
+              borderLeft: "3px solid #ed8008",
+              padding: "1.5rem",
               overflow: "auto",
-              padding: "1rem",
+            },
+            // Images - no rounded corners
+            img: {
+              borderRadius: "0",
+            },
+            // Lists
+            "ul > li": {
+              paddingLeft: "0.25em",
+            },
+            "ol > li": {
+              paddingLeft: "0.25em",
             },
           },
         },
+        // Dark mode prose
         invert: {
           css: {
-            "--tw-prose-body": "#e5e7eb",
-            "--tw-prose-headings": "#fff",
-            "--tw-prose-links": "rgba(255, 77, 6, 0.8)",
-            "--tw-prose-bold": "#fff",
-            "--tw-prose-code": "#e5e7eb",
-            "--tw-prose-quotes": "#e5e7eb",
+            "--tw-prose-body": "#f0f0f0",
+            "--tw-prose-headings": "#f0f0f0",
+            "--tw-prose-links": "#ed8008",
+            "--tw-prose-bold": "#f0f0f0",
+            "--tw-prose-quotes": "#888888",
+            "--tw-prose-code": "#f0f0f0",
+            "--tw-prose-pre-bg": "#141414",
+            color: "#f0f0f0",
+            blockquote: {
+              borderLeftColor: "#333333",
+              color: "#888888",
+            },
+            code: {
+              backgroundColor: "#141414",
+            },
+            pre: {
+              backgroundColor: "#141414",
+            },
           },
         },
       },
@@ -168,4 +220,3 @@ const config: Config = {
 }
 
 export default config
-

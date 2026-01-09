@@ -3,8 +3,8 @@ import Link from "next/link"
 import { getAllProjects } from "@/lib/mdx"
 
 export const metadata: Metadata = {
-  title: "Projects | sixeleven",
-  description: "My projects and work",
+  title: "projects | sixeleven",
+  description: "my projects and work",
 }
 
 export default async function ProjectsPage() {
@@ -13,10 +13,10 @@ export default async function ProjectsPage() {
   if (projects.length === 0) {
     return (
       <div>
-        <h1 className="text-4xl md:text-5xl font-medium mb-10 font-styrene" style={{ letterSpacing: "-0.045em", lineHeight: "1.15" }}>Projects</h1>
+        <h1 className="text-3xl font-semibold tracking-tight lowercase mb-12">projects</h1>
         <div className="text-center py-10">
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            No projects found. Please add MDX files to the content/projects directory.
+          <p className="text-[var(--foreground-muted)]">
+            no projects found.
           </p>
         </div>
       </div>
@@ -25,28 +25,43 @@ export default async function ProjectsPage() {
 
   return (
     <div>
-      <h1 className="text-4xl md:text-5xl font-medium mb-10 font-styrene" style={{ letterSpacing: "-0.045em", lineHeight: "1.15" }}>Projects</h1>
+      <h1 className="text-3xl font-semibold tracking-tight lowercase mb-12">projects</h1>
 
-      <div className="space-y-10">
-        {projects.map((project, index) => (
-          <article
-            key={project.slug}
-            className={`${index !== projects.length - 1 ? "border-b border-gray-200 dark:border-gray-800" : ""} pb-10`}
-          >
-            <h2 className="text-2xl md:text-3xl font-medium mb-2 font-styrene" style={{ letterSpacing: "-0.04em" }}>{project.title}</h2>
-            <p className="text-gray-700 dark:text-gray-300 text-lg mb-4">{project.excerpt}</p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {project.technologies?.map((tech) => (
-                <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-sm rounded">
-                  {tech}
-                </span>
-              ))}
-            </div>
+      <div className="space-y-16">
+        {projects.map((project) => (
+          <article key={project.slug}>
+            {/* Title - lowercase, orange on hover */}
+            <h2 className="text-2xl font-semibold tracking-tight lowercase mb-3">
+              <Link
+                href={`/projects/${project.slug}`}
+                className="text-[var(--foreground)] hover:text-[var(--braun-orange)] transition-colors"
+              >
+                {project.title}
+              </Link>
+            </h2>
+
+            {/* Description */}
+            <p className="text-[var(--foreground-muted)] mb-4">
+              {project.excerpt}
+            </p>
+
+            {/* Technologies - plain text tags */}
+            {project.technologies && project.technologies.length > 0 && (
+              <div className="flex flex-wrap gap-x-3 gap-y-1 mb-4">
+                {project.technologies.map((tech) => (
+                  <span key={tech} className="tag">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Read more link - orange */}
             <Link
               href={`/projects/${project.slug}`}
-              className="text-accent hover:text-accent/80 border-b border-accent/20 hover:border-accent/60 transition-colors"
+              className="text-sm text-[var(--braun-orange)] hover:underline lowercase"
             >
-              Read More →
+              read more
             </Link>
           </article>
         ))}
@@ -54,4 +69,3 @@ export default async function ProjectsPage() {
     </div>
   )
 }
-
