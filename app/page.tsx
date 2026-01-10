@@ -24,7 +24,7 @@ export default async function Home() {
     <div className="space-y-16">
       {posts.map((post) => (
         <article key={post.slug}>
-          <Link href={`/blog/${post.slug}`} className="block group">
+          <Link href={`/blog/${post.slug}`} className="block group no-underline hover:no-underline">
             {/* Date and reading time - uppercase meta */}
             <div className="uppercase-meta text-[var(--foreground-subtle)] mb-2">
               <time dateTime={post.date}>
@@ -36,8 +36,8 @@ export default async function Home() {
               {post.readingTime && <span> · {post.readingTime} min</span>}
             </div>
 
-            {/* Title - lowercase, orange on hover */}
-            <h2 className="text-2xl md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] transition-colors mb-3">
+            {/* Title - lowercase, orange on hover with underline */}
+            <h2 className="text-2xl md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
               {post.title}
             </h2>
 

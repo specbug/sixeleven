@@ -152,6 +152,12 @@
 }
 
 @layer utilities {
+  /* Block links that should not underline on hover */
+  .no-underline,
+  .no-underline:hover {
+    text-decoration: none !important;
+  }
+
   /* Lowercase utility for UI elements */
   .lowercase-ui {
     text-transform: lowercase;

@@ -280,7 +280,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
         <div className="space-y-16">
           {filteredPosts.map((post) => (
             <article key={post.slug}>
-              <Link href={`/blog/${post.slug}`} className="block group">
+              <Link href={`/blog/${post.slug}`} className="block group no-underline hover:no-underline">
                 {/* Date and reading time */}
                 <div className="uppercase-meta text-[var(--foreground-subtle)] mb-2">
                   <time dateTime={post.date}>
@@ -292,8 +292,8 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
                   {post.readingTime && <span> · {post.readingTime} min</span>}
                 </div>
 
-                {/* Title */}
-                <h2 className="text-2xl md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] transition-colors mb-3">
+                {/* Title - only this gets underline on hover */}
+                <h2 className="text-2xl md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
                   {post.title}
                 </h2>
 
