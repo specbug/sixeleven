@@ -52,7 +52,14 @@ When I need to work on multiple branches simultaneously—say, a feature branch 
 ccwt feature/new-auth
 ```
 
-This creates a worktree for the branch in a temp directory and opens Claude Code there. Combined with Zellij panes, I can have separate Claude sessions working on completely different branches of the same repo without any git stashing or context switching. When the worktree session ends, cleanup is automatic.
+Why not just use `git worktree` directly? A few reasons:
+
+- **One command** - `ccwt` handles the worktree creation, directory setup, and Claude Code launch in one step. No cd-ing around.
+- **Temp directory** - Worktrees go in `/tmp`, keeping my main repo clean. I don't have to think about where to put them.
+- **Auto cleanup** - When Claude exits, the worktree is cleaned up. No orphaned directories accumulating.
+- **Claude flags passthrough** - Any flags I pass get forwarded to Claude, so `ccwt main --dangerously-skip-permissions` just works.
+
+Combined with Zellij panes, I can have separate Claude sessions working on completely different branches of the same repo without any git stashing or context switching.
 
 ## Modern CLI Tools
 
