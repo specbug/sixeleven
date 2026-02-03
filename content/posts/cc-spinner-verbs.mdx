@@ -1,8 +1,8 @@
 ---
 title: "My Claude Code Setup"
 date: "February 03, 2026"
-excerpt: "A look at how I've customized Claude Code—terminal, spinner verbs, sound notifications, status line, and plugins."
-readingTime: "5"
+excerpt: "Terminal, worktrees, modern CLI tools, sound notifications, spinner verbs—how I've customized Claude Code."
+readingTime: "6"
 tags: ["ai", "diy"]
 ---
 
@@ -41,6 +41,32 @@ scrollback_lines_to_serialize 5000
 ```
 
 This saves session state including pane contents, so I can close my laptop and pick up exactly where I left off.
+
+## Worktrees with ccwt
+
+When I need to work on multiple branches simultaneously—say, a feature branch and a hotfix—I use a small script called `ccwt` that launches Claude Code in a temporary git worktree:
+
+```bash
+ccwt feature/new-auth
+```
+
+This creates a worktree for the branch in a temp directory and opens Claude Code there. Combined with Zellij panes, I can have separate Claude sessions working on completely different branches of the same repo without any git stashing or context switching. When the worktree session ends, cleanup is automatic.
+
+## Modern CLI Tools
+
+My shell is tuned for speed and aesthetics. These tools make the terminal feel modern:
+
+- **[eza](https://github.com/eza-community/eza)** - `ls` replacement with icons and git status. Aliased to `ls`, `ll`, `lt`
+- **[bat](https://github.com/sharkdp/bat)** - `cat` with syntax highlighting. Aliased to `cat`
+- **[fd](https://github.com/sharkdp/fd)** - Fast, user-friendly `find` alternative
+- **[zoxide](https://github.com/ajeetdsouza/zoxide)** - Smarter `cd` that learns your habits. Just `z proj` to jump to `~/projects`
+- **[fzf](https://github.com/junegunn/fzf)** - Fuzzy finder for everything. `Ctrl+T` for files, `Alt+C` for directories, `Ctrl+R` for history
+- **[atuin](https://github.com/atuinsh/atuin)** - Shell history that syncs across machines and searches intelligently
+- **[yazi](https://github.com/sxyazi/yazi)** - Blazing fast TUI file manager
+- **[starship](https://starship.rs/)** - Minimal, fast prompt with git info
+- **[gum](https://github.com/charmbracelet/gum)** - Pretty CLI prompts for scripts
+
+Claude Code can use these too—when I tell it to explore a directory or search for files, it often reaches for `fd` or `rg` instead of the slower built-ins.
 
 ## Sound Notifications
 
