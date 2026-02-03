@@ -1,12 +1,46 @@
 ---
 title: "My Claude Code Setup"
 date: "February 03, 2026"
-excerpt: "A look at how I've customized Claude Code—spinner verbs, sound notifications, status line, and plugins."
-readingTime: "4"
+excerpt: "A look at how I've customized Claude Code—terminal, spinner verbs, sound notifications, status line, and plugins."
+readingTime: "5"
 tags: ["ai", "diy"]
 ---
 
 Claude Code has quietly become my favorite way to work with AI. Not because of any single feature, but because it's designed to get out of your way and let you customize the parts that matter to you. Here's how I've set mine up.
+
+## Terminal: Ghostty + Zellij
+
+I run Claude Code inside [Ghostty](https://ghostty.org/) with [Zellij](https://zellij.dev/) as a multiplexer. This combo gives me:
+
+- **Performance** - Ghostty is GPU-accelerated and noticeably snappier than iTerm2 or Terminal.app, especially when Claude is streaming long outputs
+- **Parallel panes** - I keep Claude in one pane while running tests, watching logs, or editing in another. `Alt+n` spawns a new pane, `Alt+h/l` to jump between them
+- **Session persistence** - Zellij serializes sessions to disk, so I can detach and reattach without losing context. Useful when switching between projects
+
+My Ghostty config (`~/.config/ghostty/config`):
+
+```text
+font-family = "R Plex Mono"
+font-size = 19.0
+font-thicken = true
+theme = ayu
+macos-option-as-alt = true
+copy-on-select = true
+scrollback-limit = 50000
+cursor-style = bar
+cursor-style-blink = false
+```
+
+The key bits: `macos-option-as-alt` lets Alt-based shortcuts work properly (Zellij uses these heavily), and a large scrollback buffer helps when reviewing Claude's longer outputs.
+
+Zellij config (`~/.config/zellij/config.kdl`) is mostly default with vim-style navigation and tmux compatibility mode (`Ctrl+b`). The important additions:
+
+```kdl
+session_serialization true
+serialize_pane_viewport true
+scrollback_lines_to_serialize 5000
+```
+
+This saves session state including pane contents, so I can close my laptop and pick up exactly where I left off.
 
 ## Sound Notifications
 
