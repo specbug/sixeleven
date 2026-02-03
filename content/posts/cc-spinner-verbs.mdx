@@ -1,12 +1,12 @@
 ---
 title: "My Claude Code Setup"
 date: "February 03, 2026"
-excerpt: "Terminal, worktrees, modern CLI tools, sound notifications, spinner verbs—how I've customized Claude Code."
+excerpt: "Terminal, worktrees, modern CLI tools, sound notifications, spinner verbs. How I've customized Claude Code."
 readingTime: "6"
 tags: ["ai", "diy"]
 ---
 
-I use Claude Code for 100% of my dev workflows now. I haven't manually written a single line of code in ages—at this point, writing code by hand feels like fighting an eldritch horror from Elden Ring, except less satisfying. Claude Code just... works, and it's endlessly customizable. Here's how I've set mine up.
+I use Claude Code for 100% of my dev workflows now. Haven't manually written a line of code in ages. At this point, writing code by hand feels like fighting an eldritch horror from Elden Ring, except less satisfying. Claude just... works. And it's endlessly customizable.
 
 {{claude-disclaimer}}
 
@@ -14,11 +14,9 @@ I use Claude Code for 100% of my dev workflows now. I haven't manually written a
 
 ## Terminal: Ghostty + Zellij
 
-I run Claude Code inside [Ghostty](https://ghostty.org/) with [Zellij](https://zellij.dev/) as a multiplexer. This combo gives me:
+I run Claude Code inside [Ghostty](https://ghostty.org/) with [Zellij](https://zellij.dev/) as a multiplexer.
 
-- **Performance** - Ghostty is GPU-accelerated and noticeably snappier than iTerm2 or Terminal.app, especially when Claude is streaming long outputs
-- **Parallel Claude sessions** - I run multiple Claude Code instances side by side, each working on different tasks or repos
-- **Session persistence** - Zellij serializes sessions to disk, so I can detach and reattach without losing context. Useful when switching between projects
+Ghostty is GPU-accelerated and noticeably snappier than iTerm2 or Terminal.app, especially when Claude is streaming long outputs. Zellij lets me run multiple Claude instances side by side (different tasks, different repos) and serializes sessions to disk. I can close my laptop and pick up exactly where I left off.
 
 My Ghostty config (`~/.config/ghostty/config`):
 
@@ -34,9 +32,9 @@ cursor-style = bar
 cursor-style-blink = false
 ```
 
-The key bits: `macos-option-as-alt` lets Alt-based shortcuts work properly (Zellij uses these heavily), and a large scrollback buffer helps when reviewing Claude's longer outputs.
+The `macos-option-as-alt` bit is important because Zellij uses Alt-based shortcuts. Large scrollback helps when reviewing Claude's longer outputs.
 
-Zellij config (`~/.config/zellij/config.kdl`) is mostly default with vim-style navigation and tmux compatibility mode (`Ctrl+b`). The important additions:
+Zellij config (`~/.config/zellij/config.kdl`) is mostly default. The important additions:
 
 ```kdl
 session_serialization true
@@ -44,44 +42,37 @@ serialize_pane_viewport true
 scrollback_lines_to_serialize 5000
 ```
 
-This saves session state including pane contents, so I can close my laptop and pick up exactly where I left off.
-
 ## Worktrees with ccwt
 
-When I need to work on multiple branches simultaneously—say, a feature branch and a hotfix—I use a small script called `ccwt` that launches Claude Code in a temporary git worktree:
+When I need to work on multiple branches simultaneously (feature branch and a hotfix, say), I use a small script called `ccwt` that launches Claude Code in a temporary git worktree:
 
 ```bash
 ccwt feature/new-auth
 ```
 
-Why not just use `git worktree` directly? A few reasons:
-
-- **One command** - `ccwt` handles the worktree creation, directory setup, and Claude Code launch in one step. No cd-ing around.
-- **Temp directory** - Worktrees go in `/tmp`, keeping my main repo clean. I don't have to think about where to put them.
-- **Auto cleanup** - When Claude exits, the worktree is cleaned up. No orphaned directories accumulating.
-- **Claude flags passthrough** - Any flags I pass get forwarded to Claude, so `ccwt main --dangerously-skip-permissions` just works.
+Why not just use `git worktree` directly? Mostly convenience. `ccwt` handles worktree creation, directory setup, and Claude launch in one step. Worktrees go in `/tmp` so my main repo stays clean. When Claude exits, the worktree gets cleaned up automatically. And any flags I pass get forwarded to Claude, so `ccwt main --dangerously-skip-permissions` just works.
 
 Combined with Zellij panes, I can have separate Claude sessions working on completely different branches of the same repo without any git stashing or context switching.
 
 ## Modern CLI Tools
 
-My shell is tuned for speed and aesthetics. These tools make the terminal feel modern:
+I've replaced most of the default unix tools with faster, prettier alternatives. Mostly because I like pretty things, partly because Claude can use them too.
 
-- **[eza](https://github.com/eza-community/eza)** - `ls` replacement with icons and git status. Aliased to `ls`, `ll`, `lt`
-- **[bat](https://github.com/sharkdp/bat)** - `cat` with syntax highlighting. Aliased to `cat`
-- **[fd](https://github.com/sharkdp/fd)** - Fast, user-friendly `find` alternative
-- **[zoxide](https://github.com/ajeetdsouza/zoxide)** - Smarter `cd` that learns your habits. Just `z proj` to jump to `~/projects`
-- **[fzf](https://github.com/junegunn/fzf)** - Fuzzy finder for everything. `Ctrl+T` for files, `Alt+C` for directories, `Ctrl+R` for history
-- **[atuin](https://github.com/atuinsh/atuin)** - Shell history that syncs across machines and searches intelligently
-- **[yazi](https://github.com/sxyazi/yazi)** - Blazing fast TUI file manager
-- **[starship](https://starship.rs/)** - Minimal, fast prompt with git info
-- **[gum](https://github.com/charmbracelet/gum)** - Pretty CLI prompts for scripts
+- **[eza](https://github.com/eza-community/eza)** - `ls` with icons and git status
+- **[bat](https://github.com/sharkdp/bat)** - `cat` with syntax highlighting
+- **[fd](https://github.com/sharkdp/fd)** - faster `find`
+- **[zoxide](https://github.com/ajeetdsouza/zoxide)** - smarter `cd` that learns your habits
+- **[fzf](https://github.com/junegunn/fzf)** - fuzzy finder for everything
+- **[atuin](https://github.com/atuinsh/atuin)** - shell history that syncs across machines
+- **[yazi](https://github.com/sxyazi/yazi)** - TUI file manager
+- **[starship](https://starship.rs/)** - minimal prompt with git info
+- **[gum](https://github.com/charmbracelet/gum)** - pretty CLI prompts for scripts
 
-Claude Code can use these too—when I tell it to explore a directory or search for files, it often reaches for `fd` or `rg` instead of the slower built-ins.
+When I tell Claude to explore a directory or search for files, it often reaches for `fd` or `rg` instead of the slower built-ins.
 
 ## Sound Notifications
 
-This one's simple but transformative. When Claude finishes a task or needs my attention, I want to know—without staring at the terminal.
+When Claude finishes a task or needs my attention, I want to know without staring at the terminal. Simple hooks:
 
 ```json
 "hooks": {
@@ -110,11 +101,11 @@ This one's simple but transformative. When Claude finishes a task or needs my at
 }
 ```
 
-`Stop` fires when Claude completes work—Hero.aiff is a satisfying triumphant chime. `Notification` fires when Claude pauses for input or wants your attention—Submarine is a gentle "hey, look over here." macOS has a bunch of built-in sounds in `/System/Library/Sounds/` to choose from.
+`Stop` fires when Claude completes work. Hero.aiff is a satisfying triumphant chime. `Notification` fires when Claude pauses for input. Submarine is a gentle nudge. macOS has a bunch of built-in sounds in `/System/Library/Sounds/` to choose from.
 
 ## Status Line
 
-The default status line is fine, but I wanted something closer to my shell prompt. This shows user@host, the current directory, git branch (if any), and active Python virtualenv:
+I wanted my status line to look more like my shell prompt. This shows user@host, current directory, git branch, and active Python virtualenv:
 
 ```json
 "statusLine": {
@@ -123,17 +114,17 @@ The default status line is fine, but I wanted something closer to my shell promp
 }
 ```
 
-It's a bit of a one-liner, but it gives you something like `rishitv@mac my-project (main) (venv)` at a glance.
+Ugly one-liner, but it gives you `rishitv@mac my-project (main) (venv)` at a glance.
 
 ## Spinner Verbs
 
-Claude Code lets you replace the default loading messages with custom ones. It's called [`spinnerVerbs`](https://www.threads.com/@boris_cherny/post/DUB4mtmEskQ), purely cosmetic, zero utility, I love it.
+Claude Code lets you replace the default loading messages with custom ones. It's called [`spinnerVerbs`](https://www.threads.com/@boris_cherny/post/DUB4mtmEskQ). Purely cosmetic, zero utility, I love it.
 
-You're heads-down debugging something, grinding through it, and then "Quirrelling" flashes by. Or "Simply walking in". Or "Just as planned" appears right before Claude suggests exactly what you were hoping for. It snaps you out of the trance for a second, brings a smile, and you carry on.
+You're heads-down debugging something, grinding through it, and then "Quirrelling" flashes by. Or "Simply walking in". Or "Just as planned" appears right before Claude suggests exactly what you were hoping for. Snaps you out of the trance for a second, brings a smile, and you carry on.
 
 ![Touching grace...](/images/cc-spinner.png)
 
-Here's my current list:
+My current list:
 
 ```text
 SCIENCE!-ing
@@ -231,13 +222,13 @@ Breaking into Azkaban
 Solving death
 ```
 
-These go in `~/.claude/settings.json` under `spinnerVerbs` with `mode: replace`. Steal them or make your own.
+These go in `~/.claude/settings.json` under `spinnerVerbs` with `mode: replace`.
 
 ## Plugins
 
-I've enabled a few community plugins:
+A few community plugins I use:
 
-- **commit-commands** - shortcuts for git workflows
+- **commit-commands** - git workflow shortcuts
 - **pr-review-toolkit** - code review helpers
 - **agent-sdk-dev** - for building Claude Agent SDK apps
 - **ralph-loop** - autonomous coding loops
@@ -253,15 +244,13 @@ I've enabled a few community plugins:
 
 ## Other Settings
 
-A few more things I keep enabled:
-
 ```json
 "model": "opus",
 "alwaysThinkingEnabled": true
 ```
 
-Opus is slower but noticeably better for complex reasoning tasks. Extended thinking (`alwaysThinkingEnabled`) lets Claude work through problems step by step before responding—makes a real difference for debugging and architecture decisions.
+Opus is slower but noticeably better for complex reasoning. Extended thinking lets Claude work through problems step by step before responding. Makes a real difference for debugging and architecture decisions.
 
 ---
 
-All of this lives in `~/.claude/settings.json`. The [Claude Code docs](https://docs.anthropic.com/en/docs/claude-code) cover the full schema, but honestly the best way to figure out what works for you is just to experiment.
+All of this lives in `~/.claude/settings.json`. The [Claude Code docs](https://docs.anthropic.com/en/docs/claude-code) cover the full schema, but honestly the best way to figure out what works for you is to just experiment.
