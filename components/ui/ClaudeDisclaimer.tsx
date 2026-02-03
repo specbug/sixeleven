@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react"
 
-// Claude Code uses the braille "dots" spinner pattern
-// Characters: ⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏
-// Interval: ~80ms
-const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
-const SPINNER_INTERVAL = 80
+// Claude Code spinner - the morphing starburst animation
+// Characters: · ✻ ✽ ✶ ✳ ✢
+// Source: https://medium.com/@kyletmartinez/reverse-engineering-claudes-ascii-spinner-animation-eec2804626e0
+const SPINNER_FRAMES = ["·", "✻", "✽", "✶", "✳", "✢"]
+const SPINNER_INTERVAL = 120
 
-// Claude Code accent color (the orange used in the CLI)
+// Claude Code orange accent
 const CLAUDE_ORANGE = "#D97706"
 
 function ClaudeSpinner() {
@@ -23,7 +23,7 @@ function ClaudeSpinner() {
 
   return (
     <span
-      className="font-mono text-xl leading-none"
+      className="font-mono text-2xl leading-none inline-block w-6 text-center"
       style={{ color: CLAUDE_ORANGE }}
       aria-label="Loading spinner"
     >
