@@ -1,10 +1,60 @@
 ---
-title: "Claude Code Spinner Verbs"
+title: "My Claude Code Setup"
 date: "February 03, 2026"
-excerpt: "On customising Claude Code's loading spinners with references to things you care about."
-readingTime: "2"
+excerpt: "A look at how I've customized Claude Code—spinner verbs, sound notifications, status line, and plugins."
+readingTime: "4"
 tags: ["ai", "diy"]
 ---
+
+Claude Code has quietly become my favorite way to work with AI. Not because of any single feature, but because it's designed to get out of your way and let you customize the parts that matter to you. Here's how I've set mine up.
+
+## Sound Notifications
+
+This one's simple but transformative. When Claude finishes a task or needs my attention, I want to know—without staring at the terminal.
+
+```json
+"hooks": {
+  "Stop": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "afplay /System/Library/Sounds/Hero.aiff"
+        }
+      ]
+    }
+  ],
+  "Notification": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "afplay /System/Library/Sounds/Submarine.aiff"
+        }
+      ]
+    }
+  ]
+}
+```
+
+`Stop` fires when Claude completes work—Hero.aiff is a satisfying triumphant chime. `Notification` fires when Claude pauses for input or wants your attention—Submarine is a gentle "hey, look over here." macOS has a bunch of built-in sounds in `/System/Library/Sounds/` to choose from.
+
+## Status Line
+
+The default status line is fine, but I wanted something closer to my shell prompt. This shows user@host, the current directory, git branch (if any), and active Python virtualenv:
+
+```json
+"statusLine": {
+  "type": "command",
+  "command": "d=$(basename \"$(pwd)\"); g=\"\"; if git rev-parse --git-dir >/dev/null 2>&1; then b=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null); if [ -n \"$b\" ]; then g=$(printf \" \\033[36m(%s)\\033[0m\" \"$b\"); fi; fi; v=\"\"; if [ -n \"$VIRTUAL_ENV\" ]; then v=$(printf \" \\033[32m(%s)\\033[0m\" \"$(basename \"$VIRTUAL_ENV\")\"); elif [ -n \"$CONDA_DEFAULT_ENV\" ]; then v=$(printf \" \\033[32m(%s)\\033[0m\" \"$CONDA_DEFAULT_ENV\"); fi; printf \"\\033[2m%s@%s\\033[0m \\033[34m%s\\033[0m%s%s\" \"$(whoami)\" \"$(hostname -s)\" \"$d\" \"$g\" \"$v\""
+}
+```
+
+It's a bit of a one-liner, but it gives you something like `rishitv@mac my-project (main) (venv)` at a glance.
+
+## Spinner Verbs
 
 Claude Code lets you replace the default loading messages with custom ones. It's called [`spinnerVerbs`](https://www.threads.com/@boris_cherny/post/DUB4mtmEskQ), purely cosmetic, zero utility, I love it.
 
@@ -111,3 +161,36 @@ Solving death
 ```
 
 These go in `~/.claude/settings.json` under `spinnerVerbs` with `mode: replace`. Steal them or make your own.
+
+## Plugins
+
+I've enabled a few community plugins:
+
+- **commit-commands** - shortcuts for git workflows
+- **pr-review-toolkit** - code review helpers
+- **agent-sdk-dev** - for building Claude Agent SDK apps
+- **ralph-loop** - autonomous coding loops
+
+```json
+"enabledPlugins": {
+  "pr-review-toolkit@claude-code-plugins": true,
+  "agent-sdk-dev@claude-code-plugins": true,
+  "commit-commands@claude-code-plugins": true,
+  "ralph-loop@claude-plugins-official": true
+}
+```
+
+## Other Settings
+
+A few more things I keep enabled:
+
+```json
+"model": "opus",
+"alwaysThinkingEnabled": true
+```
+
+Opus is slower but noticeably better for complex reasoning tasks. Extended thinking (`alwaysThinkingEnabled`) lets Claude work through problems step by step before responding—makes a real difference for debugging and architecture decisions.
+
+---
+
+All of this lives in `~/.claude/settings.json`. The [Claude Code docs](https://docs.anthropic.com/en/docs/claude-code) cover the full schema, but honestly the best way to figure out what works for you is just to experiment.
