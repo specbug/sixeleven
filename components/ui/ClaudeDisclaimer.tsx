@@ -1,27 +1,48 @@
 "use client"
 
-// Claude Code starburst logo - spinning disclaimer component
-// Anthropic orange: #E86F34 (close to brand)
+import { useState, useEffect } from "react"
+
+// Claude Code uses the braille "dots" spinner pattern
+// Characters: ⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏
+// Interval: ~80ms
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+const SPINNER_INTERVAL = 80
+
+// Claude Code accent color (the orange used in the CLI)
+const CLAUDE_ORANGE = "#D97706"
+
+function ClaudeSpinner() {
+  const [frame, setFrame] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFrame((prev) => (prev + 1) % SPINNER_FRAMES.length)
+    }, SPINNER_INTERVAL)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <span
+      className="font-mono text-xl leading-none"
+      style={{ color: CLAUDE_ORANGE }}
+      aria-label="Loading spinner"
+    >
+      {SPINNER_FRAMES[frame]}
+    </span>
+  )
+}
 
 export function ClaudeDisclaimer({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="my-8 flex items-start gap-4 p-4 border-l-[3px] border-[#E86F34] bg-[#E86F34]/5">
+    <div
+      className="my-8 flex items-start gap-4 p-4 border-l-[3px]"
+      style={{
+        borderColor: CLAUDE_ORANGE,
+        backgroundColor: `${CLAUDE_ORANGE}10`
+      }}
+    >
       <div className="flex-shrink-0 mt-0.5">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin-slow"
-          style={{ animationDuration: '8s' }}
-        >
-          {/* Claude Code starburst - 8 pointed star */}
-          <path
-            d="M12 0L13.5 8.5L20.5 3.5L15.5 10.5L24 12L15.5 13.5L20.5 20.5L13.5 15.5L12 24L10.5 15.5L3.5 20.5L8.5 13.5L0 12L8.5 10.5L3.5 3.5L10.5 8.5L12 0Z"
-            fill="#E86F34"
-          />
-        </svg>
+        <ClaudeSpinner />
       </div>
       <div className="flex-1 text-[var(--foreground)] text-[0.95rem] leading-relaxed">
         {children || (

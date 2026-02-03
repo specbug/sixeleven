@@ -152,20 +152,6 @@
 }
 
 @layer utilities {
-  /* Slow spin animation for Claude starburst */
-  .animate-spin-slow {
-    animation: spin-slow 8s linear infinite;
-  }
-
-  @keyframes spin-slow {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   /* Block links that should not underline on hover */
   .no-underline,
   .no-underline:hover {
