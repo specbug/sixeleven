@@ -8,6 +8,7 @@ import { CodeBlock } from "./code-block"
 import { BlockMath, InlineMath } from "./ui/LaTeX-alt"
 import React, { Fragment } from "react"
 import { CreativeCommons } from "./ui/CreativeCommons"
+import { ClaudeDisclaimer } from "./ui/ClaudeDisclaimer"
 
 // Custom components for ReactMarkdown - Dieter Rams inspired styling
 const createCustomComponents = (blockMathExpressions: string[]) => ({
@@ -100,7 +101,8 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       text.includes("{{image-with-caption:") ||
       text.includes("{{side-by-side:") ||
       text.includes("{{callout:") ||
-      text.includes("{{creativecommons}}")
+      text.includes("{{creativecommons}}") ||
+      text.includes("{{claude-disclaimer}}")
     ) {
       if (text.includes("{{block-math:")) {
         const match = text.match(/\{\{block-math:(\d+)\}\}/)
@@ -147,6 +149,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
 
       if (text.includes("{{creativecommons}}")) {
         return <CreativeCommons />
+      }
+
+      if (text.includes("{{claude-disclaimer}}")) {
+        return <ClaudeDisclaimer />
       }
 
       // Callouts - Rams style: left border only, no icons, subtle background
