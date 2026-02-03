@@ -23,7 +23,7 @@ function ClaudeSpinner() {
 
   return (
     <span
-      className="font-mono text-2xl leading-none inline-block w-6 text-center"
+      className="font-mono text-lg leading-none inline-block w-5 text-center"
       style={{ color: CLAUDE_ORANGE }}
       aria-label="Loading spinner"
     >
