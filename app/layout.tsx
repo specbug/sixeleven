@@ -4,7 +4,7 @@ import "./globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
-import { manrope, monoFont, logoFont } from "@/lib/fonts"
+import { rSans, monoFont, logoFont } from "@/lib/fonts"
 
 function WebsiteSchema() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
@@ -74,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${monoFont.variable} ${logoFont.variable}`}>
+    <html lang="en" className={`${rSans.variable} ${monoFont.variable} ${logoFont.variable}`}>
       <head>
         <WebsiteSchema />
       </head>

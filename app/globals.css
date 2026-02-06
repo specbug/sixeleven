@@ -88,7 +88,7 @@
   }
 
   html {
-    font-family: var(--font-manrope), system-ui, sans-serif;
+    font-family: var(--font-rsans), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -103,7 +103,7 @@
 
   /* Headings - UI elements use lowercase (set via components) */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-manrope), system-ui, sans-serif;
+    font-family: var(--font-rsans), system-ui, sans-serif;
     color: var(--foreground);
   }
 
