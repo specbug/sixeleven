@@ -27,9 +27,19 @@ export const monoFont = localFont({
       style: "normal",
     },
     {
+      path: "../public/fonts/RMono-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
       path: "../public/fonts/RMono-Bold.woff2",
       weight: "700",
       style: "normal",
+    },
+    {
+      path: "../public/fonts/RMono-BoldItalic.woff2",
+      weight: "700",
+      style: "italic",
     },
   ],
   display: "swap",
