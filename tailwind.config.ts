@@ -69,11 +69,11 @@ const config: Config = {
         sm: "0",
         DEFAULT: "0",
       },
-      // Manrope as primary font
+      // R Sans as primary font
       fontFamily: {
-        sans: ["var(--font-manrope)", "system-ui", "sans-serif"],
+        sans: ["var(--font-rsans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
-        logo: ["var(--font-logo)", "var(--font-manrope)", "system-ui", "sans-serif"],
+        logo: ["var(--font-logo)", "var(--font-rsans)", "system-ui", "sans-serif"],
       },
       // Type scale based on 1.333 perfect fourth
       fontSize: {
@@ -97,7 +97,7 @@ const config: Config = {
           css: {
             maxWidth: "680px",
             color: "#1a1a1a",
-            fontFamily: "var(--font-manrope), system-ui, sans-serif",
+            fontFamily: "var(--font-rsans), system-ui, sans-serif",
             fontSize: "1.125rem",
             fontWeight: "400",
             lineHeight: "1.7",

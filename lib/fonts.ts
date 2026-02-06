@@ -1,13 +1,21 @@
-import { Manrope } from "next/font/google"
 import localFont from "next/font/local"
 
-// Primary font: Manrope - closest free alternative to Akzidenz-Grotesk (what Dieter Rams actually used)
-// Geometric, clean, variable font with no italics by design
-export const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-manrope",
+// Primary font: R Sans - custom sans-serif variable font
+export const rSans = localFont({
+  src: [
+    {
+      path: "../public/fonts/RSans-Variable.woff2",
+      weight: "100 900",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/RSans-Italic-Variable.woff2",
+      weight: "100 900",
+      style: "italic",
+    },
+  ],
   display: "swap",
+  variable: "--font-rsans",
 })
 
 // Logo font: Et Book Bold Line Figures - distinctive, classic
@@ -47,10 +55,11 @@ export const monoFont = localFont({
 })
 
 // Legacy exports for compatibility
-export const serifFont = manrope
-export const sansFont = manrope
-export const helveticaNeue = manrope
-export const roboto = manrope
-export const tiemposText = manrope
+export const manrope = rSans
+export const serifFont = rSans
+export const sansFont = rSans
+export const helveticaNeue = rSans
+export const roboto = rSans
+export const tiemposText = rSans
 export const plexMono = monoFont
-export const blogTitleFont = manrope
+export const blogTitleFont = rSans
