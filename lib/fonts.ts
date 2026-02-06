@@ -5,10 +5,12 @@ export const rSans = localFont({
   src: [
     {
       path: "../public/fonts/RSans-Variable.woff2",
+      weight: "100 900",
       style: "normal",
     },
     {
       path: "../public/fonts/RSans-Italic-Variable.woff2",
+      weight: "100 900",
       style: "italic",
     },
   ],

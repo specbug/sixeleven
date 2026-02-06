@@ -89,8 +89,11 @@
 
   html {
     font-family: var(--font-rsans), system-ui, sans-serif;
+    font-feature-settings: "cv01" 1, "cv05" 1, "cv08" 1, "cv09" 1, "cv10" 1, "cv11" 1, "cv12" 1, "ss03" 1, "zero" 1, "dlig" 1;
+    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
