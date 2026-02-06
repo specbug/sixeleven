@@ -18,16 +18,16 @@ export const logoFont = localFont({
   preload: true,
 })
 
-// Monospace font: R Plex Mono for code blocks
+// Monospace font: R Mono for code blocks
 export const monoFont = localFont({
   src: [
     {
-      path: "../public/fonts/RPlexMono-Regular.ttf",
+      path: "../public/fonts/RMono-Regular.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../public/fonts/RPlexMono-Bold.ttf",
+      path: "../public/fonts/RMono-Bold.woff2",
       weight: "700",
       style: "normal",
     },
