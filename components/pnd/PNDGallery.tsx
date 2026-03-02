@@ -178,7 +178,7 @@ function Hero() {
 
       <Reveal visible={mounted} delay={350}>
         <p className="text-[var(--foreground-subtle)] text-sm italic mt-3 max-w-[520px]">
-          the cognitive hangover of re-entering reality after deep immersion in
+          the cognitive overhang of re-entering reality after deep immersion in
           a high-fidelity fictional world.
         </p>
       </Reveal>
