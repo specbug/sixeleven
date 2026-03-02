@@ -280,7 +280,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
         <div className="space-y-16">
           {filteredPosts.map((post) => (
             <article key={post.slug}>
-              <Link href={`/blog/${post.slug}`} className="block group no-underline hover:no-underline">
+              <Link href={post.link || `/blog/${post.slug}`} className="block group no-underline hover:no-underline">
                 {/* Date and reading time */}
                 <div className="uppercase-meta text-[var(--foreground-subtle)] mb-2">
                   <time dateTime={post.date}>
