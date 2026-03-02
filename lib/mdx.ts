@@ -11,6 +11,7 @@ export interface Post {
   content: string
   readingTime?: string
   tags?: string[]
+  link?: string
 }
 
 export interface Project {

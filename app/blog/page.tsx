@@ -46,7 +46,7 @@ export default async function BlogPage() {
       <div className="space-y-16">
         {posts.map((post) => (
           <article key={post.slug}>
-            <Link href={`/blog/${post.slug}`} className="block group no-underline hover:no-underline">
+            <Link href={post.link || `/blog/${post.slug}`} className="block group no-underline hover:no-underline">
               {/* Date and reading time - uppercase meta */}
               <div className="uppercase-meta text-[var(--foreground-subtle)] mb-2">
                 <time dateTime={post.date}>
