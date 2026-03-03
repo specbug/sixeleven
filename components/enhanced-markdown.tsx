@@ -388,6 +388,24 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     </li>
   ),
 
+  // Tables - mono font for data alignment
+  table: ({ children, ...props }: any) => (
+    <div className="my-6 overflow-x-auto">
+      <table className="w-full text-sm border-collapse" style={{ fontFamily: "var(--font-mono), ui-monospace, monospace" }} {...props}>
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children, ...props }: any) => (
+    <thead className="border-b-[2px] border-[var(--border)]" {...props}>{children}</thead>
+  ),
+  th: ({ children, ...props }: any) => (
+    <th className="text-left py-2 pr-4 font-semibold text-[var(--foreground)]" {...props}>{children}</th>
+  ),
+  td: ({ children, ...props }: any) => (
+    <td className="py-2 pr-4 text-[var(--foreground-body)] border-b border-[var(--border)]" {...props}>{children}</td>
+  ),
+
   // Horizontal rule - subtle
   hr: (props: any) => <hr className="my-10 border-t border-[var(--border)]" {...props} />,
 })
