@@ -9,10 +9,10 @@ This is a personal blog website ("sixeleven") for Rishit Vora, built with Next.j
 ## Core Commands
 
 ### Development
-- `npm run dev` - Start the Next.js development server
-- `npm run build` - Build the production application
-- `npm run start` - Start the production server
-- `npm run lint` - Run ESLint on the codebase
+- `bun dev` - Start the Next.js development server
+- `bun run build` - Build the production application
+- `bun start` - Start the production server
+- `bun lint` - Run ESLint on the codebase
 
 ## Architecture
 
