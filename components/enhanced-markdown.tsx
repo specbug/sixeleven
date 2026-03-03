@@ -89,7 +89,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return child
       })
 
-      return <p className="my-4" {...props}>{processedChildren}</p>
+      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
     }
 
     const text = children ? String(children) : ""
@@ -208,10 +208,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         parts.push(text.substring(lastIndex))
       }
 
-      return <p className="my-4" {...props}>{parts}</p>
+      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{parts}</p>
     }
 
-    return <p className="my-4" {...props}>{children}</p>
+    return <p className="my-6 text-[var(--foreground-body)]" {...props}>{children}</p>
   },
 
   img: ({ src, alt, ...props }: any) => {
