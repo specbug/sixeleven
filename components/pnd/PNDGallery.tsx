@@ -19,44 +19,14 @@ interface Entry {
 
 const entries: Entry[] = [
   {
-    title: "Worm",
-    creator: "Wildbow",
-    medium: "web serial",
-    year: "2011–2013",
-    experienced: "2026",
-    image: "/images/pnd/worm.jpg",
+    title: "Harry Potter",
+    creator: "J.K. Rowling",
+    medium: "book series",
+    year: "1997–2007",
+    experienced: "2017",
+    image: "/images/pnd/harry-potter.png",
     reflection:
-      "Worm broke superhero stories for me. Nothing in the genre has come close since, and I've tried. 1.7 million words of relentlessly bleak, ever-escalating exercise in masochism, and you can't stop turning the page. Taylor Hebert altered something in me, and I don't think it reverts. I finished it and the real world felt thinner.",
-  },
-  {
-    title: "Clair Obscur: Expedition 33",
-    creator: "Sandfall Interactive",
-    medium: "video game",
-    year: "2025",
-    experienced: "2025",
-    image: "/images/pnd/expedition-33.webp",
-    reflection:
-      "The story. The characters. The score (oh god, the score). There's nothing reductive left to say. It's a work of art that happens to come in a game-shaped box.",
-  },
-  {
-    title: "Elden Ring",
-    creator: "FromSoftware",
-    medium: "video game",
-    year: "2022",
-    experienced: "2023",
-    image: "/images/pnd/elden-ring.png",
-    reflection:
-      "Two months to beat it. Two years to get out of it. I have never had a stronger emotional response to a game than stepping into Limgrave for the first time. FromSoft built a world that never asked for my attention, it just quietly deserved all of it, and I realized this at 3am binging VaatiVidya videos. Favorite game of all time. Nothing else is close.",
-  },
-  {
-    title: "Harry Potter and the Methods of Rationality",
-    creator: "Eliezer Yudkowsky",
-    medium: "web fiction",
-    year: "2010–2015",
-    experienced: "2021",
-    image: "/images/pnd/hpmor.jpg",
-    reflection:
-      "HPMOR feels like it was reverse-engineered from my specific brain. I've read it five times. So far. Each reread surfaces things I missed that were load-bearing the entire time. I genuinely cannot articulate what this book did to my thinking without sounding unhinged. It's an inflection point in my life, and I rue imagining a universe where I never came across it.",
+      "The gateway drug. HP is the reason I read. Every book I've picked up since is downstream of an owl that never actually arrived. I owe Rowling the single most important habit of my life.",
   },
   {
     title: "Remembrance of Earth's Past",
@@ -66,17 +36,57 @@ const entries: Entry[] = [
     experienced: "2020",
     image: "/images/pnd/remembrance.jpg",
     reflection:
-      "I can usually see a twist coming, but Liu Cixin had me on the back foot for three straight books. This was the first time I rode the scope escalation train and it just kept going, each volume blowing open the ceiling of the last. Some of the ideas in this trilogy live rent-free in my head, and I don't think they're leaving.",
+      "I operate with a respectable hit rate on predicting plot structures. Liu Cixin forced me to go 0 for 3 across an entire trilogy. Each volume casually invalidates the functional scale of the last, executing a cosmic escalation loop of \"actually, the threat vector is magnitudes worse.\" Multiple concepts from this series bypassed my filters and have taken up permanent, non-negotiable residence in my foundational model of the universe.",
   },
   {
-    title: "Harry Potter",
-    creator: "J.K. Rowling",
-    medium: "book series",
-    year: "1997–2007",
-    experienced: "2017",
-    image: "/images/pnd/harry-potter.png",
+    title: "Harry Potter and the Methods of Rationality",
+    creator: "Eliezer Yudkowsky",
+    medium: "web fiction",
+    year: "2010–2015",
+    experienced: "2021",
+    image: "/images/pnd/hpmor.jpg",
     reflection:
-      "The first fictional world I ever truly lived in. HP gave me the gift of falling in love with reading. It has a permanently reserved space in who I am.",
+      "HPMOR reads like a developer reverse-engineered my specific cognitive architecture and wrote a book exclusively to target my vulnerabilities. Five iterations in and I am still detecting structural plot elements I had previously misclassified as decorative syntax. An honest accounting of what this did to my epistemology would fail a standard sanity check, so I'll limit the assessment: it is the single highest-leverage data set I have ever encountered.",
+  },
+  {
+    title: "Elden Ring",
+    creator: "FromSoftware",
+    medium: "video game",
+    year: "2022",
+    experienced: "2023",
+    image: "/images/pnd/elden-ring.png",
+    reflection:
+      "Two months to beat it. Two years to get out of it. Stepping into Limgrave for the first time is the strongest emotional response I have ever had to a piece of software. FromSoft built a world that never once asked for my attention; it just quietly deserved all of it, a fact I processed at 3am through a VaatiVidya binge. Favourite game.",
+  },
+  {
+    title: "Attack on Titan",
+    creator: "Hajime Isayama",
+    medium: "anime",
+    year: "2013–2023",
+    experienced: "2023",
+    image: "/images/pnd/attack-on-titan.jpg",
+    reflection:
+      "Every component running at maximum output simultaneously: the writing, the direction, characters that feel closer to family than fictional constructs, and a Sawano score that might be my favourite album across all genres and all media. My favourite anime, full stop.",
+  },
+  {
+    title: "Clair Obscur: Expedition 33",
+    creator: "Sandfall Interactive",
+    medium: "video game",
+    year: "2025",
+    experienced: "2025",
+    image: "/images/pnd/expedition-33.webp",
+    reflection:
+      "There is no reductive way to describe this game. The story resists summarization; the characters resist archetypes; the score resists the pause button. Sandfall Interactive shipped a work of art that happens to run on a console.",
+  },
+  {
+    title: "Worm",
+    creator: "Wildbow",
+    medium: "web serial",
+    year: "2011–2013",
+    experienced: "2026",
+    image: "/images/pnd/worm.jpg",
+    reflection:
+      "1.7 million words of methodically escalating catastrophe, and at no point did my brain flag this as optional reading. Wildbow doesn't write stories; he engineers narrative traps with load-bearing walls you don't notice until you're already inside. Khepri induced a fully realized trigger event, and I didn't even get the compensatory powers.",
   },
 ]
 
@@ -179,7 +189,7 @@ function Hero() {
       <Reveal visible={mounted} delay={350}>
         <p className="text-[var(--foreground-subtle)] text-sm italic mt-3 max-w-[520px]">
           the cognitive overhang of re-entering reality after deep immersion in
-          a high-fidelity fictional world.
+          a fictional world.
         </p>
       </Reveal>
 
@@ -203,10 +213,11 @@ function Hero() {
 
       <Reveal visible={mounted} delay={800}>
         <p className="text-[var(--foreground-subtle)] text-sm leading-relaxed mt-8 max-w-[520px]">
-          this is not a list of favourites. it is a record of temporal
-          watermarks — works that didn&apos;t just pass through me but altered
-          the coordinate system by which I locate myself in time. each one
-          partitions my life into before and after.
+          These are not mere favorites, but an index of temporal watermarks.
+          These works carried enough cognitive overhang to make
+          context-switching back to reality highly difficult. The resulting
+          baseline update acts as a permanent, irreversible partition in my
+          timeline.
         </p>
       </Reveal>
     </section>
@@ -308,8 +319,8 @@ export default function PNDGallery() {
       <Hero />
 
       <div className="space-y-24 md:space-y-32">
-        {entries.map((entry, i) => (
-          <EntryCard key={entry.title} entry={entry} index={i} />
+        {[...entries].reverse().map((entry, i) => (
+          <EntryCard key={entry.title} entry={entry} index={entries.length - 1 - i} />
         ))}
       </div>
 

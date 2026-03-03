@@ -89,7 +89,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return child
       })
 
-      return <p {...props}>{processedChildren}</p>
+      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
     }
 
     const text = children ? String(children) : ""
@@ -208,10 +208,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         parts.push(text.substring(lastIndex))
       }
 
-      return <p {...props}>{parts}</p>
+      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{parts}</p>
     }
 
-    return <p {...props}>{children}</p>
+    return <p className="my-6 text-[var(--foreground-body)]" {...props}>{children}</p>
   },
 
   img: ({ src, alt, ...props }: any) => {
@@ -386,6 +386,24 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     <li className="my-1" {...props}>
       {children}
     </li>
+  ),
+
+  // Tables - mono font for data alignment
+  table: ({ children, ...props }: any) => (
+    <div className="my-6 overflow-x-auto">
+      <table className="w-full text-sm border-collapse" style={{ fontFamily: "var(--font-mono), ui-monospace, monospace" }} {...props}>
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children, ...props }: any) => (
+    <thead className="border-b-[2px] border-[var(--border)]" {...props}>{children}</thead>
+  ),
+  th: ({ children, ...props }: any) => (
+    <th className="text-left py-2 pr-4 font-semibold text-[var(--foreground)]" {...props}>{children}</th>
+  ),
+  td: ({ children, ...props }: any) => (
+    <td className="py-2 pr-4 text-[var(--foreground-body)] border-b border-[var(--border)]" {...props}>{children}</td>
   ),
 
   // Horizontal rule - subtle
