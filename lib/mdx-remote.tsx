@@ -20,6 +20,7 @@ const components = {
         width={800}
         height={500}
         className="rounded-lg"
+        unoptimized={props.src?.startsWith("http") || props.src?.toLowerCase().endsWith(".gif")}
       />
     </div>
   ),

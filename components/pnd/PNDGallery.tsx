@@ -286,7 +286,6 @@ function EntryCard({ entry, index }: { entry: Entry; index: number }) {
               alt={entry.title}
               fill
               className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-              unoptimized
               onError={() => setImgError(true)}
             />
           ) : (

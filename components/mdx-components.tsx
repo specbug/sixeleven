@@ -71,7 +71,7 @@ const mdxComponents = {
 
     // Use a div instead of figure to avoid nesting issues
     return (
-      <Image src={src || "/placeholder.svg"} alt={alt || ""} width={800} height={500} className="rounded-lg my-4" />
+      <Image src={src || "/placeholder.svg"} alt={alt || ""} width={800} height={500} className="rounded-lg my-4" unoptimized={src.startsWith("http") || src.toLowerCase().endsWith(".gif")} />
     )
   },
   blockquote: ({ children }: { children: React.ReactNode }) => (

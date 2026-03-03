@@ -9,9 +9,11 @@ interface ImageWithCaptionProps {
 }
 
 export function ImageWithCaption({ src, alt, caption, width = 800, height = 500 }: ImageWithCaptionProps) {
+  const shouldSkipOptimization = src.startsWith("http") || src.toLowerCase().endsWith(".gif")
+
   return (
     <figure className="my-8">
-      <Image src={src || "/placeholder.svg"} alt={alt} width={width} height={height} className="rounded-lg w-full" />
+      <Image src={src || "/placeholder.svg"} alt={alt} width={width} height={height} className="rounded-lg w-full" unoptimized={shouldSkipOptimization} />
       {caption && (
         <figcaption className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">{caption}</figcaption>
       )}

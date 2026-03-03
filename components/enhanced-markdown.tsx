@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useMemo } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Image from "next/image"
@@ -47,6 +47,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                    loading="lazy"
                     className="w-full aspect-video"
                   ></iframe>
                 </div>
@@ -136,6 +137,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                loading="lazy"
                 className="w-full aspect-video"
               ></iframe>
             </div>
@@ -415,26 +417,15 @@ interface EnhancedMarkdownProps {
 }
 
 export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
-  const [processedContent, setProcessedContent] = useState(content)
-  const [captionedImages, setCaptionedImages] = useState<
-    Array<{ src: string; alt: string; caption: string; width: number; height: number }>
-  >([])
-  const [sideBySideImages, setSideBySideImages] = useState<
-    Array<{ images: Array<{ src: string; alt: string; width: number; height: number }> }>
-  >([])
-  const [blockMathExpressions, setBlockMathExpressions] = useState<string[]>([])
-
-  useEffect(() => {
+  const { processedContent, captionedImages, sideBySideImages, blockMathExpressions } = useMemo(() => {
     let contentWithoutBlockMath = content
     const mathBlocks: string[] = []
 
-    contentWithoutBlockMath = contentWithoutBlockMath.replace(/\$\$([\s\S]*?)\$\$/g, (match, expr) => {
+    contentWithoutBlockMath = contentWithoutBlockMath.replace(/\$\$([\s\S]*?)\$\$/g, (_match, expr) => {
       const id = mathBlocks.length
       mathBlocks.push(expr)
       return `{{block-math:${id}}}`
     })
-
-    setBlockMathExpressions(mathBlocks)
 
     let processedWithSideBySide = contentWithoutBlockMath
     const sideBySideGroups: Array<{ images: Array<{ src: string; alt: string; width: number; height: number }> }> = []
@@ -467,8 +458,8 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
                 src = urlObj.pathname
               }
             }
-          } catch (error) {
-            console.error("Error parsing image dimensions:", error)
+          } catch {
+            // ignore malformed URLs
           }
 
           images.push({ src, alt, width, height })
@@ -486,7 +477,7 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
 
     processedWithSideBySide = processedWithSideBySide.replace(
       /!\[(.*?)\]$$(.+?)$$\s*\|\s*!\[(.*?)\]$$(.+?)$$/g,
-      (match, alt1, src1, alt2, src2) => {
+      (_match, alt1, src1, alt2, src2) => {
         const images: Array<{ src: string; alt: string; width: number; height: number }> = []
 
         let width1 = 400
@@ -508,8 +499,8 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
               finalSrc1 = urlObj.pathname
             }
           }
-        } catch (error) {
-          console.error("Error parsing image dimensions:", error)
+        } catch {
+          // ignore malformed URLs
         }
 
         let width2 = 400
@@ -531,8 +522,8 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
               finalSrc2 = urlObj.pathname
             }
           }
-        } catch (error) {
-          console.error("Error parsing image dimensions:", error)
+        } catch {
+          // ignore malformed URLs
         }
 
         images.push({ src: finalSrc1, alt: alt1, width: width1, height: height1 })
@@ -544,10 +535,8 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
       },
     )
 
-    setSideBySideImages(sideBySideGroups)
-
-    const images: Array<{ src: string; alt: string; caption: string; width: number; height: number }> = []
-    const processed = processedWithSideBySide.replace(/!\[(.*?)::(.+?)\]$$(.+?)$$/g, (match, alt, caption, src) => {
+    const captionImages: Array<{ src: string; alt: string; caption: string; width: number; height: number }> = []
+    const processed = processedWithSideBySide.replace(/!\[(.*?)::(.+?)\]$$(.+?)$$/g, (_match, alt, caption, src) => {
       let width = 800
       let height = 450
       let finalSrc = src
@@ -567,20 +556,24 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
             finalSrc = urlObj.pathname
           }
         }
-      } catch (error) {
-        console.error("Error parsing image dimensions:", error)
+      } catch {
+        // ignore malformed URLs
       }
 
-      const id = images.length
-      images.push({ src: finalSrc, alt, caption, width, height })
+      const id = captionImages.length
+      captionImages.push({ src: finalSrc, alt, caption, width, height })
       return `{{image-with-caption:${id}}}`
     })
 
-    setProcessedContent(processed)
-    setCaptionedImages(images)
+    return {
+      processedContent: processed,
+      captionedImages: captionImages,
+      sideBySideImages: sideBySideGroups,
+      blockMathExpressions: mathBlocks,
+    }
   }, [content])
 
-  const customComponents = createCustomComponents(blockMathExpressions)
+  const customComponents = useMemo(() => createCustomComponents(blockMathExpressions), [blockMathExpressions])
 
   return (
     <Fragment>

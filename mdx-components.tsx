@@ -67,7 +67,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
       return (
         <div className="my-6">
-          <Image src={src || "/placeholder.svg"} alt={alt || ""} width={800} height={500} className="rounded-lg" />
+          <Image src={src || "/placeholder.svg"} alt={alt || ""} width={800} height={500} className="rounded-lg" unoptimized={src.startsWith("http") || src.toLowerCase().endsWith(".gif")} />
         </div>
       )
     },

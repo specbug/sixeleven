@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import type { TOCItem } from "@/lib/mdx"
 
 // Minimal chevron icon - simple geometric line
 function ChevronIcon({ size = 14, rotated = false }: { size?: number; rotated?: boolean }) {
@@ -19,36 +20,10 @@ function ChevronIcon({ size = 14, rotated = false }: { size?: number; rotated?: 
   )
 }
 
-interface TOCItem {
-  id: string
-  text: string
-  level: number
-}
-
-export default function TableOfContents({ content }: { content: string }) {
-  const [toc, setToc] = useState<TOCItem[]>([])
+export default function TableOfContents({ headings }: { headings: TOCItem[] }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  useEffect(() => {
-    const headingRegex = /^(#{2,4})\s+(.+)$/gm
-    const headings: TOCItem[] = []
-    let match
-
-    while ((match = headingRegex.exec(content)) !== null) {
-      const level = match[1].length
-      const text = match[2]
-      const id = text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, "-")
-
-      headings.push({ id, text, level })
-    }
-
-    setToc(headings)
-  }, [content])
-
-  if (toc.length === 0) return null
+  if (headings.length === 0) return null
 
   return (
     <div className="mb-8">
@@ -64,7 +39,7 @@ export default function TableOfContents({ content }: { content: string }) {
       {/* TOC list */}
       {isExpanded && (
         <ul className="mt-4 space-y-2 border-l border-[var(--border)] pl-4">
-          {toc.map((item, index) => (
+          {headings.map((item, index) => (
             <li
               key={index}
               style={{
