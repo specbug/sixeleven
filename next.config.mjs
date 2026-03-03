@@ -18,9 +18,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  images: {
-    unoptimized: true,
-  },
+  images: {},
   turbopack: {
     root: resolve(__dirname),
   },

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getPostBySlug, getAllPosts } from "@/lib/mdx"
+import { getPostBySlug, getAllPosts, parseHeadings } from "@/lib/mdx"
 import TableOfContents from "@/components/TableOfContents"
 import ReadingProgressBar from "@/components/ReadingProgressBar"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
@@ -76,6 +76,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const isoDate = new Date(post.date).toISOString()
+  const headings = parseHeadings(post.content)
 
   return (
     <>
@@ -115,7 +116,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Table of Contents */}
         <div className="md:block">
-          <TableOfContents content={post.content} />
+          <TableOfContents headings={headings} />
         </div>
 
         {/* Article content */}
