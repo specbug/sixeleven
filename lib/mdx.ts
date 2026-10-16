@@ -32,11 +32,13 @@ export interface TOCItem {
 
 // Parse headings from markdown content for table of contents
 export function parseHeadings(content: string): TOCItem[] {
+  // Ignore fenced code, where `## comment` is not a heading
+  const prose = content.replace(/^```[\s\S]*?^```/gm, "")
   const headingRegex = /^(#{2,4})\s+(.+)$/gm
   const headings: TOCItem[] = []
   let match
 
-  while ((match = headingRegex.exec(content)) !== null) {
+  while ((match = headingRegex.exec(prose)) !== null) {
     const level = match[1].length
     const text = match[2]
     const id = text
@@ -48,6 +50,17 @@ export function parseHeadings(content: string): TOCItem[] {
   }
 
   return headings
+}
+
+// Posts to read next: most shared tags first, then most recent
+export function getRelatedPosts(post: Post, posts: Post[], count = 2): Post[] {
+  const tags = new Set((post.tags ?? []).map((t) => t.toLowerCase()))
+  return posts
+    .filter((p) => p.slug !== post.slug)
+    .map((p) => ({ p, shared: (p.tags ?? []).filter((t) => tags.has(t.toLowerCase())).length }))
+    .sort((a, b) => b.shared - a.shared || new Date(b.p.date).getTime() - new Date(a.p.date).getTime())
+    .slice(0, count)
+    .map(({ p }) => p)
 }
 
 // Get the app directory path
