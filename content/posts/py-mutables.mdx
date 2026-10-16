@@ -1,5 +1,5 @@
 ---
-title: "A Curious Case of The Mutable’s"
+title: "A Curious Case of the Mutables"
 date: "November 18, 2022"
 excerpt: "A clear breakdown of how Python handles object references — and why mutating a list of lists doesn’t always do what you expect."
 readingTime: "8"
@@ -28,7 +28,7 @@ and plot the array:
 
 The output is not what you expect. Instead of changing the element at $(0, 0)$ to $2$, the entire first row is updated to $2$!
 
-### The Curious Case of Mutables
+### The curious case of mutables
 
 Alright let’s unravel this. The line `[0] * 5` creates five references to the object $0$. An object is just some data residing in some memory location. And a reference is a pointer to that object. In the above case, all five copies point to the same memory location (which contains an object $"0"$).
 ![Obj Ref](/images/pymut3.png)
@@ -83,7 +83,7 @@ vector[0] is vector[1]
 # False
 ```
 
-### Visualising Stackframes
+### Visualising stackframes
 
 **Case 1: mutating a mutable object**
 

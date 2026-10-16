@@ -29,11 +29,11 @@ export default function TableOfContents({ headings }: { headings: TOCItem[] }) {
     <div className="mb-8">
       {/* Toggle button - collapsed by default */}
       <button
-        className="flex items-center gap-1 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+        className="flex items-center gap-1 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <ChevronIcon size={14} rotated={isExpanded} />
-        contents
+        Contents
       </button>
 
       {/* TOC list */}
@@ -48,7 +48,7 @@ export default function TableOfContents({ headings }: { headings: TOCItem[] }) {
             >
               <a
                 href={`#${item.id}`}
-                className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+                className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
               >
                 {item.text}
               </a>

@@ -103,8 +103,8 @@ export default function Navigation() {
   }
 
   const navLinks = [
-    { href: "/archive", label: "archive" },
-    { href: "/about", label: "about" },
+    { href: "/archive", label: "Archive" },
+    { href: "/about", label: "About" },
   ]
 
   return (
@@ -128,7 +128,7 @@ export default function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm transition-colors lowercase ${
+              className={`text-sm transition-colors ${
                 pathname === link.href
                   ? "text-[var(--braun-orange)]"
                   : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
@@ -176,7 +176,7 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block py-3 text-base transition-colors lowercase ${
+                className={`block py-3 text-base transition-colors ${
                   pathname === link.href
                     ? "text-[var(--braun-orange)]"
                     : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"

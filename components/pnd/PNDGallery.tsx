@@ -182,13 +182,13 @@ function Hero() {
     <section className="min-h-[50vh] flex flex-col justify-end pb-20">
       <Reveal visible={mounted} delay={200}>
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1]">
-          post narrative depression
+          Post Narrative Depression
         </h1>
       </Reveal>
 
       <Reveal visible={mounted} delay={350}>
         <p className="text-[var(--foreground-subtle)] text-sm italic mt-3 max-w-[520px]">
-          the cognitive overhang of re-entering reality after deep immersion in
+          The cognitive overhang of re-entering reality after deep immersion in
           a fictional world.
         </p>
       </Reveal>
@@ -203,10 +203,10 @@ function Hero() {
 
       <Reveal visible={mounted} delay={600}>
         <p className="text-[var(--foreground-muted)] leading-relaxed max-w-[520px]">
-          some stories don&apos;t just end. they leave a space where they used
+          Some stories don&apos;t just end. They leave a space where they used
           to be.
           <span className="block mt-1 text-[var(--foreground-subtle)]">
-            this is that space.
+            This is that space.
           </span>
         </p>
       </Reveal>

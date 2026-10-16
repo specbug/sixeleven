@@ -135,13 +135,13 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
   const getSortLabel = (option: SortOption): string => {
     switch (option) {
       case "newest":
-        return "newest"
+        return "Newest"
       case "oldest":
-        return "oldest"
+        return "Oldest"
       case "title":
-        return "title"
+        return "Title"
       case "readingTime":
-        return "reading time"
+        return "Reading time"
     }
   }
 
@@ -161,10 +161,10 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
           </div>
           <input
             type="text"
-            placeholder="search posts…"
+            placeholder="Search posts…"
             value={searchQuery}
             onChange={handleSearch}
-            className="w-full pl-6 pr-8 py-2 bg-transparent border-b border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--braun-orange)] transition-colors lowercase"
+            className="w-full pl-6 pr-8 py-2 bg-transparent border-b border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--braun-orange)] transition-colors"
           />
           {searchQuery && (
             <button
@@ -181,7 +181,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
         <div className="relative flex-shrink-0">
           <button
             onClick={() => setShowSortMenu(!showSortMenu)}
-            className="flex items-baseline gap-2 px-0 py-2 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+            className="flex items-baseline gap-2 px-0 py-2 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
           >
             <span className="self-center"><SortIcon size={14} /></span>
             <span>{getSortLabel(sortOption)}</span>
@@ -195,7 +195,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
                     setSortOption(option)
                     setShowSortMenu(false)
                   }}
-                  className={`block w-full text-left px-4 py-1.5 text-sm lowercase transition-colors ${
+                  className={`block w-full text-left px-4 py-1.5 text-sm transition-colors ${
                     sortOption === option
                       ? "text-[var(--braun-orange)]"
                       : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
@@ -213,9 +213,9 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       <div>
         <button
           onClick={() => setShowTagFilter(!showTagFilter)}
-          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
         >
-          {showTagFilter ? "hide tags" : "filter by tags"}
+          {showTagFilter ? "Hide tags" : "Filter by tags"}
         </button>
 
         {showTagFilter && (
@@ -234,7 +234,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
 
         {selectedTags.length > 0 && (
           <div className="flex items-center mt-4 gap-2">
-            <span className="text-sm text-[var(--foreground-subtle)]">active:</span>
+            <span className="text-sm text-[var(--foreground-subtle)]">Active:</span>
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {selectedTags.map((tag) => (
                 <span key={tag} className="tag text-[var(--braun-orange)] flex items-center gap-1">
@@ -249,9 +249,9 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
               ))}
               <button
                 onClick={clearFilters}
-                className="text-xs text-[var(--foreground-subtle)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+                className="text-xs text-[var(--foreground-subtle)] hover:text-[var(--braun-orange)] transition-colors"
               >
-                clear
+                Clear
               </button>
             </div>
           </div>
@@ -266,13 +266,13 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       {/* Results */}
       {filteredPosts.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-[var(--foreground-muted)] lowercase">no posts found.</p>
+          <p className="text-[var(--foreground-muted)]">No posts found.</p>
           {(searchQuery || selectedTags.length > 0) && (
             <button
               onClick={clearFilters}
-              className="mt-2 text-[var(--braun-orange)] hover:underline text-sm lowercase"
+              className="mt-2 text-[var(--braun-orange)] hover:underline text-sm"
             >
-              clear filters
+              Clear filters
             </button>
           )}
         </div>
@@ -293,7 +293,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
                 </div>
 
                 {/* Title - only this gets underline on hover */}
-                <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+                <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
                   {post.title}
                 </h2>
 

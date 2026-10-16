@@ -264,11 +264,11 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     )
   },
 
-  // Headings - lowercase for Rams aesthetic, text blocks stay normal case
+  // Headings - rendered as authored (sentence case in posts)
   // Scale steps down from the 64px post title so sections read as sections, not
   // rival titles; more air above than below binds each heading to its text.
   h1: ({ children, ...props }: any) => (
-    <h1 className="text-[1.875rem] md:text-[2.25rem] leading-[1.15] font-semibold mt-16 mb-5 tracking-[-0.025em] lowercase" {...props}>
+    <h1 className="text-[1.875rem] md:text-[2.25rem] leading-[1.15] font-semibold mt-16 mb-5 tracking-[-0.025em]" {...props}>
       {children}
     </h1>
   ),
@@ -280,7 +280,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h2 id={id} className="text-[1.625rem] md:text-[2rem] leading-[1.15] font-semibold mt-16 mb-4 tracking-[-0.025em] lowercase scroll-mt-24" {...props}>
+      <h2 id={id} className="text-[1.625rem] md:text-[2rem] leading-[1.15] font-semibold mt-16 mb-4 tracking-[-0.025em] scroll-mt-24" {...props}>
         {children}
       </h2>
     )
@@ -293,7 +293,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h3 id={id} className="text-[1.3125rem] md:text-[1.4375rem] leading-[1.25] font-semibold mt-12 mb-3 tracking-[-0.015em] lowercase scroll-mt-24" {...props}>
+      <h3 id={id} className="text-[1.3125rem] md:text-[1.4375rem] leading-[1.25] font-semibold mt-12 mb-3 tracking-[-0.015em] scroll-mt-24" {...props}>
         {children}
       </h3>
     )
@@ -306,7 +306,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h4 id={id} className="text-[1.125rem] md:text-[1.1875rem] leading-[1.35] font-semibold mt-10 mb-2 lowercase scroll-mt-24" {...props}>
+      <h4 id={id} className="text-[1.125rem] md:text-[1.1875rem] leading-[1.35] font-semibold mt-10 mb-2 scroll-mt-24" {...props}>
         {children}
       </h4>
     )

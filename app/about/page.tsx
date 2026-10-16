@@ -5,8 +5,8 @@ import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import SpecialCode from "@/components/SpecialCode"
 
 export const metadata: Metadata = {
-  title: "about | sixeleven",
-  description: "learn more about me and this blog",
+  title: "About | sixeleven",
+  description: "About Rishit Vora and this blog",
 }
 
 export default async function AboutPage() {
