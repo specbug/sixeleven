@@ -29,7 +29,7 @@ export default function Footer() {
 
   return (
     <footer className="py-8 border-t border-[var(--border)]">
-      <div className="max-w-[680px] mx-auto px-6 md:px-0">
+      <div className="max-w-[640px] mx-auto px-6 md:px-0">
         <div className="flex justify-between items-center">
           {/* Copyright - wordmark stays lowercase */}
           <p className="text-sm text-[var(--foreground-muted)]">

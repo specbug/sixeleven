@@ -98,7 +98,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Title - Title Case, as authored in frontmatter */}
-          <h1 className="text-[2.25rem] leading-[1.1] sm:text-3xl md:text-4xl font-semibold tracking-[-0.03em] mb-5">
+          <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-5">
             {post.title}
           </h1>
 
@@ -119,9 +119,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <TableOfContents headings={headings} />
         </div>
 
-        {/* Article content - 19px on desktop keeps the 680px column near a 74-character
-            measure; long URLs and identifiers wrap instead of overflowing on phones */}
-        <div className="max-w-none md:text-[1.1875rem] md:leading-[1.65] break-words">
+        {/* Article content - inherits the 17px/1.6 body; long URLs and identifiers
+            wrap instead of overflowing on phones */}
+        <div className="max-w-none break-words">
           <EnhancedMarkdown content={post.content} />
         </div>
       </article>

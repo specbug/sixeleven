@@ -29,7 +29,7 @@ export default async function BlogPage() {
   if (posts.length === 0) {
     return (
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight mb-12">Blog</h1>
+        <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-12">Blog</h1>
         <div className="text-center py-10">
           <p className="text-[var(--foreground-muted)]">
             No posts found.
@@ -41,9 +41,9 @@ export default async function BlogPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight mb-12">Blog</h1>
+      <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-12">Blog</h1>
 
-      <div className="space-y-16">
+      <div className="space-y-12">
         {posts.map((post) => (
           <article key={post.slug}>
             <Link href={post.link || `/blog/${post.slug}`} className="block group no-underline hover:no-underline">
@@ -59,7 +59,7 @@ export default async function BlogPage() {
               </div>
 
               {/* Title - orange on hover with underline */}
-              <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+              <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
                 {post.title}
               </h2>
 

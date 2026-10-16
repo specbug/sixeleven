@@ -181,7 +181,7 @@ function Hero() {
   return (
     <section className="min-h-[50vh] flex flex-col justify-end pb-20">
       <Reveal visible={mounted} delay={200}>
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1]">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-[-0.012em] leading-[1.08]">
           Post Narrative Depression
         </h1>
       </Reveal>
@@ -260,7 +260,7 @@ function EntryCard({ entry, index }: { entry: Entry; index: number }) {
 
       {/* Title */}
       <Reveal visible={visible} delay={80}>
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mt-3 leading-tight">
+        <h2 className="text-2xl md:text-3xl font-semibold tracking-[-0.01em] mt-3 leading-tight">
           {entry.title}
         </h2>
       </Reveal>

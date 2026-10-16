@@ -113,7 +113,7 @@ export default function Navigation() {
         !isVisible ? "-translate-y-full" : "translate-y-0"
       } ${isScrolled || mobileMenuOpen ? "border-[var(--border)]" : "border-transparent"}`}
     >
-      <div className="h-full max-w-[680px] mx-auto px-6 md:px-0 flex justify-between items-center">
+      <div className="h-full max-w-[640px] mx-auto px-6 md:px-0 flex justify-between items-center">
         {/* Logo with image and text */}
         <Link href="/" className="flex items-center gap-2 font-logo hover:opacity-80 transition-opacity">
           <Image src="/logo.png" alt="sixeleven logo" width={20} height={20} className="w-5 h-5" />
@@ -171,7 +171,7 @@ export default function Navigation() {
       {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 right-0 bg-[var(--background)] border-b border-[var(--border)] py-2">
-          <div className="max-w-[680px] mx-auto px-6 flex flex-col">
+          <div className="max-w-[640px] mx-auto px-6 flex flex-col">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

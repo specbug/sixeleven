@@ -90,7 +90,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return child
       })
 
-      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
+      return <p className="my-4 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
     }
 
     const text = children ? String(children) : ""
@@ -209,10 +209,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         parts.push(text.substring(lastIndex))
       }
 
-      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{parts}</p>
+      return <p className="my-4 text-[var(--foreground-body)]" {...props}>{parts}</p>
     }
 
-    return <p className="my-6 text-[var(--foreground-body)]" {...props}>{children}</p>
+    return <p className="my-4 text-[var(--foreground-body)]" {...props}>{children}</p>
   },
 
   img: ({ src, alt, ...props }: any) => {
@@ -265,10 +265,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   },
 
   // Headings - rendered as authored (sentence case in posts)
-  // Scale steps down from the 64px post title so sections read as sections, not
-  // rival titles; more air above than below binds each heading to its text.
+  // Scale steps down from the 52px post title so sections read as sections, not
+  // rival titles; generous air above, a tight 8px below binds each heading to its text.
   h1: ({ children, ...props }: any) => (
-    <h1 className="text-[1.875rem] md:text-[2.25rem] leading-[1.15] font-semibold mt-16 mb-5 tracking-[-0.025em]" {...props}>
+    <h1 className="text-[1.75rem] md:text-[2rem] leading-[1.15] font-semibold mt-12 mb-3 tracking-[-0.012em]" {...props}>
       {children}
     </h1>
   ),
@@ -280,7 +280,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h2 id={id} className="text-[1.625rem] md:text-[2rem] leading-[1.15] font-semibold mt-16 mb-4 tracking-[-0.025em] scroll-mt-24" {...props}>
+      <h2 id={id} className="text-[1.375rem] md:text-[1.5625rem] leading-[1.2] font-semibold mt-10 mb-2 tracking-[-0.01em] scroll-mt-24" {...props}>
         {children}
       </h2>
     )
@@ -293,7 +293,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h3 id={id} className="text-[1.3125rem] md:text-[1.4375rem] leading-[1.25] font-semibold mt-12 mb-3 tracking-[-0.015em] scroll-mt-24" {...props}>
+      <h3 id={id} className="text-[1.1875rem] leading-[1.25] font-semibold mt-8 mb-1.5 tracking-[-0.005em] scroll-mt-24" {...props}>
         {children}
       </h3>
     )
@@ -306,7 +306,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h4 id={id} className="text-[1.125rem] md:text-[1.1875rem] leading-[1.35] font-semibold mt-10 mb-2 scroll-mt-24" {...props}>
+      <h4 id={id} className="text-[1.0625rem] leading-[1.35] font-semibold mt-6 mb-1 scroll-mt-24" {...props}>
         {children}
       </h4>
     )
@@ -335,7 +335,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   // Blockquote - a quiet 2px rule (matching /pnd), no italics (Rams preferred clean type)
   blockquote: ({ children, ...props }: any) => (
     <blockquote
-      className="border-l-2 border-[var(--border)] pl-6 my-8 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
+      className="border-l-2 border-[var(--border)] pl-6 my-6 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
       {...props}
     >
       {children}
@@ -373,17 +373,17 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   },
 
   ul: ({ children, ...props }: any) => (
-    <ul className="list-disc pl-6 my-6 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
+    <ul className="list-disc pl-6 my-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
       {children}
     </ul>
   ),
   ol: ({ children, ...props }: any) => (
-    <ol className="list-decimal pl-6 my-6 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
+    <ol className="list-decimal pl-6 my-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
       {children}
     </ol>
   ),
   li: ({ children, ...props }: any) => (
-    <li className="my-1.5 pl-1" {...props}>
+    <li className="my-1 pl-1" {...props}>
       {children}
     </li>
   ),

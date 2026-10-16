@@ -79,7 +79,7 @@ const config: Config = {
       fontSize: {
         "xs": ["0.75rem", { lineHeight: "1.5", letterSpacing: "0.05em" }],
         "sm": ["0.875rem", { lineHeight: "1.5" }],
-        "base": ["1.125rem", { lineHeight: "1.7" }],
+        "base": ["1.0625rem", { lineHeight: "1.6" }],
         "lg": ["1.5rem", { lineHeight: "1.4" }],
         "xl": ["2rem", { lineHeight: "1.2" }],
         "2xl": ["2.5rem", { lineHeight: "1.15" }],
@@ -100,12 +100,12 @@ const config: Config = {
       typography: {
         DEFAULT: {
           css: {
-            maxWidth: "680px",
+            maxWidth: "640px",
             color: "var(--foreground-body)",
             fontFamily: "var(--font-rsans), system-ui, sans-serif",
-            fontSize: "1.125rem",
+            fontSize: "1.0625rem",
             fontWeight: "400",
-            lineHeight: "1.7",
+            lineHeight: "1.6",
             letterSpacing: "0",
             "--tw-prose-body": "var(--foreground-body)",
             "--tw-prose-headings": "var(--foreground)",
@@ -118,8 +118,8 @@ const config: Config = {
             "--tw-prose-counters": "var(--foreground-subtle)",
             "--tw-prose-hr": "var(--border)",
             p: {
-              marginTop: "1.5em",
-              marginBottom: "1.5em",
+              marginTop: "1em",
+              marginBottom: "1em",
             },
             // Blog content headings stay normal case
             h1: {
