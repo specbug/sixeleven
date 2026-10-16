@@ -170,21 +170,21 @@ const config: Config = {
               color: "var(--foreground-muted)",
               quotes: "none",
             },
-            // Code - left border accent, no border-radius
+            // Code - 4px blocks, 2px inline (matches the markdown renderer)
             code: {
               fontFamily: "var(--font-mono)",
               fontWeight: "400",
               fontSize: "0.85em",
               backgroundColor: "var(--surface)",
               padding: "0.1em 0.3em",
-              borderRadius: "0",
+              borderRadius: "2px",
               "&::before": { content: "none" },
               "&::after": { content: "none" },
             },
             pre: {
               fontFamily: "var(--font-mono)",
               backgroundColor: "var(--code-bg)",
-              borderRadius: "0",
+              borderRadius: "4px",
               padding: "1.25rem 1.5rem",
               overflow: "auto",
             },

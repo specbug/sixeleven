@@ -39,8 +39,8 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
           // Ligatures off: R Mono joins `--` into a dash, so `--flag` would read as `—flag`
           return (
             <pre
-              className={`${className} px-6 py-5 overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
-              style={{ ...style, borderRadius: 0 }}
+              className={`${className} px-6 py-5 rounded-[4px] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
+              style={style}
             >
               {tokens.map((line, i) => {
                 const lineProps = getLineProps({ line, key: i })

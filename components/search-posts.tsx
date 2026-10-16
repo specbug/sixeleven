@@ -187,7 +187,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
             <span>{getSortLabel(sortOption)}</span>
           </button>
           {showSortMenu && (
-            <div className="absolute top-full right-0 mt-2 bg-[var(--background)] border border-[var(--border)] py-2 z-10 min-w-[140px]">
+            <div className="absolute top-full right-0 mt-2 bg-[var(--background)] border border-[var(--border)] rounded-[4px] py-2 z-10 min-w-[140px]">
               {(["newest", "oldest", "title", "readingTime"] as SortOption[]).map((option) => (
                 <button
                   key={option}
