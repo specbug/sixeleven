@@ -29,7 +29,7 @@ export default async function BlogPage() {
   if (posts.length === 0) {
     return (
       <div>
-        <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-12">Blog</h1>
+        <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.02em] mb-12">Blog</h1>
         <div className="text-center py-10">
           <p className="text-[var(--foreground-muted)]">
             No posts found.
@@ -41,7 +41,7 @@ export default async function BlogPage() {
 
   return (
     <div>
-      <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-12">Blog</h1>
+      <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.02em] mb-12">Blog</h1>
 
       <div className="space-y-10">
         {posts.map((post) => (

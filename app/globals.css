@@ -137,9 +137,11 @@
     line-height: 1.6;
   }
 
-  /* Headings - Title Case for post titles, sentence case for sections (as authored) */
+  /* Headings - Geist (the open face Anthropic Sans grew from); R Sans stays the reading
+     face. Geist's own defaults, not the R Sans character variants set on html. */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-rsans), system-ui, sans-serif;
+    font-family: var(--font-geist-sans), var(--font-rsans), system-ui, sans-serif;
+    font-feature-settings: normal;
     color: var(--foreground);
     text-wrap: balance;
   }

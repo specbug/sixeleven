@@ -4,6 +4,7 @@ import "./globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
+import { GeistSans } from "geist/font/sans"
 import { rSans, monoFont, logoFont } from "@/lib/fonts"
 
 function WebsiteSchema() {
@@ -78,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${rSans.variable} ${monoFont.variable} ${logoFont.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${rSans.variable} ${GeistSans.variable} ${monoFont.variable} ${logoFont.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <WebsiteSchema />

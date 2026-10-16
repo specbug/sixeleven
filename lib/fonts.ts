@@ -18,6 +18,8 @@ export const rSans = localFont({
   variable: "--font-rsans",
 })
 
+// Headings use Geist, loaded in app/layout.tsx from the `geist` package
+
 // Logo font: Et Book Bold Line Figures - distinctive, classic
 export const logoFont = localFont({
   src: "../public/fonts/Et Book Bold Line Figures.woff",
