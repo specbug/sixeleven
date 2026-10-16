@@ -187,7 +187,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
             <span>{getSortLabel(sortOption)}</span>
           </button>
           {showSortMenu && (
-            <div className="absolute top-full right-0 mt-2 bg-[var(--background)] border border-[var(--border)] py-2 z-10 min-w-[140px]">
+            <div className="absolute top-full right-0 mt-2 bg-[var(--background)] border border-[var(--border)] rounded-[4px] py-2 z-10 min-w-[140px]">
               {(["newest", "oldest", "title", "readingTime"] as SortOption[]).map((option) => (
                 <button
                   key={option}
@@ -277,7 +277,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
           )}
         </div>
       ) : (
-        <div className="space-y-16">
+        <div className="space-y-10">
           {filteredPosts.map((post) => (
             <article key={post.slug}>
               <Link href={post.link || `/blog/${post.slug}`} className="block group no-underline hover:no-underline">
@@ -293,12 +293,12 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
                 </div>
 
                 {/* Title - only this gets underline on hover */}
-                <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+                <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-2">
                   {post.title}
                 </h2>
 
                 {/* Excerpt */}
-                <p className="text-[var(--foreground-muted)] mb-3">
+                <p className="text-[var(--foreground-muted)] mb-2">
                   {post.excerpt}
                 </p>
 

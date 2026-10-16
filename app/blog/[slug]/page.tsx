@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getPostBySlug, getAllPosts, parseHeadings } from "@/lib/mdx"
-import TableOfContents from "@/components/TableOfContents"
+import TableOfContents, { TocRail } from "@/components/TableOfContents"
 import ReadingProgressBar from "@/components/ReadingProgressBar"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import BlogPostSchema from "@/components/blog-schema"
@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <article className="max-w-none relative">
         <ReadingProgressBar />
 
-        <header className="mb-10">
+        <header className="mb-8">
           {/* Date and reading time - uppercase meta */}
           <div className="uppercase-meta text-[var(--foreground-subtle)] mb-3">
             <time dateTime={post.date}>
@@ -98,9 +98,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Title - Title Case, as authored in frontmatter */}
-          <h1 className="text-[2.25rem] leading-[1.1] sm:text-3xl md:text-4xl font-semibold tracking-[-0.03em] mb-5">
+          <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-4">
             {post.title}
           </h1>
+
+          {/* Lede - the excerpt, so the post opens with what it is about */}
+          {post.excerpt && (
+            <p className="text-[1.1875rem] md:text-[1.3125rem] leading-[1.45] text-[var(--foreground-muted)] mb-4">
+              {post.excerpt}
+            </p>
+          )}
 
           {/* Tags - plain text, lowercase like identifiers */}
           {post.tags && post.tags.length > 0 && (
@@ -114,15 +121,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
         </header>
 
-        {/* Table of Contents */}
-        <div className="md:block">
+        {/* Contents - a toggle in the column; on wide screens, a sticky rail in the margin */}
+        <div className="xl:hidden">
           <TableOfContents headings={headings} />
         </div>
 
-        {/* Article content - 19px on desktop keeps the 680px column near a 74-character
-            measure; long URLs and identifiers wrap instead of overflowing on phones */}
-        <div className="max-w-none md:text-[1.1875rem] md:leading-[1.65] break-words">
-          <EnhancedMarkdown content={post.content} />
+        <div className="relative">
+          <TocRail headings={headings} />
+
+          {/* Article content - inherits the 17px/1.6 body; long URLs and identifiers
+              wrap instead of overflowing on phones */}
+          <div className="max-w-none break-words">
+            <EnhancedMarkdown content={post.content} />
+          </div>
         </div>
       </article>
     </>

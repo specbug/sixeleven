@@ -87,7 +87,7 @@ export default function RootLayout({
         <KaTeXLoader />
         <Navigation />
         <main className="flex-grow pt-16">
-          <div className="max-w-[680px] mx-auto px-6 md:px-0 py-12">
+          <div className="max-w-[640px] mx-auto px-6 md:px-0 py-12">
             {children}
           </div>
         </main>

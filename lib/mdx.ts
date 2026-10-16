@@ -32,11 +32,13 @@ export interface TOCItem {
 
 // Parse headings from markdown content for table of contents
 export function parseHeadings(content: string): TOCItem[] {
+  // Ignore fenced code, where `## comment` is not a heading
+  const prose = content.replace(/^```[\s\S]*?^```/gm, "")
   const headingRegex = /^(#{2,4})\s+(.+)$/gm
   const headings: TOCItem[] = []
   let match
 
-  while ((match = headingRegex.exec(content)) !== null) {
+  while ((match = headingRegex.exec(prose)) !== null) {
     const level = match[1].length
     const text = match[2]
     const id = text

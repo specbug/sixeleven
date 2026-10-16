@@ -13,7 +13,7 @@ export default async function ProjectsPage() {
   if (projects.length === 0) {
     return (
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight mb-12">Projects</h1>
+        <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-12">Projects</h1>
         <div className="text-center py-10">
           <p className="text-[var(--foreground-muted)]">
             No projects found.
@@ -25,13 +25,13 @@ export default async function ProjectsPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight mb-12">Projects</h1>
+      <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-12">Projects</h1>
 
-      <div className="space-y-16">
+      <div className="space-y-12">
         {projects.map((project) => (
           <article key={project.slug}>
             {/* Title - orange on hover */}
-            <h2 className="text-2xl font-semibold tracking-tight mb-3">
+            <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] mb-3">
               <Link
                 href={`/projects/${project.slug}`}
                 className="text-[var(--foreground)] hover:text-[var(--braun-orange)] transition-colors"

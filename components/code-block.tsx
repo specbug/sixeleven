@@ -30,18 +30,17 @@ const theme: PrismTheme = {
 
 export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockProps) {
   return (
-    <div className="not-prose my-8">
+    <div className="not-prose my-6">
       <Highlight theme={theme} code={code} language={language as any} prism={Prism}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => {
           // A lone "1" carries no information - number only multi-line blocks
           const numbered = showLineNumbers && tokens.length > 1
 
           // Ligatures off: R Mono joins `--` into a dash, so `--flag` would read as `—flag`
-
           return (
             <pre
-              className={`${className} px-6 py-5 overflow-auto text-[0.8125rem] md:text-[0.9375rem] leading-[1.7] [font-variant-ligatures:none]`}
-              style={{ ...style, borderRadius: 0 }}
+              className={`${className} px-6 py-5 rounded-[4px] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
+              style={style}
             >
               {tokens.map((line, i) => {
                 const lineProps = getLineProps({ line, key: i })

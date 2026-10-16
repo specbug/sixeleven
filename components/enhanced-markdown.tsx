@@ -10,6 +10,16 @@ import React, { Fragment } from "react"
 import { CreativeCommons } from "./ui/CreativeCommons"
 import { ClaudeDisclaimer } from "./ui/ClaudeDisclaimer"
 
+// Media sits on a plate: a quiet surface that sets figures apart from prose. On
+// desktop it extends past the text column equally on both sides (640 -> 736 -> 800px);
+// on phones it runs edge to edge, with padding that keeps the media on the text margin.
+// Spans, not figure/div, because markdown places images inside <p>. A 4px corner echoes
+// R Sans's softened terminals; phones keep square corners, where the plate meets the
+// screen edge, and media inside stays square against the generous padding.
+const PLATE_OUTER = "block my-8 -mx-6 md:-mx-12 lg:-mx-20"
+const PLATE = "block bg-[var(--plate)] p-6 md:p-8 lg:p-10 md:rounded-[4px]"
+const PLATE_CAPTION = "block mt-3 px-6 md:px-0 text-sm leading-snug text-[var(--foreground-muted)]"
+
 // Custom components for ReactMarkdown - Dieter Rams inspired styling
 const createCustomComponents = (blockMathExpressions: string[]) => ({
   p: ({ children, node, ...props }: any) => {
@@ -39,18 +49,20 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
             if (match && match[1]) {
               const videoId = match[1]
               return (
-                <div key={`youtube-${index}`} className="my-8 aspect-video w-full overflow-hidden">
-                  <iframe
-                    width="560"
-                    height="315"
-                    src={`https://www.youtube.com/embed/${videoId}`}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                    className="w-full aspect-video"
-                  ></iframe>
-                </div>
+                <span key={`youtube-${index}`} className={PLATE_OUTER}>
+                  <span className={PLATE}>
+                    <iframe
+                      width="560"
+                      height="315"
+                      src={`https://www.youtube.com/embed/${videoId}`}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      loading="lazy"
+                      className="block w-full aspect-video"
+                    ></iframe>
+                  </span>
+                </span>
               )
             }
           }
@@ -90,7 +102,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return child
       })
 
-      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
+      return <p className="mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
     }
 
     const text = children ? String(children) : ""
@@ -129,17 +141,19 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         if (match && match[1]) {
           const videoId = match[1]
           return (
-            <div className="my-8 aspect-video w-full overflow-hidden">
-              <iframe
-                width="560"
-                height="315"
-                src={`https://www.youtube.com/embed/${videoId}`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-                className="w-full aspect-video"
-              ></iframe>
+            <div className={PLATE_OUTER}>
+              <div className={PLATE}>
+                <iframe
+                  width="560"
+                  height="315"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                  className="block w-full aspect-video"
+                ></iframe>
+              </div>
             </div>
           )
         }
@@ -209,10 +223,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         parts.push(text.substring(lastIndex))
       }
 
-      return <p className="my-6 text-[var(--foreground-body)]" {...props}>{parts}</p>
+      return <p className="mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{parts}</p>
     }
 
-    return <p className="my-6 text-[var(--foreground-body)]" {...props}>{children}</p>
+    return <p className="mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{children}</p>
   },
 
   img: ({ src, alt, ...props }: any) => {
@@ -221,10 +235,6 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     const parts = alt ? alt.split("::") : [""]
     const imageAlt = parts[0].trim()
     const caption = parts.length > 1 ? parts[1].trim() : null
-
-    if (caption) {
-      return null
-    }
 
     let width = 800
     let height = 450
@@ -251,24 +261,29 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
 
     const isGif = finalSrc.toLowerCase().endsWith(".gif")
 
+    // `![alt::caption](src)` puts a caption under the plate
     return (
-      <span className="block my-6">
-        <Image
-          src={finalSrc || "/placeholder.svg"}
-          alt={imageAlt}
-          width={width}
-          height={height}
-          unoptimized={src.startsWith("http") || isGif}
-        />
+      <span className={PLATE_OUTER}>
+        <span className={PLATE}>
+          <Image
+            src={finalSrc || "/placeholder.svg"}
+            alt={imageAlt}
+            width={width}
+            height={height}
+            unoptimized={src.startsWith("http") || isGif}
+            className="block mx-auto h-auto max-w-full"
+          />
+        </span>
+        {caption && <span className={PLATE_CAPTION}>{caption}</span>}
       </span>
     )
   },
 
   // Headings - rendered as authored (sentence case in posts)
-  // Scale steps down from the 64px post title so sections read as sections, not
-  // rival titles; more air above than below binds each heading to its text.
+  // Scale steps down from the 52px post title so sections read as sections, not
+  // rival titles; 32px above, 8px below binds each heading to its text.
   h1: ({ children, ...props }: any) => (
-    <h1 className="text-[1.875rem] md:text-[2.25rem] leading-[1.15] font-semibold mt-16 mb-5 tracking-[-0.025em]" {...props}>
+    <h1 className="text-[1.75rem] md:text-[2rem] leading-[1.15] font-semibold mt-10 mb-2 tracking-[-0.012em]" {...props}>
       {children}
     </h1>
   ),
@@ -280,7 +295,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h2 id={id} className="text-[1.625rem] md:text-[2rem] leading-[1.15] font-semibold mt-16 mb-4 tracking-[-0.025em] scroll-mt-24" {...props}>
+      <h2 id={id} className="text-[1.375rem] md:text-[1.5625rem] leading-[1.2] font-semibold mt-8 mb-2 tracking-[-0.01em] scroll-mt-24" {...props}>
         {children}
       </h2>
     )
@@ -293,7 +308,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h3 id={id} className="text-[1.3125rem] md:text-[1.4375rem] leading-[1.25] font-semibold mt-12 mb-3 tracking-[-0.015em] scroll-mt-24" {...props}>
+      <h3 id={id} className="text-[1.1875rem] leading-[1.25] font-semibold mt-8 mb-2 tracking-[-0.005em] scroll-mt-24" {...props}>
         {children}
       </h3>
     )
@@ -306,7 +321,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h4 id={id} className="text-[1.125rem] md:text-[1.1875rem] leading-[1.35] font-semibold mt-10 mb-2 scroll-mt-24" {...props}>
+      <h4 id={id} className="text-[1.0625rem] leading-[1.35] font-semibold mt-6 mb-2 scroll-mt-24" {...props}>
         {children}
       </h4>
     )
@@ -335,7 +350,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   // Blockquote - a quiet 2px rule (matching /pnd), no italics (Rams preferred clean type)
   blockquote: ({ children, ...props }: any) => (
     <blockquote
-      className="border-l-2 border-[var(--border)] pl-6 my-8 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
+      className="border-l-2 border-[var(--border)] pl-6 mt-0 mb-6 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
       {...props}
     >
       {children}
@@ -355,7 +370,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     if (!isCodeBlock) {
       return (
         <code
-          className="bg-[var(--surface)] text-[var(--foreground)] px-[0.3em] py-[0.1em] font-mono text-[0.85em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
+          className="bg-[var(--surface)] text-[var(--foreground)] rounded-[2px] px-[0.3em] py-[0.1em] font-mono text-[0.85em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
           {...props}
         >
           {children}
@@ -373,17 +388,17 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   },
 
   ul: ({ children, ...props }: any) => (
-    <ul className="list-disc pl-6 my-6 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
+    <ul className="list-disc pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
       {children}
     </ul>
   ),
   ol: ({ children, ...props }: any) => (
-    <ol className="list-decimal pl-6 my-6 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
+    <ol className="list-decimal pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
       {children}
     </ol>
   ),
   li: ({ children, ...props }: any) => (
-    <li className="my-1.5 pl-1" {...props}>
+    <li className="my-1 pl-1" {...props}>
       {children}
     </li>
   ),
@@ -407,7 +422,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   ),
 
   // Horizontal rule - subtle
-  hr: (props: any) => <hr className="my-10 border-t border-[var(--border)]" {...props} />,
+  hr: (props: any) => <hr className="my-8 border-t border-[var(--border)]" {...props} />,
 })
 
 interface EnhancedMarkdownProps {
@@ -581,8 +596,8 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
 
       {/* Captioned images */}
       {captionedImages.map((img, index) => (
-        <div key={index} className="my-8">
-          <div className="block">
+        <div key={index} className={PLATE_OUTER}>
+          <div className={PLATE}>
             <Image
               src={img.src || "/placeholder.svg"}
               alt={img.alt}
