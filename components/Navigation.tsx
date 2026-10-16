@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
@@ -46,7 +46,8 @@ function CloseIcon({ size = 18 }: { size?: number }) {
 export default function Navigation() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
-  const [lastScrollY, setLastScrollY] = useState(0)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const lastScrollY = useRef(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const isBlogPost = pathname.startsWith("/blog/") && pathname !== "/blog"
@@ -67,28 +68,26 @@ export default function Navigation() {
   }, [])
 
   useEffect(() => {
-    if (!isBlogPost) {
-      setIsVisible(true)
-      return
-    }
+    setIsVisible(true)
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY
 
-      if (currentScrollY <= 10) {
-        setIsVisible(true)
-      } else if (currentScrollY < lastScrollY) {
-        setIsVisible(true)
-      } else {
-        setIsVisible(false)
+      // Hairline appears only once content passes beneath the bar
+      setIsScrolled(currentScrollY > 8)
+
+      // On posts, the bar steps aside while reading and returns on scroll-up
+      if (isBlogPost) {
+        setIsVisible(currentScrollY <= 10 || currentScrollY < lastScrollY.current)
       }
 
-      setLastScrollY(currentScrollY)
+      lastScrollY.current = currentScrollY
     }
 
+    handleScroll()
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [lastScrollY, isBlogPost])
+  }, [isBlogPost])
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
@@ -110,9 +109,9 @@ export default function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 h-16 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-md transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 h-16 bg-[var(--background)] border-b transition-[transform,border-color] duration-300 ${
         !isVisible ? "-translate-y-full" : "translate-y-0"
-      }`}
+      } ${isScrolled || mobileMenuOpen ? "border-[var(--border)]" : "border-transparent"}`}
     >
       <div className="h-full max-w-[680px] mx-auto px-6 md:px-0 flex justify-between items-center">
         {/* Logo with image and text */}
@@ -171,13 +170,13 @@ export default function Navigation() {
 
       {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md py-4">
-          <div className="max-w-[680px] mx-auto px-6 flex flex-col space-y-4">
+        <div className="md:hidden absolute top-16 left-0 right-0 bg-[var(--background)] border-b border-[var(--border)] py-2">
+          <div className="max-w-[680px] mx-auto px-6 flex flex-col">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm transition-colors lowercase ${
+                className={`block py-3 text-base transition-colors lowercase ${
                   pathname === link.href
                     ? "text-[var(--braun-orange)]"
                     : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"

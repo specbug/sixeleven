@@ -157,26 +157,25 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return <ClaudeDisclaimer />
       }
 
-      // Callouts - Rams style: left border only, no icons, subtle background
-      // Uses Dieter Rams / Braun color palette
+      // Callouts - set off by hairlines and a mono label, not a tinted box with a
+      // colored stripe. Type is carried by the label's word and hue.
       if (text.includes("{{callout:")) {
         const match = text.match(/{{callout:(info|warning|error)\|(.*?)}}/)
         if (match && match[1] && match[2]) {
-          const type = match[1]
+          const type = match[1] as "info" | "warning" | "error"
           const content = match[2]
+          const label = { info: "note", warning: "caution", error: "important" }[type]
+          const labelColor = {
+            info: "text-[var(--braun-orange)]",
+            warning: "text-[var(--braun-cream)]",
+            error: "text-[var(--braun-red)]",
+          }[type]
 
           return (
-            <div
-              className={`my-6 pl-4 py-3 border-l-[3px] ${
-                type === "info"
-                  ? "border-[var(--braun-orange)] bg-[var(--braun-grey-muted)]"
-                  : type === "warning"
-                    ? "border-[var(--braun-cream)] bg-[var(--braun-cream-muted)]"
-                    : "border-[var(--braun-red)] bg-[var(--braun-red-muted)]"
-              }`}
-            >
-              <p className="text-[var(--foreground)] m-0">{content}</p>
-            </div>
+            <aside className="my-8 py-5 border-y border-[var(--border)]" role="note">
+              <span className={`uppercase-meta block mb-2 ${labelColor}`}>{label}</span>
+              <p className="m-0 text-[var(--foreground)] leading-[1.6]">{content}</p>
+            </aside>
           )
         }
       }
@@ -266,8 +265,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   },
 
   // Headings - lowercase for Rams aesthetic, text blocks stay normal case
+  // Scale steps down from the 64px post title so sections read as sections, not
+  // rival titles; more air above than below binds each heading to its text.
   h1: ({ children, ...props }: any) => (
-    <h1 className="text-3xl md:text-4xl font-semibold mt-10 mb-4 tracking-tight lowercase" {...props}>
+    <h1 className="text-[1.875rem] md:text-[2.25rem] leading-[1.15] font-semibold mt-16 mb-5 tracking-[-0.025em] lowercase" {...props}>
       {children}
     </h1>
   ),
@@ -279,7 +280,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h2 id={id} className="text-2xl md:text-3xl font-semibold mt-10 mb-4 tracking-tight lowercase" {...props}>
+      <h2 id={id} className="text-[1.625rem] md:text-[2rem] leading-[1.15] font-semibold mt-16 mb-4 tracking-[-0.025em] lowercase scroll-mt-24" {...props}>
         {children}
       </h2>
     )
@@ -292,7 +293,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h3 id={id} className="text-xl md:text-2xl font-semibold mt-8 mb-3 lowercase" {...props}>
+      <h3 id={id} className="text-[1.3125rem] md:text-[1.4375rem] leading-[1.25] font-semibold mt-12 mb-3 tracking-[-0.015em] lowercase scroll-mt-24" {...props}>
         {children}
       </h3>
     )
@@ -305,13 +306,14 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       .replace(/\s+/g, "-")
 
     return (
-      <h4 id={id} className="text-lg md:text-xl font-medium mt-6 mb-2 lowercase" {...props}>
+      <h4 id={id} className="text-[1.125rem] md:text-[1.1875rem] leading-[1.35] font-semibold mt-10 mb-2 lowercase scroll-mt-24" {...props}>
         {children}
       </h4>
     )
   },
 
-  // Links - orange, underline on hover
+  // Links - ink with an orange hairline underline. Orange text alone fails contrast on
+  // paper (2.6:1); the hairline keeps the accent while the words stay readable.
   a: ({ href, children, ...props }: any) => {
     if (!href) return <span>{children}</span>
 
@@ -322,7 +324,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         href={href}
         target={isExternal ? "_blank" : undefined}
         rel={isExternal ? "noopener noreferrer" : undefined}
-        className="text-[var(--braun-orange)] hover:underline hover:underline-offset-2 transition-colors"
+        className="text-[var(--foreground)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors"
         {...props}
       >
         {children}
@@ -330,10 +332,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     )
   },
 
-  // Blockquote - left border, no italics (Rams preferred clean type)
+  // Blockquote - a quiet 2px rule (matching /pnd), no italics (Rams preferred clean type)
   blockquote: ({ children, ...props }: any) => (
     <blockquote
-      className="border-l-[3px] border-[var(--border)] pl-6 my-6 text-[var(--foreground-muted)]"
+      className="border-l-2 border-[var(--border)] pl-6 my-8 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
       {...props}
     >
       {children}
@@ -353,7 +355,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     if (!isCodeBlock) {
       return (
         <code
-          className="bg-[var(--surface)] text-[var(--foreground)] px-1.5 py-0.5 font-mono text-[0.9em] before:content-none after:content-none"
+          className="bg-[var(--surface)] text-[var(--foreground)] px-[0.3em] py-[0.1em] font-mono text-[0.85em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
           {...props}
         >
           {children}
@@ -363,11 +365,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
 
     const language = match ? match[1] : ""
 
-    return (
-      <div className="my-6">
-        <CodeBlock code={content.replace(/\n$/, "")} language={language || "text"} />
-      </div>
-    )
+    return <CodeBlock code={content.replace(/\n$/, "")} language={language || "text"} />
   },
 
   pre: ({ children }: any) => {
@@ -375,17 +373,17 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   },
 
   ul: ({ children, ...props }: any) => (
-    <ul className="list-disc pl-6 my-4" {...props}>
+    <ul className="list-disc pl-6 my-6 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
       {children}
     </ul>
   ),
   ol: ({ children, ...props }: any) => (
-    <ol className="list-decimal pl-6 my-4" {...props}>
+    <ol className="list-decimal pl-6 my-6 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
       {children}
     </ol>
   ),
   li: ({ children, ...props }: any) => (
-    <li className="my-1" {...props}>
+    <li className="my-1.5 pl-1" {...props}>
       {children}
     </li>
   ),
@@ -393,13 +391,13 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   // Tables - mono font for data alignment
   table: ({ children, ...props }: any) => (
     <div className="my-6 overflow-x-auto">
-      <table className="w-full text-sm border-collapse" style={{ fontFamily: "var(--font-mono), ui-monospace, monospace" }} {...props}>
+      <table className="w-full text-sm border-collapse tabular-nums" style={{ fontFamily: "var(--font-mono), ui-monospace, monospace" }} {...props}>
         {children}
       </table>
     </div>
   ),
   thead: ({ children, ...props }: any) => (
-    <thead className="border-b-[2px] border-[var(--border)]" {...props}>{children}</thead>
+    <thead className="border-b border-[var(--foreground-subtle)]" {...props}>{children}</thead>
   ),
   th: ({ children, ...props }: any) => (
     <th className="text-left py-2 pr-4 font-semibold text-[var(--foreground)]" {...props}>{children}</th>
@@ -592,7 +590,7 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
               height={img.height}
               unoptimized={img.src.startsWith("http") || img.src.toLowerCase().endsWith(".gif")}
             />
-            <p className="text-center text-sm text-[var(--foreground-muted)] mt-2">{img.caption}</p>
+            <p className="text-center text-sm leading-snug text-[var(--foreground-muted)] mt-3">{img.caption}</p>
           </div>
         </div>
       ))}

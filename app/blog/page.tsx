@@ -59,7 +59,7 @@ export default async function BlogPage() {
               </div>
 
               {/* Title - lowercase, orange on hover with underline */}
-              <h2 className="text-2xl md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+              <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
                 {post.title}
               </h2>
 

@@ -86,6 +86,11 @@ const config: Config = {
         "3xl": ["3rem", { lineHeight: "1.1" }],
         "4xl": ["4rem", { lineHeight: "1.05" }],
       },
+      // Stolid kinetics - confident, weighty easing; never the browser default
+      transitionTimingFunction: {
+        DEFAULT: "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        out: "cubic-bezier(0.2, 0.7, 0.2, 1)",
+      },
       // 8px base spacing system
       spacing: {
         "18": "4.5rem",
@@ -96,19 +101,22 @@ const config: Config = {
         DEFAULT: {
           css: {
             maxWidth: "680px",
-            color: "#1a1a1a",
+            color: "var(--foreground-body)",
             fontFamily: "var(--font-rsans), system-ui, sans-serif",
             fontSize: "1.125rem",
             fontWeight: "400",
             lineHeight: "1.7",
             letterSpacing: "0",
-            "--tw-prose-body": "#1a1a1a",
-            "--tw-prose-headings": "#1a1a1a",
-            "--tw-prose-links": "#ed8008",
-            "--tw-prose-bold": "#1a1a1a",
-            "--tw-prose-quotes": "#666666",
-            "--tw-prose-code": "#1a1a1a",
-            "--tw-prose-pre-bg": "#f8f8f8",
+            "--tw-prose-body": "var(--foreground-body)",
+            "--tw-prose-headings": "var(--foreground)",
+            "--tw-prose-links": "var(--foreground)",
+            "--tw-prose-bold": "var(--foreground)",
+            "--tw-prose-quotes": "var(--foreground-muted)",
+            "--tw-prose-code": "var(--foreground)",
+            "--tw-prose-pre-bg": "var(--code-bg)",
+            "--tw-prose-bullets": "var(--foreground-subtle)",
+            "--tw-prose-counters": "var(--foreground-subtle)",
+            "--tw-prose-hr": "var(--border)",
             p: {
               marginTop: "1.5em",
               marginBottom: "1.5em",
@@ -138,13 +146,16 @@ const config: Config = {
               marginBottom: "0.5em",
             },
             // Links - orange, underline on hover
+            // Links - ink with an orange hairline; color is a guest, not a host
             a: {
-              color: "#ed8008",
-              textDecoration: "none",
-              fontWeight: "400",
+              color: "var(--foreground)",
+              textDecorationLine: "underline",
+              textDecorationColor: "var(--braun-orange)",
+              textDecorationThickness: "1px",
+              textUnderlineOffset: "0.2em",
+              fontWeight: "inherit",
               "&:hover": {
-                textDecoration: "underline",
-                textUnderlineOffset: "3px",
+                color: "var(--braun-orange)",
               },
             },
             strong: {
@@ -152,29 +163,29 @@ const config: Config = {
             },
             // Blockquote - left border, no italics (Rams preferred clean type)
             blockquote: {
-              borderLeftWidth: "3px",
-              borderLeftColor: "#e0e0e0",
+              borderLeftWidth: "2px",
+              borderLeftColor: "var(--border)",
               paddingLeft: "1.5rem",
               fontStyle: "normal",
-              color: "#666666",
+              color: "var(--foreground-muted)",
               quotes: "none",
             },
             // Code - left border accent, no border-radius
             code: {
               fontFamily: "var(--font-mono)",
               fontWeight: "400",
-              backgroundColor: "#f8f8f8",
-              padding: "0.15em 0.4em",
+              fontSize: "0.85em",
+              backgroundColor: "var(--surface)",
+              padding: "0.1em 0.3em",
               borderRadius: "0",
               "&::before": { content: "none" },
               "&::after": { content: "none" },
             },
             pre: {
               fontFamily: "var(--font-mono)",
-              backgroundColor: "#f8f8f8",
+              backgroundColor: "var(--code-bg)",
               borderRadius: "0",
-              borderLeft: "3px solid #ed8008",
-              padding: "1.5rem",
+              padding: "1.25rem 1.5rem",
               overflow: "auto",
             },
             // Images - no rounded corners
@@ -190,27 +201,16 @@ const config: Config = {
             },
           },
         },
-        // Dark mode prose
+        // Dark mode prose - tokens already flip under .dark
         invert: {
           css: {
-            "--tw-prose-body": "#f0f0f0",
-            "--tw-prose-headings": "#f0f0f0",
-            "--tw-prose-links": "#ed8008",
-            "--tw-prose-bold": "#f0f0f0",
-            "--tw-prose-quotes": "#888888",
-            "--tw-prose-code": "#f0f0f0",
-            "--tw-prose-pre-bg": "#141414",
-            color: "#f0f0f0",
-            blockquote: {
-              borderLeftColor: "#333333",
-              color: "#888888",
-            },
-            code: {
-              backgroundColor: "#141414",
-            },
-            pre: {
-              backgroundColor: "#141414",
-            },
+            "--tw-prose-body": "var(--foreground-body)",
+            "--tw-prose-headings": "var(--foreground)",
+            "--tw-prose-links": "var(--foreground)",
+            "--tw-prose-bold": "var(--foreground)",
+            "--tw-prose-quotes": "var(--foreground-muted)",
+            "--tw-prose-code": "var(--foreground)",
+            "--tw-prose-pre-bg": "var(--code-bg)",
           },
         },
       },
