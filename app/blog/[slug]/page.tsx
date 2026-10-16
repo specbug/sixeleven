@@ -19,15 +19,15 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: "post not found | sixeleven",
-      description: "the requested post could not be found.",
+      title: "Post not found | sixeleven",
+      description: "The requested post could not be found.",
     }
   }
 
   const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`
 
   return {
-    title: `${post.title.toLowerCase()} | sixeleven`,
+    title: `${post.title} | sixeleven`,
     description: post.excerpt,
     authors: [{ name: "Rishit Vora" }],
     openGraph: {
@@ -97,12 +97,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.readingTime && <span> · {post.readingTime} min read</span>}
           </div>
 
-          {/* Title - lowercase for Rams aesthetic */}
-          <h1 className="text-[2.25rem] leading-[1.1] sm:text-3xl md:text-4xl font-semibold tracking-[-0.03em] mb-5 lowercase">
+          {/* Title - Title Case, as authored in frontmatter */}
+          <h1 className="text-[2.25rem] leading-[1.1] sm:text-3xl md:text-4xl font-semibold tracking-[-0.03em] mb-5">
             {post.title}
           </h1>
 
-          {/* Tags - plain text, lowercase */}
+          {/* Tags - plain text, lowercase like identifiers */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {post.tags.map((tag: string) => (

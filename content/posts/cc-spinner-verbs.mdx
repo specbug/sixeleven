@@ -54,7 +54,7 @@ Why not just use `git worktree` directly? Mostly convenience. `ccwt` handles wor
 
 Combined with Zellij panes, I can have separate Claude sessions working on completely different branches of the same repo without any git stashing or context switching.
 
-## Modern CLI Tools
+## Modern CLI tools
 
 I've replaced most of the default unix tools with faster, prettier alternatives. Mostly because I like pretty things, partly because Claude can use them too.
 
@@ -70,7 +70,7 @@ I've replaced most of the default unix tools with faster, prettier alternatives.
 
 When I tell Claude to explore a directory or search for files, it often reaches for `fd` or `rg` instead of the slower built-ins.
 
-## Sound Notifications
+## Sound notifications
 
 When Claude finishes a task or needs my attention, I want to know without staring at the terminal. Simple hooks:
 
@@ -103,7 +103,7 @@ When Claude finishes a task or needs my attention, I want to know without starin
 
 `Stop` fires when Claude completes work. Hero.aiff is a satisfying triumphant chime. `Notification` fires when Claude pauses for input. Submarine is a gentle nudge. macOS has a bunch of built-in sounds in `/System/Library/Sounds/` to choose from.
 
-## Status Line
+## Status line
 
 I wanted my status line to look more like my shell prompt. This shows user@host, current directory, git branch, and active Python virtualenv:
 
@@ -116,7 +116,7 @@ I wanted my status line to look more like my shell prompt. This shows user@host,
 
 Ugly one-liner, but it gives you `rishitv@mac my-project (main) (venv)` at a glance.
 
-## Spinner Verbs
+## Spinner verbs
 
 Claude Code lets you replace the default loading messages with custom ones. It's called [`spinnerVerbs`](https://www.threads.com/@boris_cherny/post/DUB4mtmEskQ). Purely cosmetic, zero utility, I love it.
 
@@ -242,7 +242,7 @@ A few community plugins I use:
 }
 ```
 
-## Other Settings
+## Other settings
 
 ```json
 "model": "opus",

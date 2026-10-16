@@ -8,13 +8,13 @@ export default async function Home() {
     return (
       <div className="text-center py-20">
         <p className="text-[var(--foreground-muted)] mb-6">
-          no posts found.
+          No posts found.
         </p>
         <Link
           href="/about"
-          className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+          className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
         >
-          about
+          About
         </Link>
       </div>
     )
@@ -36,8 +36,8 @@ export default async function Home() {
               {post.readingTime && <span> · {post.readingTime} min</span>}
             </div>
 
-            {/* Title - lowercase, orange on hover with underline */}
-            <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+            {/* Title - orange on hover with underline */}
+            <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
               {post.title}
             </h2>
 
@@ -46,7 +46,7 @@ export default async function Home() {
               {post.excerpt}
             </p>
 
-            {/* Tags - plain text, lowercase */}
+            {/* Tags - plain text, lowercase like identifiers */}
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-x-3 gap-y-1">
                 {post.tags.map((tag) => (

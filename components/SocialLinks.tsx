@@ -31,28 +31,28 @@ export default function SocialLinks() {
         href="https://x.com/irishvora"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm lowercase"
+        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm"
       >
         <XIcon size={16} />
-        x
+        X
       </a>
       <a
         href="https://github.com/specbug"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm lowercase"
+        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm"
       >
         <GithubIcon size={16} />
-        github
+        GitHub
       </a>
       <a
         href="https://www.goodreads.com/user/show/71020611-specbug"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm lowercase"
+        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm"
       >
         <BookIcon size={16} />
-        goodreads
+        Goodreads
       </a>
     </div>
   )

@@ -3,19 +3,19 @@ import Link from "next/link"
 import { getAllPosts } from "@/lib/mdx"
 
 export const metadata: Metadata = {
-  title: "blog | sixeleven",
-  description: "all blog posts",
+  title: "Blog | sixeleven",
+  description: "All blog posts",
   openGraph: {
-    title: "blog | sixeleven",
-    description: "all blog posts",
+    title: "Blog | sixeleven",
+    description: "All blog posts",
     type: "website",
     url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"}/blog`,
     siteName: "sixeleven",
   },
   twitter: {
     card: "summary",
-    title: "blog | sixeleven",
-    description: "all blog posts",
+    title: "Blog | sixeleven",
+    description: "All blog posts",
     creator: "Rishit Vora",
   },
   alternates: {
@@ -29,10 +29,10 @@ export default async function BlogPage() {
   if (posts.length === 0) {
     return (
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight lowercase mb-12">blog</h1>
+        <h1 className="text-3xl font-semibold tracking-tight mb-12">Blog</h1>
         <div className="text-center py-10">
           <p className="text-[var(--foreground-muted)]">
-            no posts found.
+            No posts found.
           </p>
         </div>
       </div>
@@ -41,7 +41,7 @@ export default async function BlogPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight lowercase mb-12">blog</h1>
+      <h1 className="text-3xl font-semibold tracking-tight mb-12">Blog</h1>
 
       <div className="space-y-16">
         {posts.map((post) => (
@@ -58,8 +58,8 @@ export default async function BlogPage() {
                 {post.readingTime && <span> · {post.readingTime} min</span>}
               </div>
 
-              {/* Title - lowercase, orange on hover with underline */}
-              <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+              {/* Title - orange on hover with underline */}
+              <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
                 {post.title}
               </h2>
 
@@ -68,7 +68,7 @@ export default async function BlogPage() {
                 {post.excerpt}
               </p>
 
-              {/* Tags - plain text, lowercase */}
+              {/* Tags - plain text, lowercase like identifiers */}
               {post.tags && post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-x-3 gap-y-1">
                   {post.tags.map((tag) => (

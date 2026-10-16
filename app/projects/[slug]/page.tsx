@@ -16,13 +16,13 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
   if (!project) {
     return {
-      title: "project not found | sixeleven",
-      description: "the requested project could not be found.",
+      title: "Project not found | sixeleven",
+      description: "The requested project could not be found.",
     }
   }
 
   return {
-    title: `${project.title.toLowerCase()} | sixeleven`,
+    title: `${project.title} | sixeleven`,
     description: project.excerpt,
   }
 }
@@ -70,9 +70,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-[var(--braun-orange)] hover:underline lowercase"
+            className="text-sm text-[var(--braun-orange)] hover:underline"
           >
-            view project
+            View project
           </a>
         )}
       </header>
