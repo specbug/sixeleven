@@ -16,18 +16,19 @@ export default function ReadingProgressBar() {
       setScrollPercentage(percentage)
     }
 
-    window.addEventListener("scroll", handleScroll)
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => {
       window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
   return (
-    // Horizontal progress bar at very top - Rams style (thin, unobtrusive)
-    <div className="fixed left-0 top-0 right-0 h-0.5 bg-[var(--border)] z-50">
+    // A 2px orange line that grows with the read - no track; the empty page is the track
+    <div className="fixed left-0 top-0 right-0 h-0.5 z-[60] pointer-events-none" aria-hidden="true">
       <div
-        className="bg-[var(--braun-orange)] h-full transition-all duration-150 ease-out"
-        style={{ width: `${scrollPercentage}%` }}
+        className="bg-[var(--braun-orange)] h-full origin-left will-change-transform"
+        style={{ transform: `scaleX(${scrollPercentage / 100})` }}
       />
     </div>
   )

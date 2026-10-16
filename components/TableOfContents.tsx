@@ -12,8 +12,8 @@ function ChevronIcon({ size = 14, rotated = false }: { size?: number; rotated?: 
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      className={`transition-transform ${rotated ? "rotate-90" : ""}`}
+      strokeWidth="1.5"
+      className={`transition-transform duration-200 ${rotated ? "rotate-90" : ""}`}
     >
       <polyline points="9 18 15 12 9 6" />
     </svg>

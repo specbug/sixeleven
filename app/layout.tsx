@@ -42,6 +42,10 @@ function WebsiteSchema() {
   )
 }
 
+// Resolve the theme before first paint so dark-mode readers never see a light flash.
+// Mirrors the logic in Navigation.tsx.
+const themeScript = `(function(){try{var s=localStorage.getItem("darkMode");if(s==="true"||(s===null&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})()`
+
 export const metadata: Metadata = {
   title: "sixeleven",
   description: "Personal blog of Rishit Vora.",
@@ -74,8 +78,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${rSans.variable} ${monoFont.variable} ${logoFont.variable}`}>
+    <html lang="en" className={`${rSans.variable} ${monoFont.variable} ${logoFont.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <WebsiteSchema />
       </head>
       <body className="min-h-screen flex flex-col">

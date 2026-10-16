@@ -153,15 +153,15 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
   return (
     <div className="space-y-8">
       {/* Search and sort controls */}
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-8">
         {/* Search input - underline style */}
         <div className="relative flex-grow">
-          <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-[var(--foreground-subtle)]">
             <SearchIcon size={16} />
           </div>
           <input
             type="text"
-            placeholder="search posts..."
+            placeholder="search posts…"
             value={searchQuery}
             onChange={handleSearch}
             className="w-full pl-6 pr-8 py-2 bg-transparent border-b border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--braun-orange)] transition-colors lowercase"
@@ -169,7 +169,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
           {searchQuery && (
             <button
               onClick={clearSearch}
-              className="absolute inset-y-0 right-0 flex items-center"
+              className="absolute inset-y-0 right-0 flex items-center text-[var(--foreground-subtle)] hover:text-[var(--foreground)] transition-colors"
               aria-label="Clear search"
             >
               <CloseIcon size={16} />
@@ -181,9 +181,9 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
         <div className="relative flex-shrink-0">
           <button
             onClick={() => setShowSortMenu(!showSortMenu)}
-            className="flex items-center gap-2 px-0 py-2 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
+            className="flex items-baseline gap-2 px-0 py-2 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors lowercase"
           >
-            <SortIcon size={14} />
+            <span className="self-center"><SortIcon size={14} /></span>
             <span>{getSortLabel(sortOption)}</span>
           </button>
           {showSortMenu && (
@@ -224,7 +224,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`tag-interactive ${isTagSelected(tag) ? "active" : ""}`}
+                className={`tag-interactive text-sm lowercase ${isTagSelected(tag) ? "active" : ""}`}
               >
                 {tag}
               </button>
@@ -259,7 +259,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       </div>
 
       {/* Results count */}
-      <div className="text-sm text-[var(--foreground-subtle)] border-b border-[var(--border)] pb-2 lowercase">
+      <div className="uppercase-meta text-[var(--foreground-subtle)] border-b border-[var(--border)] pb-3">
         {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"} found
       </div>
 
@@ -293,7 +293,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
                 </div>
 
                 {/* Title - only this gets underline on hover */}
-                <h2 className="text-2xl md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+                <h2 className="text-[1.75rem] leading-[1.15] md:text-[2rem] font-semibold tracking-tight lowercase text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
                   {post.title}
                 </h2>
 
@@ -308,7 +308,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
                     {post.tags.map((tag: string) => (
                       <span
                         key={`${post.slug}-${tag}`}
-                        className="tag-interactive"
+                        className="tag tag-interactive"
                         onClick={(e) => {
                           e.preventDefault()
                           toggleTag(tag)

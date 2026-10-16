@@ -20,28 +20,43 @@
     --braun-red: #ad1d1d;
     --braun-red-muted: #faf0f0;
 
-    /* Light mode colors */
-    --background: #ffffff;
-    --surface: #f8f8f8;
-    --foreground: #1a1a1a;
-    --foreground-muted: #666666;
-    --foreground-subtle: #999999;
-    --foreground-body: #3a3a3a;
-    --border: #e0e0e0;
-    --input: #e0e0e0;
+    /* Light mode — warm paper, graphite ink (never pure #fff / #000) */
+    --background: oklch(0.985 0.004 85);
+    --surface: oklch(0.962 0.007 85);
+    --foreground: oklch(0.22 0.008 265);
+    --foreground-muted: oklch(0.47 0.008 265);
+    --foreground-subtle: oklch(0.55 0.008 265); /* ≥4.5:1 on paper, safe for 12px meta */
+    --foreground-body: oklch(0.32 0.008 265);
+    --border: oklch(0.905 0.008 85);
+    --input: oklch(0.905 0.008 85);
     --ring: #ed8008;
 
+    /* Syntax — ink tones plus the orange family; one cool neutral for keywords */
+    --code-bg: var(--surface);
+    --code-fg: oklch(0.30 0.008 265);
+    --code-comment: oklch(0.58 0.008 265);
+    --code-punct: oklch(0.52 0.008 265);
+    --code-keyword: oklch(0.42 0.05 255);
+    --code-string: oklch(0.48 0.10 60);
+    --code-number: oklch(0.56 0.15 48);
+    --code-function: oklch(0.22 0.008 265);
+    --code-tag: oklch(0.47 0.11 35);
+    --code-line-number: oklch(0.72 0.006 85);
+
+    /* Motion — stolid kinetics */
+    --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+
     /* Legacy variables for compatibility */
-    --card: #ffffff;
-    --card-foreground: #1a1a1a;
-    --popover: #ffffff;
-    --popover-foreground: #1a1a1a;
+    --card: var(--background);
+    --card-foreground: var(--foreground);
+    --popover: var(--background);
+    --popover-foreground: var(--foreground);
     --primary: #ed8008;
     --primary-foreground: #ffffff;
-    --secondary: #f8f8f8;
-    --secondary-foreground: #1a1a1a;
-    --muted: #f8f8f8;
-    --muted-foreground: #666666;
+    --secondary: var(--surface);
+    --secondary-foreground: var(--foreground);
+    --muted: var(--surface);
+    --muted-foreground: var(--foreground-muted);
     --accent: #ed8008;
     --accent-foreground: #ffffff;
     --destructive: #dc2626;
@@ -49,18 +64,32 @@
 
     /* No rounded corners */
     --radius: 0;
+
+    color-scheme: light;
   }
 
   .dark {
-    /* Dark mode colors */
-    --background: #0a0a0a;
-    --surface: #141414;
-    --foreground: #f0f0f0;
-    --foreground-muted: #888888;
-    --foreground-subtle: #666666;
-    --foreground-body: #cccccc;
-    --border: #262626;
-    --input: #262626;
+    color-scheme: dark;
+
+    /* Dark mode — warm graphite, not inverted black */
+    --background: oklch(0.18 0.004 75);
+    --surface: oklch(0.215 0.005 75);
+    --foreground: oklch(0.93 0.006 85);
+    --foreground-muted: oklch(0.71 0.006 85);
+    --foreground-subtle: oklch(0.60 0.006 85);
+    --foreground-body: oklch(0.85 0.006 85);
+    --border: oklch(0.29 0.005 75);
+    --input: oklch(0.29 0.005 75);
+
+    --code-fg: oklch(0.86 0.006 85);
+    --code-comment: oklch(0.58 0.006 85);
+    --code-punct: oklch(0.66 0.006 85);
+    --code-keyword: oklch(0.76 0.05 250);
+    --code-string: oklch(0.78 0.09 75);
+    --code-number: oklch(0.74 0.14 52);
+    --code-function: oklch(0.94 0.006 85);
+    --code-tag: oklch(0.72 0.11 40);
+    --code-line-number: oklch(0.40 0.005 75);
 
     /* Dieter Rams / Braun callout palette - dark mode */
     --braun-grey: #736356;
@@ -71,16 +100,16 @@
     --braun-red-muted: rgba(173, 29, 29, 0.12);
 
     /* Legacy variables for compatibility */
-    --card: #141414;
-    --card-foreground: #f0f0f0;
-    --popover: #141414;
-    --popover-foreground: #f0f0f0;
+    --card: var(--surface);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface);
+    --popover-foreground: var(--foreground);
     --primary: #ed8008;
     --primary-foreground: #ffffff;
-    --secondary: #141414;
-    --secondary-foreground: #f0f0f0;
-    --muted: #141414;
-    --muted-foreground: #888888;
+    --secondary: var(--surface);
+    --secondary-foreground: var(--foreground);
+    --muted: var(--surface);
+    --muted-foreground: var(--foreground-muted);
     --accent: #ed8008;
     --accent-foreground: #ffffff;
   }
@@ -110,6 +139,12 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-rsans), system-ui, sans-serif;
     color: var(--foreground);
+    text-wrap: balance;
+  }
+
+  /* No orphans or ragged last lines in reading text */
+  p, li, blockquote, figcaption {
+    text-wrap: pretty;
   }
 
   h1 {
@@ -130,12 +165,13 @@
   a {
     color: var(--braun-orange);
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color 0.18s var(--ease-out);
   }
 
   a:hover {
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
   }
 
   /* Code */
@@ -154,6 +190,15 @@
     background-color: var(--braun-orange-muted);
     color: var(--foreground);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer utilities {
@@ -169,10 +214,13 @@
   }
 
   /* Uppercase for meta text */
+  /* Meta (dates, durations) - the monospace signal: this is data, not prose */
   .uppercase-meta {
+    font-family: var(--font-mono), ui-monospace, monospace;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
   }
 
   /* No border-radius override */
@@ -197,7 +245,7 @@
     text-transform: lowercase;
     padding: 0.5rem 1.25rem;
     border: none;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.18s var(--ease-out);
   }
 
   .btn-braun:hover {
@@ -213,7 +261,7 @@
     font-weight: 500;
     text-transform: lowercase;
     padding: 0.5rem 1.25rem;
-    transition: border-color 0.15s ease, color 0.15s ease;
+    transition: border-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
   }
 
   .btn-ghost:hover {
@@ -230,8 +278,9 @@
   }
 
   .tag-interactive {
+    color: var(--foreground-subtle);
     cursor: pointer;
-    transition: color 0.15s ease;
+    transition: color 0.18s var(--ease-out);
   }
 
   .tag-interactive:hover,

@@ -8,13 +8,16 @@ import { useState, useEffect } from "react"
 const SPINNER_FRAMES = ["·", "✻", "✽", "✶", "✳", "✢"]
 const SPINNER_INTERVAL = 120
 
-// Claude Code orange accent
-const CLAUDE_ORANGE = "#D97706"
-
 function ClaudeSpinner() {
   const [frame, setFrame] = useState(0)
 
   useEffect(() => {
+    // Hold on a single glyph for readers who prefer less motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setFrame(1)
+      return
+    }
+
     const interval = setInterval(() => {
       setFrame((prev) => (prev + 1) % SPINNER_FRAMES.length)
     }, SPINNER_INTERVAL)
@@ -23,9 +26,8 @@ function ClaudeSpinner() {
 
   return (
     <span
-      className="font-mono text-lg leading-none inline-block w-5 text-center"
-      style={{ color: CLAUDE_ORANGE }}
-      aria-label="Loading spinner"
+      className="font-mono text-lg leading-none inline-block w-5 text-center text-[var(--braun-orange)]"
+      aria-hidden="true"
     >
       {SPINNER_FRAMES[frame]}
     </span>
@@ -34,17 +36,11 @@ function ClaudeSpinner() {
 
 export function ClaudeDisclaimer({ children }: { children?: React.ReactNode }) {
   return (
-    <div
-      className="my-8 flex items-start gap-4 p-4 border-l-[3px]"
-      style={{
-        borderColor: CLAUDE_ORANGE,
-        backgroundColor: `${CLAUDE_ORANGE}10`
-      }}
-    >
-      <div className="flex-shrink-0 mt-0.5">
+    <aside className="my-8 py-5 border-y border-[var(--border)] flex items-start gap-3" role="note">
+      <div className="flex-shrink-0 pt-[0.15rem]">
         <ClaudeSpinner />
       </div>
-      <div className="flex-1 text-[var(--foreground)] text-[0.95rem] leading-relaxed">
+      <div className="flex-1 text-[var(--foreground)] text-[0.9375rem] leading-[1.6]">
         {children || (
           <p className="m-0">
             <span className="font-medium">Full disclosure:</span> I wrote this post, but I'm also the subject of it.
@@ -53,6 +49,6 @@ export function ClaudeDisclaimer({ children }: { children?: React.ReactNode }) {
           </p>
         )}
       </div>
-    </div>
+    </aside>
   )
 }

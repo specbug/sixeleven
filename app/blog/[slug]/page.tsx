@@ -98,7 +98,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Title - lowercase for Rams aesthetic */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-4 lowercase">
+          <h1 className="text-[2.25rem] leading-[1.1] sm:text-3xl md:text-4xl font-semibold tracking-[-0.03em] mb-5 lowercase">
             {post.title}
           </h1>
 
@@ -119,8 +119,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <TableOfContents headings={headings} />
         </div>
 
-        {/* Article content */}
-        <div className="max-w-none">
+        {/* Article content - 19px on desktop keeps the 680px column near a 74-character
+            measure; long URLs and identifiers wrap instead of overflowing on phones */}
+        <div className="max-w-none md:text-[1.1875rem] md:leading-[1.65] break-words">
           <EnhancedMarkdown content={post.content} />
         </div>
       </article>
