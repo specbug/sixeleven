@@ -6,27 +6,38 @@ const href = (post: Post) => post.link || `/blog/${post.slug}`
 const monthYear = (date: string) =>
   new Date(date).toLocaleDateString("en-US", { month: "short", year: "numeric" })
 
-// One row per post: title left, date right, hairline between. The whole list reads
-// at a glance; excerpts and tags live in the archive.
+// An index, grouped by year: the year sits once in a narrow left column, titles run
+// beside it at reading weight, and hairlines fall only between years. Date and title
+// stay a glance apart; excerpts and tags live in the archive.
 export function PostLedger({ posts }: { posts: Post[] }) {
+  const years: [string, Post[]][] = []
+  for (const post of posts) {
+    const year = String(new Date(post.date).getFullYear())
+    const last = years[years.length - 1]
+    if (last && last[0] === year) last[1].push(post)
+    else years.push([year, [post]])
+  }
+
   return (
-    <ul className="border-t border-[var(--border)]">
-      {posts.map((post) => (
-        <li key={post.slug} className="border-b border-[var(--border)]">
-          <Link
-            href={href(post)}
-            className="group flex items-baseline justify-between gap-6 py-4 no-underline hover:no-underline"
-          >
-            <span className="text-[1.125rem] md:text-[1.25rem] leading-[1.3] font-semibold tracking-[-0.008em] text-[var(--foreground)] group-hover:text-[var(--braun-orange)] transition-colors">
-              {post.title}
-            </span>
-            <time dateTime={post.date} className="uppercase-meta shrink-0 text-[var(--foreground-subtle)]">
-              {monthYear(post.date)}
-            </time>
-          </Link>
-        </li>
+    <div className="border-y border-[var(--border)] divide-y divide-[var(--border)]">
+      {years.map(([year, items]) => (
+        <section key={year} className="grid grid-cols-[4rem_1fr] md:grid-cols-[5.5rem_1fr] items-baseline py-5">
+          <h3 className="uppercase-meta font-normal text-[var(--foreground-subtle)]">{year}</h3>
+          <ul className="space-y-2.5">
+            {items.map((post) => (
+              <li key={post.slug}>
+                <Link
+                  href={href(post)}
+                  className="text-[1.0625rem] md:text-[1.125rem] leading-[1.35] font-medium text-[var(--foreground)] hover:text-[var(--braun-orange)] no-underline hover:no-underline transition-colors"
+                >
+                  {post.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
-    </ul>
+    </div>
   )
 }
 
