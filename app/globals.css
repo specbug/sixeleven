@@ -23,6 +23,7 @@
     /* Light mode — warm paper, graphite ink (never pure #fff / #000) */
     --background: oklch(0.985 0.004 85);
     --surface: oklch(0.962 0.007 85);
+    --plate: oklch(0.945 0.010 85); /* behind figures: a step darker than code */
     --foreground: oklch(0.22 0.008 265);
     --foreground-muted: oklch(0.47 0.008 265);
     --foreground-subtle: oklch(0.55 0.008 265); /* ≥4.5:1 on paper, safe for 12px meta */
@@ -74,6 +75,7 @@
     /* Dark mode — warm graphite, not inverted black */
     --background: oklch(0.18 0.004 75);
     --surface: oklch(0.215 0.005 75);
+    --plate: oklch(0.225 0.005 75);
     --foreground: oklch(0.93 0.006 85);
     --foreground-muted: oklch(0.71 0.006 85);
     --foreground-subtle: oklch(0.60 0.006 85);

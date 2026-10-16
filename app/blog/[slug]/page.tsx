@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <article className="max-w-none relative">
         <ReadingProgressBar />
 
-        <header className="mb-10">
+        <header className="mb-8">
           {/* Date and reading time - uppercase meta */}
           <div className="uppercase-meta text-[var(--foreground-subtle)] mb-3">
             <time dateTime={post.date}>
@@ -98,7 +98,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Title - Title Case, as authored in frontmatter */}
-          <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-5">
+          <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-3">
             {post.title}
           </h1>
 

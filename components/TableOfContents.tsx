@@ -26,7 +26,7 @@ export default function TableOfContents({ headings }: { headings: TOCItem[] }) {
   if (headings.length === 0) return null
 
   return (
-    <div className="mb-8">
+    <div className="mb-6">
       {/* Toggle button - collapsed by default */}
       <button
         className="flex items-center gap-1 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"

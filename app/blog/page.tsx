@@ -43,7 +43,7 @@ export default async function BlogPage() {
     <div>
       <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.012em] mb-12">Blog</h1>
 
-      <div className="space-y-12">
+      <div className="space-y-10">
         {posts.map((post) => (
           <article key={post.slug}>
             <Link href={post.link || `/blog/${post.slug}`} className="block group no-underline hover:no-underline">
@@ -59,12 +59,12 @@ export default async function BlogPage() {
               </div>
 
               {/* Title - orange on hover with underline */}
-              <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-3">
+              <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-2">
                 {post.title}
               </h2>
 
               {/* Excerpt */}
-              <p className="text-[var(--foreground-muted)] mb-3">
+              <p className="text-[var(--foreground-muted)] mb-2">
                 {post.excerpt}
               </p>
 
