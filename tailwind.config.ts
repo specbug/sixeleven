@@ -104,7 +104,7 @@ const config: Config = {
             color: "var(--foreground-body)",
             fontFamily: "var(--font-rsans), system-ui, sans-serif",
             fontSize: "1.0625rem",
-            fontWeight: "400",
+            fontWeight: "inherit",
             lineHeight: "1.6",
             letterSpacing: "0",
             "--tw-prose-body": "var(--foreground-body)",
