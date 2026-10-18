@@ -24,10 +24,11 @@
     --background: oklch(0.985 0.004 85);
     --surface: oklch(0.962 0.007 85);
     --plate: oklch(0.945 0.010 85); /* behind figures: a step darker than code */
-    --foreground: oklch(0.22 0.008 265);
+    --foreground: oklch(0.20 0.008 265);
     --foreground-muted: oklch(0.47 0.008 265);
     --foreground-subtle: oklch(0.55 0.008 265); /* ≥4.5:1 on paper, safe for 12px meta */
-    --foreground-body: oklch(0.25 0.008 265);
+    --foreground-body: oklch(0.20 0.008 265); /* near-ink, 17.4:1 on paper */
+    --body-weight: 450;
     --border: oklch(0.905 0.008 85);
     --input: oklch(0.905 0.008 85);
     --ring: #ed8008;
@@ -79,7 +80,8 @@
     --foreground: oklch(0.93 0.006 85);
     --foreground-muted: oklch(0.71 0.006 85);
     --foreground-subtle: oklch(0.60 0.006 85);
-    --foreground-body: oklch(0.89 0.006 85);
+    --foreground-body: oklch(0.92 0.006 85);
+    --body-weight: 425; /* light text on dark blooms; a step lighter */
     --border: oklch(0.29 0.005 75);
     --input: oklch(0.29 0.005 75);
 
@@ -132,7 +134,7 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-weight: 425;
+    font-weight: var(--body-weight);
     font-size: 1.0625rem;
     line-height: 1.6;
   }
