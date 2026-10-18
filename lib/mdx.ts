@@ -12,6 +12,11 @@ export interface Post {
   readingTime?: string
   tags?: string[]
   link?: string
+  // Optional cover: a site-relative image path, its alt text, and a markdown
+  // credit line (links allowed) shown under it
+  cover?: string
+  coverAlt?: string
+  coverCredit?: string
 }
 
 export interface Project {
