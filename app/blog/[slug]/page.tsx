@@ -5,6 +5,7 @@ import TableOfContents, { TocRail } from "@/components/TableOfContents"
 import ReadingProgressBar from "@/components/ReadingProgressBar"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import BlogPostSchema from "@/components/blog-schema"
+import PostCover from "@/components/PostCover"
 
 interface BlogPostPageProps {
   params: {
@@ -24,7 +25,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     }
   }
 
-  const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`
+  // A post with a cover shares it with link previews; otherwise the title card
+  const ogImageUrl = post.cover
+    ? `${baseUrl}${post.cover}`
+    : `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`
+  const ogImageSize = post.cover ? { width: 1920, height: 1080 } : { width: 1200, height: 630 }
 
   return {
     title: `${post.title} | sixeleven`,
@@ -39,8 +44,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       images: [
         {
           url: ogImageUrl,
-          width: 1200,
-          height: 630,
+          ...ogImageSize,
           alt: post.title,
         },
       ],
@@ -77,10 +81,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const isoDate = new Date(post.date).toISOString()
   const headings = parseHeadings(post.content)
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
 
   return (
     <>
-      <BlogPostSchema title={post.title} excerpt={post.excerpt} date={isoDate} slug={post.slug} />
+      <BlogPostSchema
+        title={post.title}
+        excerpt={post.excerpt}
+        date={isoDate}
+        slug={post.slug}
+        image={post.cover ? `${baseUrl}${post.cover}` : undefined}
+      />
       <article className="max-w-none relative">
         <ReadingProgressBar />
 
@@ -120,6 +131,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           )}
         </header>
+
+        {/* Cover - sits between the title block and the text, on the same plate as
+            the post's figures, with its credit beneath */}
+        {post.cover && <PostCover src={post.cover} alt={post.coverAlt} credit={post.coverCredit} />}
 
         {/* Contents - a toggle in the column; on wide screens, a sticky rail in the margin */}
         <div className="xl:hidden">

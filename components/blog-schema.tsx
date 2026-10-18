@@ -3,6 +3,7 @@ export default function BlogPostSchema({
   excerpt,
   date,
   slug,
+  image,
   author = "Rishit Vora",
   authorUrl = "https://sixeleven.in/about",
   baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in",
@@ -11,6 +12,7 @@ export default function BlogPostSchema({
   excerpt: string
   date: string
   slug: string
+  image?: string
   author?: string
   authorUrl?: string
   baseUrl?: string
@@ -27,7 +29,7 @@ export default function BlogPostSchema({
     },
     datePublished: date,
     dateModified: date,
-    image: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`,
+    image: image || `${baseUrl}/api/og?title=${encodeURIComponent(title)}`,
     url: `${baseUrl}/blog/${slug}`,
     publisher: {
       "@type": "Organization",
