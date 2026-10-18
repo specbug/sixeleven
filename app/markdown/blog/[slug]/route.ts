@@ -2,8 +2,8 @@ import { getAllPosts, getPostBySlug } from "@/lib/mdx"
 import { frontmatter, markdownResponse, postMarkdown } from "@/lib/portable"
 import { SITE_URL } from "@/lib/seo"
 
-// A post as markdown; middleware routes `Accept: text/markdown` and /blog/<slug>.md
-// here. Built for every post at build time; any other slug is a 404.
+// A post as markdown, served at /blog/<slug>.md (see the rewrites in
+// next.config.mjs). Built for every post at build time; any other slug is a 404.
 export const dynamic = "force-static"
 export const dynamicParams = false
 

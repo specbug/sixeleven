@@ -10,6 +10,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Rishit Vora, a software engineer in Bengaluru: background, interests, the name sixeleven, and how to get in touch.",
   path: "/about",
+  markdown: "/about.md",
 })
 
 // Who the site is by, for search engines and assistants: ties the name to the

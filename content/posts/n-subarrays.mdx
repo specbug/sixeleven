@@ -25,8 +25,8 @@ In the above discussion, there are *five* distinct approaches to prove the above
 Consider an array $A$ with $n$ elements. The indices of the above array fall within the range $[1…n]$ (1-indexed).
 
 $$
-A: int[n] \\
-i\in \text{[1 2 3 ... n]}\ (i \rightarrow \text{index of A})
+\begin{gathered}A: int[n] \\
+i\in \text{[1 2 3 ... n]}\ (i \rightarrow \text{index of A})\end{gathered}
 $$
 
 To slice a subarray, we need the start & end indices of the subarray, termed $s$ & $e$ respectively, such that $s \le e\ (s, e \in i)$.
@@ -60,8 +60,8 @@ and so on…
 **Hence, the total choices (total count of subarrays) are** $\sum \text{(possibilities)}$ **=**
 
 $$
-1 + 2 + 3 + ... + (n-(k-1)) + ... + (n-1) + n = \\
-\bold{\frac {n(n+1)}{2}}
+\begin{gathered}1 + 2 + 3 + ... + (n-(k-1)) + ... + (n-1) + n = \\
+\bold{\frac {n(n+1)}{2}}\end{gathered}
 $$
 
 ### Proof 2: Selecting

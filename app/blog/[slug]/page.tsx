@@ -62,6 +62,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     },
     alternates: {
       canonical: `${baseUrl}/blog/${post.slug}`,
+      // The post as plain markdown, for agents
+      types: { "text/markdown": `${baseUrl}/blog/${post.slug}.md` },
     },
   }
 }

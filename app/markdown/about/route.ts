@@ -2,7 +2,7 @@ import { getAboutContent } from "@/lib/mdx"
 import { frontmatter, markdownResponse, postMarkdown } from "@/lib/portable"
 import { SITE_URL } from "@/lib/seo"
 
-// /about as markdown; middleware routes `Accept: text/markdown` and /about.md here
+// /about as markdown, served at /about.md (see the rewrites in next.config.mjs)
 export const dynamic = "force-static"
 
 export async function GET() {

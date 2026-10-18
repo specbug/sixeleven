@@ -22,15 +22,14 @@ const nextConfig = {
   turbopack: {
     root: resolve(__dirname),
   },
-  // Pages that also answer in markdown (see middleware.ts) must tell caches that
-  // the response depends on Accept. Next's page and route handlers replace any
-  // Vary set by middleware, so it's declared here, where the host applies it to
-  // the final response.
-  async headers() {
-    return ["/", "/about", "/about.md", "/blog/:slug"].map((source) => ({
-      source,
-      headers: [{ key: "Vary", value: "Accept" }],
-    }))
+  // Markdown for agents lives at its own URLs: /blog/<slug>.md and /about.md.
+  // Not content negotiation on the HTML URLs: that needs `Vary: Accept` on both
+  // representations to be cache-safe, and Next replaces Vary on page responses.
+  async rewrites() {
+    return [
+      { source: "/blog/:slug.md", destination: "/markdown/blog/:slug" },
+      { source: "/about.md", destination: "/markdown/about" },
+    ]
   },
   experimental: {
     webpackBuildWorker: true,

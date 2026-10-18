@@ -2,8 +2,8 @@ import katex from "katex"
 import { micromark } from "micromark"
 import { gfm, gfmHtml } from "micromark-extension-gfm"
 
-// Posts outside the site's own renderer: as plain markdown for agents (served on
-// `Accept: text/markdown`) and as standalone HTML for the RSS feed. The site's
+// Posts outside the site's own renderer: as plain markdown for agents (served at
+// /blog/<slug>.md) and as standalone HTML for the RSS feed. The site's
 // custom syntax becomes ordinary markdown and site-relative links and images
 // become absolute. Math stays TeX in markdown, which language models read
 // natively, and becomes MathML in HTML, which feed readers render.
@@ -72,15 +72,13 @@ export const frontmatter = (fields: Record<string, string | string[] | undefined
     .join("\n") +
   "\n---\n\n"
 
-// A markdown response for an HTML page's URL. The canonical Link points search
-// engines back at the HTML page; the token count is an estimate (about four
-// characters per token), for agents budgeting context. `Vary: Accept` is also
-// declared in next.config.mjs, since Next can replace this one.
+// A page's markdown twin. The canonical Link points search engines back at the
+// HTML page; the token count is an estimate (about four characters per token),
+// for agents budgeting context.
 export function markdownResponse(body: string, canonical: string) {
   return new Response(body, {
     headers: {
       "Content-Type": "text/markdown; charset=utf-8",
-      Vary: "Accept",
       Link: `<${canonical}>; rel="canonical"`,
       "x-markdown-tokens": String(Math.ceil(body.length / 4)),
     },
