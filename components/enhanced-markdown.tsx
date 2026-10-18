@@ -437,7 +437,7 @@ const createCustomComponents = (
   // Blockquote - a quiet 2px rule (matching /pnd), no italics (Rams preferred clean type)
   blockquote: ({ children, node, ...props }: any) => (
     <blockquote
-      className="border-l-2 border-[var(--border)] pl-6 mt-0 mb-6 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
+      className="border-l-2 border-[var(--quote-border)] pl-6 mt-0 mb-6 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
       {...props}
     >
       {children}

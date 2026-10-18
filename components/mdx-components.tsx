@@ -75,7 +75,7 @@ const mdxComponents = {
     )
   },
   blockquote: ({ children }: { children: React.ReactNode }) => (
-    <blockquote className="border-l-4 border-gray-300 dark:border-gray-700 pl-4 my-6 italic text-lg text-justify">
+    <blockquote className="border-l-4 border-[var(--quote-border)] pl-4 my-6 italic text-lg text-justify">
       {children}
     </blockquote>
   ),

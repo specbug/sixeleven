@@ -7,10 +7,11 @@
 
 @layer base {
   :root {
-    /* Braun orange - ONLY for interactive elements */
+    /* Braun orange - interactive accents and quiet quote rules */
     --braun-orange: #ed8008;
     --braun-orange-hover: #d67307;
     --braun-orange-muted: rgba(237, 128, 8, 0.12);
+    --quote-border: color-mix(in srgb, var(--primary) 55%, transparent);
 
     /* Dieter Rams / Braun callout palette */
     --braun-grey: #d9d2c6;
