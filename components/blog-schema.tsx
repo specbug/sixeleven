@@ -4,6 +4,8 @@ export default function BlogPostSchema({
   date,
   slug,
   image,
+  tags,
+  wordCount,
   author = "Rishit Vora",
   authorUrl = "https://sixeleven.in/about",
   baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in",
@@ -13,6 +15,8 @@ export default function BlogPostSchema({
   date: string
   slug: string
   image?: string
+  tags?: string[]
+  wordCount?: number
   author?: string
   authorUrl?: string
   baseUrl?: string
@@ -31,6 +35,9 @@ export default function BlogPostSchema({
     dateModified: date,
     image: image || `${baseUrl}/api/og?title=${encodeURIComponent(title)}`,
     url: `${baseUrl}/blog/${slug}`,
+    ...(tags?.length ? { keywords: tags.map((t) => t.trim()).join(", ") } : {}),
+    ...(wordCount ? { wordCount } : {}),
+    inLanguage: "en",
     publisher: {
       "@type": "Organization",
       name: "sixeleven",

@@ -1,11 +1,13 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import Link from "next/link"
 import { getAllProjects } from "@/lib/mdx"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Projects | sixeleven",
-  description: "Projects and work",
-}
+  description: "Projects by Rishit Vora.",
+  path: "/projects",
+})
 
 export default async function ProjectsPage() {
   const projects = await getAllProjects()

@@ -1,5 +1,14 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { getAllPosts } from "@/lib/mdx"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "sixeleven",
+  description:
+    "Essays and experiments by Rishit Vora, a software engineer in Bengaluru, on science, AI, philosophy and programming.",
+  path: "/",
+})
 
 export default async function Home() {
   const posts = await getAllPosts()

@@ -1,11 +1,13 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import { getAllPosts } from "@/lib/mdx"
 import SearchPosts from "@/components/search-posts"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Archive | sixeleven",
-  description: "All blog posts",
-}
+  description: "Every post on sixeleven, searchable by title and tag.",
+  path: "/archive",
+})
 
 export default async function ArchivePage() {
   const posts = await getAllPosts()

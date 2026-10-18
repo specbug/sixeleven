@@ -1,14 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
+// After the site styles, as the CDN stylesheet it replaces was; served from our own
+// origin and pinned to the same KaTeX version that renders the markup
+import "katex/dist/katex.min.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
-import KaTeXLoader from "@/components/KaTeXLoader"
 import { rSans, headingFont, monoFont, logoFont } from "@/lib/fonts"
 
-function WebsiteSchema() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
 
+function WebsiteSchema() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -24,11 +26,6 @@ function WebsiteSchema() {
       "@type": "Person",
       name: "Rishit Vora",
       url: `${baseUrl}/about`,
-    },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${baseUrl}/search?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
     },
   }
 
@@ -47,6 +44,8 @@ function WebsiteSchema() {
 const themeScript = `(function(){try{var s=localStorage.getItem("darkMode");if(s==="true"||(s===null&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})()`
 
 export const metadata: Metadata = {
+  // Resolves relative canonical and image URLs in every page's metadata
+  metadataBase: new URL(baseUrl),
   title: "sixeleven",
   description: "Personal blog of Rishit Vora.",
   icons: {
@@ -67,9 +66,9 @@ export const metadata: Metadata = {
     description: "Personal blog of Rishit Vora.",
     creator: "Rishit Vora",
   },
-  alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in",
-  },
+  // No canonical here: it would be inherited by every page that doesn't set its
+  // own, telling search engines those pages are copies of the homepage. Each page
+  // declares its own instead.
 }
 
 export default function RootLayout({
@@ -82,9 +81,11 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <WebsiteSchema />
+        {/* In the layout rather than metadata.alternates, which each page's own
+            canonical would replace */}
+        <link rel="alternate" type="application/rss+xml" title="sixeleven" href={`${baseUrl}/feed.xml`} />
       </head>
       <body className="min-h-screen flex flex-col">
-        <KaTeXLoader />
         <Navigation />
         <main className="flex-grow pt-16">
           <div className="max-w-[640px] mx-auto px-6 md:px-0 py-12">

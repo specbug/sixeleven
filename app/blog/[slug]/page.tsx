@@ -39,7 +39,10 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: post.title,
       description: post.excerpt,
       type: "article",
-      publishedTime: post.date,
+      // ISO 8601; frontmatter dates read "October 18, 2026"
+      publishedTime: new Date(post.date).toISOString(),
+      authors: ["Rishit Vora"],
+      tags: post.tags?.map((tag) => tag.trim()),
       url: `${baseUrl}/blog/${post.slug}`,
       images: [
         {
@@ -91,6 +94,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         date={isoDate}
         slug={post.slug}
         image={post.cover ? `${baseUrl}${post.cover}` : undefined}
+        tags={post.tags}
+        wordCount={post.content.split(/\s+/).filter(Boolean).length}
       />
       <article className="max-w-none relative">
         <ReadingProgressBar />

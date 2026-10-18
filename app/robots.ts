@@ -1,15 +1,15 @@
 import type { MetadataRoute } from "next"
+import { SITE_URL } from "@/lib/seo"
 
 export default function robots(): MetadataRoute.Robots {
-  // Get your base URL from environment variable or hardcode it for local development
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
-
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
-      disallow: ["/api/", "/_next/"],
+      allow: ["/", "/api/og"],
+      // /api/og stays open so link-preview crawlers can fetch post cards. /_next/
+      // is not blocked: search engines need its CSS and JS to render pages.
+      disallow: ["/api/"],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   }
 }

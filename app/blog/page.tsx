@@ -1,27 +1,13 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import Link from "next/link"
 import { getAllPosts } from "@/lib/mdx"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Blog | sixeleven",
-  description: "All blog posts",
-  openGraph: {
-    title: "Blog | sixeleven",
-    description: "All blog posts",
-    type: "website",
-    url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"}/blog`,
-    siteName: "sixeleven",
-  },
-  twitter: {
-    card: "summary",
-    title: "Blog | sixeleven",
-    description: "All blog posts",
-    creator: "Rishit Vora",
-  },
-  alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"}/blog`,
-  },
-}
+  description: "Every post on sixeleven, newest first.",
+  path: "/blog",
+})
 
 export default async function BlogPage() {
   const posts = await getAllPosts()

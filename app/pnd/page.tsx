@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       "Some stories don't just end. They leave a space where they used to be.",
     type: "article",
   },
+  alternates: { canonical: "/pnd" },
 }
 
 export default function PNDPage() {
