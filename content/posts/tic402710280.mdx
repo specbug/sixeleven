@@ -1,0 +1,371 @@
+---
+title: "Searching for a World That Doesn't Exist"
+date: "October 18, 2026"
+excerpt: "I discovered an exoplanet using AI. This blogpost distills the work."
+readingTime: "20"
+tags: ["astronomy", "science", "ai"]
+---
+
+{{callout:info|Disclaimer: I'm no astronomer and would appreciate a professional pair of eyes. If you can help, please drop a 👋 at [rishitv@protonmail.com](mailto:rishitv@protonmail.com).}}
+
+Preprint: [doi:10.5281/zenodo.23390317](https://doi.org/10.5281/zenodo.23390317)
+
+There is a star in the southern constellation Triangulum Australe, 218 light-years away. It dims by 0.21% for five hours, every 36.34 days. As far as I can tell, this dip has gone unreported throughout human history, and if my analysis holds true, reveals a planet 3.75x the size of Earth.
+
+I'm not an astronomer. Quite typically, I started out as an aspiring astronaut, which morphed into astronomy, astrophysics, fundamental physics, and finally settled into computer science & programming, and as this post is my witness, into AI cajoling. Last week, I may have come full circle when I employed such AI prowess to (probably) **discover an exoplanet, in a system far far away**!
+
+It is still a candidate, which is to say a guess, and as Feynman [said](https://www.goodreads.com/book/show/291920.The_Character_of_Physical_Law):
+
+> It doesn't make a difference how beautiful your guess is. It doesn't make a difference how smart you are, who made the guess, or what his name is. If it disagrees with the experiment, it's wrong.
+
+So I have published predictions of the next transits, along with the pre-registered tests that will strengthen or disprove my hypothesis. The relevant dataset, code, ephemeris and predictions are attached at the end.
+
+This blogpost is an attempt to distill my findings, primarily for self-directed learning. It also contains background on how I used Claude to look centuries into the past at something I may never see.
+
+## The Watcher
+
+Our candidate planet orbits the star [TIC 402710280](https://exofop.ipac.caltech.edu/tess/target.php?id=402710280). TESS is NASA's exoplanet survey satellite, and its TESS Input Catalog (TIC) records over 1.7B objects. The star number, as far as I can tell, is a surrogate primary key assigned during batch processing.
+
+TESS has been stargazing since 2018. Each of its four cameras can capture a 16.8 MP snapshot of an average constellation, covering a 24° x 96° total field of view, or an Observation Sector. TESS tiles the celestial sky into several sectors (over 100 so far) and stares at each sector for about 27 days. For roughly 20,000 selected stars it records brightness every two minutes; for everything else in the field it saves full-frame images (FFIs) at a slower cadence. Our star never made the two-minute list, so this analysis relies almost entirely on FFIs.
+
+{{youtube:evHF_mnIdj4|How NASA's Newest Planet Hunter Scans the Sky}}
+
+TESS "sees" a planet by the shadow it casts upon us, much like you would see a moth flitting across a distant streetlamp. Such transits appear as small dips in the star's total brightness. The depth of the dip is roughly the fraction of the star's disc the planet covers, the ratio of their areas:
+
+$$
+\delta \approx \left( \frac{R_{p}}{R_{\star}} \right)^{2}
+$$
+
+Earth crossing the Sun would dim it by 84 parts per million; Jupiter about 1%. Our candidate blocks 0.21% of its star's flux.
+
+We can plot a star's light curve (the graph of its brightness over time) to look for such transits. A single dip may be a fluke (a cosmic ray, a wobble of the spacecraft, sunlight scattered off the Earth), so you want dips that repeat at a fixed period before inferring anything in orbit. Even then, it could result from the star's dark spot rotating into view or eclipsing binaries. The 27-day sector rotation also makes it harder to find planets with a longer orbital period, since TESS only revisits the patch once every year or two.
+
+![The candidate planet crossing its star, drawn to scale, with the brightness dip it produces](/images/tic402710280/transit-to-scale.gif?width=800&height=800)
+
+## Light Reading
+
+TESS sends images back home, not light curves. But that's alright, we can turn an image into a brightness measurement by the way of [photometry](https://en.wikipedia.org/wiki/Photometry_(astronomy)), and there are several techniques to do it. A typical technique is to sum up the pixels around a star (within some aperture) and subtract the background sky noise, to get a star's brightness. Run this for each of the ~12k images in a sector, sort the values by time, and you have the star's light curve.
+
+Keep iterating for every star, in every image, over eight years, and you get a search space of over $10^{13}$ pixel measurements. Pipelines like [QLP](https://tess.mit.edu/qlp/) orchestrate this photometry at scale and publish light curves for millions of stars, with one light curve per star per sector. We evaluated over 10 million of these public light curves.
+
+Once you have a light curve, you still need to detect a transit programmatically. One [approach](https://ui.adsabs.harvard.edu/abs/2016ascl.soft07008K/abstract) is to use a window of width $T$ (say, 5 hours) and slide it across the light curve. At each step, average the points inside the window and subtract that from the average just outside it, on either side. If the inside is darker than the outside by some threshold, flag it as a potential transit.
+
+![A 27-day light curve, a 5-hour box slid across it, and the dip score at every box position](/images/tic402710280/box-search.png?width=1906&height=1119)
+
+The window width is a hyperparameter – too short and you get false positives; too long and the average dilutes to missed signals. We looped through ten widths, from 45 mins to 18 hrs, and flagged anything above 6σ.
+
+Six sigma sounds strict, but ten million light curves across ten window widths and a thousand positions per light curve result in $10^{11}$ measurements. Even pure gaussian noise could lead to hundreds of false positives at that rate. Real data is obviously more messy, but we can estimate the FPR by running the calculation twice: once on the light curves, and once on the same light curves flipped upside down. Noise makes fake troughs and fake peaks ~equally often, but a flipped light curve can't contain a real transit.
+
+We can employ more tactics to weed out further impostors:
+
+- Dips with the wrong shape: V-shaped (common with eclipsing binaries) or lopsided.
+- Dips at the edge of a data gap, where trend-fitting could result in an error.
+- Dips affecting hundreds of stars at the same moment (instrument error).
+
+All of this, and more, left us with 2,263 stars with at least one clean dip.
+
+The TESS magnitude ($T_{mag}$) is the measure of a star's brightness in the red-to-near-infrared band, as estimated from other surveys (e.g., Gaia). We restrict our samples to stars with $T_{mag} \leq 10.5$ (lower is brighter), since fainter stars yield lower flux and higher noise. This reduced our search space to 142 stellar candidates (we converged upon such a threshold as to keep the final count manageable).
+
+We then scoured reliable data sources to compile available information:
+
+- ExoFOP, where TESS planet candidates are listed
+- the NASA Exoplanet Archive, for confirmed planets
+- SIMBAD, general database for astronomical objects
+- Gaia's catalogues of binary stars
+
+Candidates with known correlates (candidates, planets, eclipsing binaries) were ruled out. Which left 27 candidates with a dip or two, that yet remain elusive to the human archive.
+
+We ignored 13 of the 27 candidates, since they marked only a single dip in our data. Of the rest, we couldn't derive consistent orbital motion for 12 of them: either they fit several periods equally well, or fit no period consistent with the transit length. So we excluded those 25 as well. And then there were two, each with a single, clean period.
+
+So far, we've treated a transit as a spherical cow, but astronomers also care about the transit chord, i.e., the points at which an object cuts through the star. The impact parameter, $b$ is defined by the proximity of the transit path to the centre. $b = 0$ when the object passes through the centre, while a path that nicks the rim has $b \approx 1$. Grazing transits are ambiguous, because the same dip fits multiple explanations (could be another star clipping the edge or a planet wholly transiting). TIC 447447071 has a periodic dip every 33.7 days. However, its transit nicks the edge with $b \approx 1.1$, and with Gaia suggesting a variable star velocity (possibly due to a companion star), it was dropped from consideration.
+
+And thus we arrive at our champion candidate, TIC 402710280.
+
+## Clocking Laps
+
+These are the four transits of TIC 402710280:
+
+![The four transits of TIC 402710280 with the fitted model and residuals, and the unused Sector 66](/images/tic402710280/four-transits.png?width=1217&height=518)
+
+The data from Sectors 100 and 102 were captured in early 2026 and had no public light curves yet, so we produced our own (using the photometry technique you surely recall, dear reader). Sector 66 would have added a fifth transit and tightened the period estimates, but alas, it fell prey to sheer randomness; sunlight scattered off the Earth and Moon flooded the cameras around the transit, and MIT's QLP pipeline flags that stretch of data as unreliable.
+
+To extract the orbital period from the transits, we first estimate the number of orbits between the different transit observations. A planet on a fixed orbit transits at
+
+$$
+T_{E} = T_{0} + EP
+$$
+
+where
+
+- $T_{E}$: The predicted transit time (at midpoint) for epoch $E$.
+- $T_{0}$: The first measured transit time ($E = 0$).
+- $E$: The transit epoch (orbit count).
+- $P$: The orbital period of the exoplanet.
+
+The four transits:
+
+| Transit | Date | Mid-time (BJD) | Uncertainty |
+|---|---|---|---|
+| Sector 39 | 19 Jun 2021 | 2459384.6094 | ±1.9 min |
+| Sector 93 | 11 Jun 2025 | 2460838.1847 | ±1.7 min |
+| Sector 100 | 21 Feb 2026 | 2461092.5845 | ±3.3 min |
+| Sector 102 | 29 Mar 2026 | 2461128.9446 | ±2.4 min |
+
+The time gaps between consecutive transit observations:
+
+$$
+\begin{aligned}
+\Delta_{1} &= 1453.575\ \text{d} \quad (\text{S39} \rightarrow \text{S93}) \\
+\Delta_{2} &= 254.400\ \text{d} \quad (\text{S93} \rightarrow \text{S100}) \\
+\Delta_{3} &= 36.360\ \text{d} \quad (\text{S100} \rightarrow \text{S102})
+\end{aligned}
+$$
+
+Suppose the shortest gap is exactly one orbit, and count the orbits across observations:
+
+$$
+\frac{\Delta_{1}}{\Delta_{3}} = \frac{1453.575}{36.360} = 39.98 \approx 40, \qquad \frac{\Delta_{2}}{\Delta_{3}} = \frac{254.400}{36.360} = 7.00
+$$
+
+That places the four transits at epochs
+
+$$
+E = 0,\ 40,\ 47,\ 48
+$$
+
+Whole number orbits lend strength to our assumed orbital period $P = 36.36$. However, they would hold equally true for half or third of it ($P = 18.18$ or $P = 12.12$). Each of these shorter periods predict extra transits, and we can evaluate the light curve on those dates (fortunately, TESS was paying attention on some of those dates). We find no statistically significant transit for any of them, so our shortest gap spans exactly one orbit.
+
+The gap is only an approximation. To pin it down, we plot each transit's mid-time against its epoch. The slope is the period. The best-fitting line is the one that minimizes
+
+$$
+\chi^{2} = \left( \frac{T_{E} - T_{0} - EP}{\sigma_{E}} \right)^{2}
+$$
+
+where $\sigma_{E}$ is each transit's timing uncertainty.
+
+![Transit mid-time against epoch, whose slope is the period, and how far each transit sits off the fitted line](/images/tic402710280/timing.png?width=1877&height=874)
+
+Thus we established the orbital period of the object transiting TIC 402710280:
+
+$$
+P = 36.33986 \pm 0.00051\ \text{days}
+$$
+
+While this linear model forms a good baseline, it assumes a perfectly constant orbital period. To test that, astronomers compare the observed transit time against the model's prediction:
+
+$$
+O - C = T_{obs} - T_{E}
+$$
+
+- If $O - C \approx 0$, the planet keeps to an unperturbed Keplerian orbit.
+- If $O - C \neq 0$, the transits arrive earlier or later than expected.
+
+Our four transits:
+
+| Transit | O−C |
+|---|---|
+| Sector 39 | 4 min late |
+| Sector 93 | 23 min early |
+| Sector 100 | 7 min late |
+| Sector 102 | 36 min late |
+
+Each transit is boxed to 2 or 3 mins, so these offsets are ~10x larger than expected. We can think of two explanations to these residual transit time variations:
+
+1. something in the data or light-curve production could shift the measured times. We checked: trying different models moved the time by no more than 2.3 mins, at most (far short of the offsets).
+2. gravitational perturbations due to a second body in the system.
+
+Either way, while the transits stand; we're uncertain about their timing. The next few (predicted) transits shall explain this better.
+
+## Stellar Characterization
+
+To learn about a planet, it is useful (and quite poetic) to start with its star.
+
+ESA's [Gaia](https://www.esa.int/Science_Exploration/Space_Science/Gaia) satellite measures the apparent displacement of nearby stars due to a change in the Earth's point of view (revolution). This shift (parallax) is inversely proportional to the star's distance:
+
+$$
+d\ [\text{parsecs}] = \frac{1}{p\ [\text{arcseconds}]}
+$$
+
+For TIC 402710280, Gaia cataloges $p = 0.014964''$, which puts the star 66.8 parsecs, or 218 light-years away. The star's distance and its apparent brightness reveal its luminosity. The flux we receive is $F = L_{\star}/4\pi d^{2}$, which gives a luminosity of $L_{\star} = 0.43L_{\odot}$ (solar luminosity). TIC lists the star's surface temperature at $T_{\star} \approx 5180$ K (the Sun is 5770 K). Luminosity, temperature and size are tightly coupled, since every patch of the star's surface radiates according to its temperature:
+
+$$
+L_{\star} = 4\pi R_{\star}^{2}\sigma T_{\star}^{4}
+$$
+
+Solving for the radius gives $R_{\star} = 0.82R_{\odot}$: a smaller, cooler K dwarf, about 0.88 times the mass of our Sun.
+
+We went through this effort to create a reference baseline to size our object. The dip depth is measured in the ratio of their radii:
+
+$$
+\frac{R_{p}}{R_{\star}} = 0.0421
+$$
+
+so
+
+$$
+R_{p} = 0.0421 \times 0.82R_{\odot} \approx 3.75R_{\oplus}
+$$
+
+So the object is 3.75 times Earth's radius (Neptune is 3.88), just the right size for a planet.
+
+Using Kepler's third law (measured in AU), we can estimate the distance of the planet from its star:
+
+$$
+a^{3} = M_{\star}P^{2}, \qquad a = 0.206\ \text{AU}
+$$
+
+That's about half as far as Mercury is from the Sun. To cover that orbit every five weeks (five-week years!) it must move at twice Earth's orbital velocity (62 km/s).
+
+At that distance, the planet receives
+
+$$
+S = \frac{L_{\star}}{a^{2}} = \frac{0.43}{0.206^{2}} \approx 10\ S_{\oplus}
+$$
+
+ten times Earth's sunlight, which would lead it to an equilibrium temperature of a balmy 227 °C.
+
+$$
+T_{eq} = T_{\star} \approx 500\ \text{K}
+$$
+
+A planet this large would also trap a thick atmosphere (and heat), so is probably warmer. Even the smallest stars are three times larger, so this safely rules out a companion star (so long as the dip originates from TIC 402710280).
+
+Going by typical size-to-mass relations, it would weigh about 14 Earths, although there are, of course, no recorded measurements as yet. While there are [sub-Neptunes](https://en.wikipedia.org/wiki/Sub-Neptune) aplenty, our solar system hosts none and so we don't quite know enough about the composition of such planets. The planet is heavy enough to tug its star by about 2.8 m/s as it orbits, which should be detectable by [ESPRESSO](https://www.eso.org/public/teles-instr/paranal-observatory/vlt/vlt-instr/espresso/). Knowing the mass and radius would give us its density, which could unearth clues about its true composition.
+
+## Is It a Bird? Is It a Plane?
+
+![TESS planet count: 8035 TOIs so far, 2098 false positives, 897 confirmed planets::Source: https://tess.mit.edu/tess-planet-count/](/images/tic402710280/tess-planet-count.png?width=1300&height=990)
+
+About 70% of settled TOI turn up false positives. So we must strive to make a best effort at falsifying this incredible observation.
+
+The usual impostor is a blended [eclipsing binary](http://spiff.rit.edu/classes/phys370/lectures/eclipse_1/eclipse_1.html): a gravitationally bound pair of stars undergoing mutual eclipses, nearly collinear with our star along the line of sight. Each TESS pixel represents a patch of sky 21 arcseconds across, wide enough to hold several stars. A star's brightness is measured by summing up the light landing on a small patch of pixels around it, which could potentially include an overlapping neighbor's smudge. When such a neighbor dims, we observe a dimming in the patch, and falsely attribute it to our star.
+
+To quantify a neighbor's contribution to our patch, let us suppose a neighbor that supplies a fraction $f$ to the total light on that patch. If it suffers an eclipse, it loses a fraction $\delta_{EB}$ of its own light, which we observe as a dip amounting to $f\delta_{EB}$.
+
+$$
+\delta_{EB} = \frac{\delta_{obs}}{f}
+$$
+
+So far, we know only the observed dip (0.21%). We don't know what fraction of the light, if any, is attributed to a neighbor, or whether a dimming neighbor exists at all. Naturally, $\delta_{EB} \leq 1$, and so the neighbor must be bright enough to supply $f \geq \delta_{obs}$ (at least 0.21%) of the light. That shrinks the search space significantly. Gaia has catalogued the position and brightness of every such star around our own, so we have a short list of confounders to investigate.
+
+With the suspects narrowed down, we can try to locate the dimming star. Subtract an image during the transit from one taken just before it. The steady stars cancel out, leaving us with a ghost of pixels centered around the dimmed star. Averaged across all four transits, the ghost appears $1.5'' \pm 1.3''$ (arcseconds) from our star.
+
+![The pixels out of transit, out minus in transit, and the difference-image centroids against the positions of TIC 402710280 and its Gaia neighbour](/images/tic402710280/difference-image.png?width=1218&height=378)
+
+The only suspect close enough within the constraints is a faint star, 3.5 arcseconds from ours (the next-nearest is 27 arcsecs away). Per Gaia, it is about 20 times farther away than our star and 354 times fainter. If our dip is a facade, this neighboring, supplying $f \approx 1/354$ of the light, would have to experience a 74% flux reduction:
+
+$$
+\delta_{EB} = \frac{\delta_{obs}}{f} \approx 0.0021 \times 354 \approx 0.74
+$$
+
+Covering three-quarters of a star requires another star about as large. So how do we rule that out?
+
+Imagine two similar stars, Tatoo I & Tatoo II, forever bound by mutual gravity. When Tatoo I passes in front of Tatoo II, it needs hours to slide across its face and yet, being similarly sized, expends little time eclipsing It with its full might. Their light curves would show a slope descending to some mid-point and an immediate Sisyphean upturn. A V-shaped light curve. Conversely, the planet is an ant overtaking an elephant. It crosses the star's edge within minutes, then sunbathes for hours before slipping off just as quickly.
+
+![A planet crossing the star against an equal-sized star eclipsing the faint neighbour: the same depth in the combined light, but only the shape gives it away](/images/tic402710280/planet-vs-binary.gif?width=960&height=512)
+
+For TIC 402710280.01, we modeled the light curve two ways:
+
+1. a transiting planet across our star;
+2. a friendly neighborhood binary (an eclipsed star and its companion). We tweaked companion sizes from a third of the eclipsing star to slightly larger than it. We also tweaked the transit chords from $b = 0$ to $\sim 1$.
+
+We descended the residuals using a [weighted least squares](https://en.wikipedia.org/wiki/Weighted_least_squares) fit, for all four light curves, across 2,227 measurements.
+
+$$
+\Delta\chi^{2} = \chi_{EB}^{2} - \chi_{planet}^{2} \geq 142
+$$
+
+Even the best EB model fits worse than the planet by roughly 12σ. While this is strong evidence against eclipsing binaries, it is not definitive proof.
+
+![The planet model against the best eclipse of the faint neighbour, over all four transits in 15-minute averages](/images/tic402710280/blend-fit.png?width=1587&height=836)
+
+At this point a keen reader may object that this feels like playing whac-a-mole with hypotheses. Fair point. We also ran [TRICERATOPS](https://github.com/stevengiacalone/triceratops/tree/master), a standardized tool for vetting exoplanets.
+
+> TRICERATOPS is a code that uses a Bayesian framework to determine if a transiting planet candidate is a real planet or an astrophysical false positive. The code does this by analyzing the transit data and the surrounding field of stars and calculating a false positive probability (the overall probability that a planet candidate is an astrophysical false positive) and a nearby false positive probability (the probability that the transit-like event originates from a known nearby source, such as a pair of nearby eclipsing binaries). TRICERATOPS can also fold in follow-up data, such as high resolution imaging, to provide stronger constraints on false positive scenarios.
+
+It divides candidates into three categories, per the evaluated FPP and NFPP:
+
+- Validated Planets: FPP < 0.015 and NFPP < 10⁻³
+- Likely Planets: FPP < 0.5 and NFPP < 10⁻³
+- Likely Nearby False Positives: NFPP > 10⁻¹
+
+For our candidate, it returns FPP ≈ 0.003 and NFPP < 10⁻⁶, well within validated-planet territory! In full disclosure, validation also demands a high-resolution image of the star, which we lack. TRICERATOPS carries import since it brings new priors (occurrence rates, the population of background stars) not covered by our blend-shape test, but a proof would require a high-resolution image.
+
+## The Art of Divination
+
+Carl Sagan once told a [parable](https://en.wikipedia.org/wiki/The_Demon-Haunted_World) about a man who claims to keep a dragon in his garage. Fascinating! You ask to see this majestic creature. "Ah," he says, "it's an invisible dragon". "That's strange, but not to fret," you rally and offer to scatter a bag of flour to catch its outline. "Excellent idea, but it is permeable to flour", he proclaims. "Very well, let us measure its fire with an infrared camera". "Oh, but its fire gives off no heat".
+
+Notice that each excuse on its own doesn't make the hypothesis unfalsifiable, it is okay to run further tests. The primary message is that the claimant already knows the outcome of your tests *before* you run them, and needs to do fast footwork to avoid falsification.
+
+Our planet comes with a garage too. Its transits already arrive up to 36 mins off schedule. If the next one didn't show, perhaps a wobble carried it out of the window? Perhaps a second celestial body is tugging at it, and we must widen our window and confidence intervals? Perhaps a magical dragon checks whether anyone is observing and retroactively edits the data?
+
+However diligent our validation strategies, the only true test is a prediction. And so we [pre-registered](https://zenodo.org/records/23390325) the future transit times, along with the exact observational window and other details. The tests are frozen, the code is fingerprinted, and the record is timestamped publicly, so nothing can be quietly amended later.
+
+If the planet keeps the schedule we measured, its $E$-th transit falls at
+
+$$
+T(E) = T_{0} + (E - 40)P
+$$
+
+Where $T_{0}$ is model's time for transit 40, the one TESS caught in 2025. Transit 40 is just a convenient reference point; any other choice gives the same predictions.
+
+How sure can we be in our predictions? Each transit time is measured to within 2 or 3 mins. If we merely extrapolate a straight line, we could pin the next transit to within a couple of mins. However, as we've seen, they arrive 22 mins off schedule on average (quadratic mean). The scatter allows the model to shift by ~17 mins (details in the paper). Additionally, the 44 secs periodic uncertainty adds up with each epoch and accumulates an error of ~12.5 mins. Assuming independence,[^1] we get a predicted uncertainty of:
+
+$$
+\sigma \approx 30\ \text{min}
+$$
+
+**Predictions**
+
+1. **Transit 57: 19 February 2027, 11:29 UTC ± 30 min**. This is the earliest transit TESS can watch (Sector 114).
+2. **Transit 59: 3 May 2027, 03:41 UTC ± 31 min**. TESS won't be looking, but this is observable from the La Silla Observatory in Chile.
+
+To validate these predictions, we run the same search when the data arrives: slide through the light curve in half-minute steps, up to 90 minutes either side of the prediction, and at each step measure the fit with and without a dip:
+
+$$
+\Delta\chi^{2} = \chi_{no\ dip}^{2} - \chi_{with\ dip}^{2}
+$$
+
+There are four possible outcomes:
+
+1. Recovered: a dip with $\Delta\chi^{2} \geq 25$ (5σ), between 1,046 and 3,138 ppm, well inside the window. Eureka!
+2. Inconsistent: a clear dip of the wrong depth.
+3. Excluded: the data covers at least 80% of the window, and there's no dip (even half the expected depth). The period would be wrong.
+4. Insufficient data: the catch-all for divine intervention. Clouds, instrument trouble, dragon fire, etc.
+
+We validated these outcomes against existing data: the (frozen) tests returned *recovered* for the four transits, *excluded* for a transit-free stretch, and *insufficient* when pointed at a gap.
+
+But TESS is not our only hope: anyone can vet a later transit using the pre-registered repository. You, dear reader, can measure this from your backyard, as long as your backyard sits in the southern hemisphere. The star sits at declination −63.5°, about 6° north of Atria (Alpha Trianguli Australis), at magnitude 10. The dip is 2.3 millimagnitudes deep and lasts 5.3 hours. You'll need a good telescope, steady skies and a night to kill.
+
+These are the 2027 transits that happen at night, with the star more than 30° up:
+
+| Date (UTC) | Mid-transit (UTC) | Best seen from |
+|---|---|---|
+| 27 March | ~19:35 | Western Australia |
+| 3 May | 03:41 | Chile, southern Brazil (the registered test) |
+| 8 June | ~11:50 | Eastern Australia, New Zealand |
+| 14 July | ~20:00 | South Africa |
+| 20 August | ~04:10 | Chile (about 60% of the transit) |
+
+If you do run it, I would be delighted to hear from you (you can reach out at [rishitv@protonmail.com](mailto:rishitv@protonmail.com)). If there are no sound transit observations, I will close my garage.
+
+## Acknowledgements
+
+Here is where things stand. The preprint, the data and code, and the pre-registration are all public.
+
+I have written to TESS to request a two-minute observation for February, and I'll write again after 19 February, whichever way it goes.
+
+[This tweet](https://x.com/p_rabtsevich/status/2107803696058822742?s=20) from a fellow amateur astronomer, Pavel Rabtsevich, inspired me to pull at this thread. The analysis ran in a single Claude Code cloud session over 8 days, through several usage limits, free resets, compactions and credits. Claude (Opus 5.5) ran most of the research, paperwork and execution (under my direction). I also used Claude to distill the findings into bite sized inferential jumps, so I could digest and transpile them into this blogpost. I also used GPT (6, Astra) for some independent checks and validations.
+
+### How You Can Help
+
+NASA's ExoFOP requires a peer-reviewed paper to accept a [cTOI](https://tess.mit.edu/toi-releases/toi-release-faqs/). I If you can help with arXiv endorsement, review, feedback or references, please write to me at [rishitv@protonmail.com](mailto:rishitv@protonmail.com). I'd be grateful for any help in bubbling this up to the official channels.
+
+Until then the star sits six degrees from Atria, dimming once every five weeks, unmoved by any human endeavors.
+
+- *Preprint:* [doi:10.5281/zenodo.23390317](https://doi.org/10.5281/zenodo.23390317)
+- *Data and code:* [doi:10.5281/zenodo.23390274](https://doi.org/10.5281/zenodo.23390274)
+- *Pre-registered test:* [doi:10.5281/zenodo.23390325](https://doi.org/10.5281/zenodo.23390325)
+- *Code:* [github.com/specbug/ad-astra](https://github.com/specbug/ad-astra)
+
+[^1]: They aren't quite independent. Checking the fit after the pre-registration was frozen, I found the first two errors are correlated (a correlation of about 0.46), which raises the honest uncertainty to about 34 minutes rather than 30. The frozen search window (±90 minutes) still covers about 99% of that wider range, so the test stands as registered.
