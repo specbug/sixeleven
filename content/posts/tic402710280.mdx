@@ -138,7 +138,7 @@ Whole number orbits lend strength to our assumed orbital period $P = 36.36$. How
 The gap is only an approximation. To pin it down, we plot each transit's mid-time against its epoch. The slope is the period. The best-fitting line is the one that minimizes
 
 $$
-\chi^{2} = \left( \frac{T_{E} - T_{0} - EP}{\sigma_{E}} \right)^{2}
+\chi^{2} = \sum_{E} \left( \frac{T_{E} - T_{0} - EP}{\sigma_{E}} \right)^{2}
 $$
 
 where $\sigma_{E}$ is each transit's timing uncertainty.
@@ -225,7 +225,7 @@ $$
 ten times Earth's sunlight, which would lead it to an equilibrium temperature of a balmy 227 °C.
 
 $$
-T_{eq} = T_{\star} \approx 500\ \text{K}
+T_{eq} = T_{\star} \sqrt{\frac{R_{\star}}{2a}} \approx 500\ \text{K}
 $$
 
 A planet this large would also trap a thick atmosphere (and heat), so is probably warmer. Even the smallest stars are three times larger, so this safely rules out a companion star (so long as the dip originates from TIC 402710280).
@@ -312,7 +312,7 @@ Where $T_{0}$ is model's time for transit 40, the one TESS caught in 2025. Trans
 How sure can we be in our predictions? Each transit time is measured to within 2 or 3 mins. If we merely extrapolate a straight line, we could pin the next transit to within a couple of mins. However, as we've seen, they arrive 22 mins off schedule on average (quadratic mean). The scatter allows the model to shift by ~17 mins (details in the paper). Additionally, the 44 secs periodic uncertainty adds up with each epoch and accumulates an error of ~12.5 mins. Assuming independence,[^1] we get a predicted uncertainty of:
 
 $$
-\sigma \approx 30\ \text{min}
+\sigma = \sqrt{17^{2} + 12.5^{2} + 22^{2}} \approx 30\ \text{min}
 $$
 
 **Predictions**
