@@ -20,8 +20,94 @@ const PLATE_OUTER = "block my-8 -mx-6 md:-mx-12 lg:-mx-20"
 const PLATE = "block bg-[var(--plate)] p-6 md:p-8 lg:p-10 md:rounded-[4px]"
 const PLATE_CAPTION = "block mt-3 px-6 md:px-0 text-sm leading-snug text-[var(--foreground-muted)]"
 
+// Links - ink with an orange hairline underline. Orange text alone fails contrast on
+// paper (2.6:1); the hairline keeps the accent while the words stay readable.
+const MarkdownLink = ({ href, children, node, ...props }: any) => {
+  if (!href) return <span>{children}</span>
+
+  const isExternal = href.startsWith("http")
+
+  return (
+    <a
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      className="text-[var(--foreground)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors"
+      {...props}
+    >
+      {children}
+    </a>
+  )
+}
+
+// Inline markdown (links, emphasis, code) for text that arrives as a raw string:
+// captions, callouts, video captions. Bare URLs autolink via GFM.
+const Inline = ({ text }: { text: string }) => (
+  <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ p: ({ children }: any) => <>{children}</>, a: MarkdownLink }}>
+    {text}
+  </ReactMarkdown>
+)
+
+// Callouts - set off by hairlines and a mono label, not a tinted box with a
+// colored stripe. Type is carried by the label's word and hue.
+const Callout = ({ type, label: custom, text }: { type: "info" | "warning" | "error"; label?: string; text: string }) => {
+  const label = custom || { info: "note", warning: "caution", error: "important" }[type]
+  const labelColor = {
+    info: "text-[var(--braun-orange)]",
+    warning: "text-[var(--braun-cream)]",
+    error: "text-[var(--braun-red)]",
+  }[type]
+
+  return (
+    <aside className="my-8 py-5 border-y border-[var(--border)]" role="note">
+      <span className={`uppercase-meta block mb-2 ${labelColor}`}>{label}</span>
+      <p className="m-0 text-[var(--foreground)] leading-[1.6]">
+        <Inline text={text} />
+      </p>
+    </aside>
+  )
+}
+
+// Inline `$...$` math in any run of text: list items and table cells get the same
+// treatment as paragraphs
+const mathify = (children: any): any => {
+  const items = Array.isArray(children) ? children : [children]
+  return items.map((child, index) => {
+    if (typeof child !== "string" || !child.includes("$") || child.includes("$$")) return child
+    const parts: any[] = []
+    let last = 0
+    let inMath = false
+    let expr = ""
+    for (let i = 0; i < child.length; i++) {
+      if (child[i] === "$") {
+        if (!inMath) {
+          if (i > last) parts.push(child.substring(last, i))
+          inMath = true
+          expr = ""
+        } else {
+          parts.push(<InlineMath key={`m-${index}-${i}`}>{expr}</InlineMath>)
+          inMath = false
+        }
+        last = i + 1
+      } else if (inMath) {
+        expr += child[i]
+      }
+    }
+    if (last < child.length) parts.push(child.substring(last))
+    return <Fragment key={`t-${index}`}>{parts}</Fragment>
+  })
+}
+
+// Text of a hast node, for reading a footnote marker's number
+const hastText = (node: any): string =>
+  node?.value ?? (node?.children ?? []).map(hastText).join("")
+
 // Custom components for ReactMarkdown - Dieter Rams inspired styling
-const createCustomComponents = (blockMathExpressions: string[]) => ({
+const createCustomComponents = (
+  blockMathExpressions: string[],
+  callouts: Array<{ type: "info" | "warning" | "error"; label?: string; text: string }>,
+  footnotes: Record<string, string>,
+) => ({
   p: ({ children, node, ...props }: any) => {
     if (Array.isArray(children)) {
       const processedChildren = children.map((child, index) => {
@@ -52,8 +138,6 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
                 <span key={`youtube-${index}`} className={PLATE_OUTER}>
                   <span className={PLATE}>
                     <iframe
-                      width="560"
-                      height="315"
                       src={`https://www.youtube.com/embed/${videoId}`}
                       title="YouTube video player"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -102,7 +186,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return child
       })
 
-      return <p className="mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
+      return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
     }
 
     const text = children ? String(children) : ""
@@ -113,7 +197,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       text.includes("{{youtube:") ||
       text.includes("{{image-with-caption:") ||
       text.includes("{{side-by-side:") ||
-      text.includes("{{callout:") ||
+      text.includes("{{callout-ref:") ||
       text.includes("{{creativecommons}}") ||
       text.includes("{{claude-disclaimer}}")
     ) {
@@ -136,24 +220,29 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return <p {...props} dangerouslySetInnerHTML={{ __html: processed }} />
       }
 
+      // `{{youtube:ID|caption}}` - the caption sits under the plate like an image's
       if (text.includes("{{youtube:")) {
-        const match = text.match(/{{youtube:([^}]+)}}/)
+        const match = text.match(/{{youtube:([^}|]+)(?:\|([^}]*))?}}/)
         if (match && match[1]) {
           const videoId = match[1]
+          const caption = match[2]?.trim()
           return (
             <div className={PLATE_OUTER}>
               <div className={PLATE}>
                 <iframe
-                  width="560"
-                  height="315"
                   src={`https://www.youtube.com/embed/${videoId}`}
-                  title="YouTube video player"
+                  title={caption || "YouTube video player"}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   loading="lazy"
                   className="block w-full aspect-video"
                 ></iframe>
               </div>
+              {caption && (
+                <span className={PLATE_CAPTION}>
+                  <Inline text={caption} />
+                </span>
+              )}
             </div>
           )
         }
@@ -171,27 +260,12 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         return <ClaudeDisclaimer />
       }
 
-      // Callouts - set off by hairlines and a mono label, not a tinted box with a
-      // colored stripe. Type is carried by the label's word and hue.
-      if (text.includes("{{callout:")) {
-        const match = text.match(/{{callout:(info|warning|error)\|(.*?)}}/)
-        if (match && match[1] && match[2]) {
-          const type = match[1] as "info" | "warning" | "error"
-          const content = match[2]
-          const label = { info: "note", warning: "caution", error: "important" }[type]
-          const labelColor = {
-            info: "text-[var(--braun-orange)]",
-            warning: "text-[var(--braun-cream)]",
-            error: "text-[var(--braun-red)]",
-          }[type]
-
-          return (
-            <aside className="my-8 py-5 border-y border-[var(--border)]" role="note">
-              <span className={`uppercase-meta block mb-2 ${labelColor}`}>{label}</span>
-              <p className="m-0 text-[var(--foreground)] leading-[1.6]">{content}</p>
-            </aside>
-          )
-        }
+      // Callouts were lifted out before parsing (see EnhancedMarkdown), so their
+      // text can carry links and emphasis without the markdown parser splitting them
+      if (text.includes("{{callout-ref:")) {
+        const match = text.match(/\{\{callout-ref:(\d+)\}\}/)
+        const callout = match && callouts[Number.parseInt(match[1], 10)]
+        if (callout) return <Callout type={callout.type} label={callout.label} text={callout.text} />
       }
     }
 
@@ -223,10 +297,10 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
         parts.push(text.substring(lastIndex))
       }
 
-      return <p className="mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{parts}</p>
+      return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{parts}</p>
     }
 
-    return <p className="mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{children}</p>
+    return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{children}</p>
   },
 
   img: ({ src, alt, ...props }: any) => {
@@ -238,6 +312,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
 
     let width = 800
     let height = 450
+    let maxWidth: number | undefined
     let finalSrc = src
 
     try {
@@ -247,9 +322,14 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
 
         const widthParam = params.get("width")
         const heightParam = params.get("height")
+        // `maxwidth=N` caps how wide a figure renders on its plate (in CSS px):
+        // tall and square images otherwise fill the whole column and tower over
+        // the prose. The image keeps its aspect ratio and sits centred.
+        const maxWidthParam = params.get("maxwidth")
 
         if (widthParam) width = Number.parseInt(widthParam, 10)
         if (heightParam) height = Number.parseInt(heightParam, 10)
+        if (maxWidthParam) maxWidth = Number.parseInt(maxWidthParam, 10)
 
         if (!src.startsWith("http")) {
           finalSrc = urlObj.pathname
@@ -272,9 +352,14 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
             height={height}
             unoptimized={src.startsWith("http") || isGif}
             className="block mx-auto h-auto max-w-full"
+            style={maxWidth ? { maxWidth: `min(100%, ${maxWidth}px)` } : undefined}
           />
         </span>
-        {caption && <span className={PLATE_CAPTION}>{caption}</span>}
+        {caption && (
+          <span className={PLATE_CAPTION}>
+            <Inline text={caption} />
+          </span>
+        )}
       </span>
     )
   },
@@ -282,12 +367,12 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
   // Headings - rendered as authored (sentence case in posts)
   // Scale steps down from the 52px post title so sections read as sections, not
   // rival titles; 32px above, 8px below binds each heading to its text.
-  h1: ({ children, ...props }: any) => (
+  h1: ({ children, node, ...props }: any) => (
     <h1 className="text-[1.75rem] md:text-[2rem] leading-[1.15] font-semibold mt-10 mb-2 tracking-[-0.012em]" {...props}>
       {children}
     </h1>
   ),
-  h2: ({ children, ...props }: any) => {
+  h2: ({ children, node, ...props }: any) => {
     const id = children
       ?.toString()
       .toLowerCase()
@@ -300,7 +385,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       </h2>
     )
   },
-  h3: ({ children, ...props }: any) => {
+  h3: ({ children, node, ...props }: any) => {
     const id = children
       ?.toString()
       .toLowerCase()
@@ -313,7 +398,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
       </h3>
     )
   },
-  h4: ({ children, ...props }: any) => {
+  h4: ({ children, node, ...props }: any) => {
     const id = children
       ?.toString()
       .toLowerCase()
@@ -327,28 +412,38 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     )
   },
 
-  // Links - ink with an orange hairline underline. Orange text alone fails contrast on
-  // paper (2.6:1); the hairline keeps the accent while the words stay readable.
-  a: ({ href, children, ...props }: any) => {
-    if (!href) return <span>{children}</span>
+  a: MarkdownLink,
 
-    const isExternal = href.startsWith("http")
-
+  // Footnotes (GFM `[^1]`): an orange superscript marker in the text. On wide screens
+  // the note itself sits in the right margin beside its paragraph, mirroring the
+  // contents rail on the left; narrower screens get the notes under a hairline at
+  // the end of the post.
+  sup: ({ children, node, ...props }: any) => {
+    const marker = hastText(node).trim()
+    const isRef = node?.children?.[0]?.properties?.dataFootnoteRef !== undefined
+    const note = isRef ? footnotes[marker] : undefined
     return (
-      <a
-        href={href}
-        target={isExternal ? "_blank" : undefined}
-        rel={isExternal ? "noopener noreferrer" : undefined}
-        className="text-[var(--foreground)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors"
-        {...props}
-      >
-        {children}
-      </a>
+      <>
+        <sup className="text-[0.7em] leading-none [&>a]:no-underline [&>a]:text-[var(--braun-orange)]" {...props}>
+          {children}
+        </sup>
+        {note && (
+          <span
+            role="note"
+            className="hidden xl:block absolute left-full top-0 ml-[112px] w-[180px] text-[0.8125rem] leading-[1.45] text-[var(--foreground-muted)] [text-wrap:pretty]"
+          >
+            <span className="text-[var(--braun-orange)] mr-1.5">{marker}</span>
+            <Inline text={note} />
+          </span>
+        )}
+      </>
     )
   },
+  // (The end-of-post footnote section itself is styled in globals.css via
+  // `section[data-footnotes]`, and hidden where the sidenotes take over.)
 
   // Blockquote - a quiet 2px rule (matching /pnd), no italics (Rams preferred clean type)
-  blockquote: ({ children, ...props }: any) => (
+  blockquote: ({ children, node, ...props }: any) => (
     <blockquote
       className="border-l-2 border-[var(--border)] pl-6 mt-0 mb-6 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
       {...props}
@@ -387,42 +482,42 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     return <Fragment>{children}</Fragment>
   },
 
-  ul: ({ children, ...props }: any) => (
+  ul: ({ children, node, ...props }: any) => (
     <ul className="list-disc pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
       {children}
     </ul>
   ),
-  ol: ({ children, ...props }: any) => (
+  ol: ({ children, node, ...props }: any) => (
     <ol className="list-decimal pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
       {children}
     </ol>
   ),
-  li: ({ children, ...props }: any) => (
+  li: ({ children, node, ...props }: any) => (
     <li className="my-1 pl-1" {...props}>
-      {children}
+      {mathify(children)}
     </li>
   ),
 
   // Tables - mono font for data alignment
-  table: ({ children, ...props }: any) => (
+  table: ({ children, node, ...props }: any) => (
     <div className="my-6 overflow-x-auto">
       <table className="w-full text-sm border-collapse tabular-nums" style={{ fontFamily: "var(--font-mono), ui-monospace, monospace" }} {...props}>
         {children}
       </table>
     </div>
   ),
-  thead: ({ children, ...props }: any) => (
+  thead: ({ children, node, ...props }: any) => (
     <thead className="border-b border-[var(--foreground-subtle)]" {...props}>{children}</thead>
   ),
-  th: ({ children, ...props }: any) => (
-    <th className="text-left py-2 pr-4 font-semibold text-[var(--foreground)]" {...props}>{children}</th>
+  th: ({ children, node, ...props }: any) => (
+    <th className="text-left py-2 pr-4 font-semibold whitespace-nowrap text-[var(--foreground)]" {...props}>{children}</th>
   ),
-  td: ({ children, ...props }: any) => (
-    <td className="py-2 pr-4 text-[var(--foreground-body)] border-b border-[var(--border)]" {...props}>{children}</td>
+  td: ({ children, node, ...props }: any) => (
+    <td className="py-2 pr-4 whitespace-nowrap text-[var(--foreground-body)] border-b border-[var(--border)]" {...props}>{mathify(children)}</td>
   ),
 
   // Horizontal rule - subtle
-  hr: (props: any) => <hr className="my-8 border-t border-[var(--border)]" {...props} />,
+  hr: ({ node, ...props }: any) => <hr className="my-8 border-t border-[var(--border)]" {...props} />,
 })
 
 interface EnhancedMarkdownProps {
@@ -430,8 +525,19 @@ interface EnhancedMarkdownProps {
 }
 
 export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
-  const { processedContent, captionedImages, sideBySideImages, blockMathExpressions } = useMemo(() => {
-    let contentWithoutBlockMath = content
+  const { processedContent, captionedImages, sideBySideImages, blockMathExpressions, callouts, footnotes } = useMemo(() => {
+    // Footnote definitions, keyed by label, so markers can show them as sidenotes
+    const footnoteStore: Record<string, string> = {}
+    for (const m of content.matchAll(/^\[\^([^\]]+)\]:[ \t]*(.+)$/gm)) footnoteStore[m[1]] = m[2].trim()
+
+    // Lift callouts out whole, so markdown inside them (links, emphasis) survives parsing.
+    // `{{callout:type|text}}` or `{{callout:type|Label|text}}` - a label of a few words
+    // replaces the default one (note / caution / important)
+    const calloutStore: Array<{ type: "info" | "warning" | "error"; label?: string; text: string }> = []
+    let contentWithoutBlockMath = content.replace(/\{\{callout:(info|warning|error)\|(?:([^|{}\n]{1,24})\|)?([\s\S]*?)\}\}/g, (_m, type, label, text) => {
+      calloutStore.push({ type, label: label?.trim(), text: text.trim() })
+      return `{{callout-ref:${calloutStore.length - 1}}}`
+    })
     const mathBlocks: string[] = []
 
     contentWithoutBlockMath = contentWithoutBlockMath.replace(/\$\$([\s\S]*?)\$\$/g, (_match, expr) => {
@@ -552,6 +658,7 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
     const processed = processedWithSideBySide.replace(/!\[(.*?)::(.+?)\]$$(.+?)$$/g, (_match, alt, caption, src) => {
       let width = 800
       let height = 450
+    let maxWidth: number | undefined
       let finalSrc = src
 
       try {
@@ -583,10 +690,15 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
       captionedImages: captionImages,
       sideBySideImages: sideBySideGroups,
       blockMathExpressions: mathBlocks,
+      callouts: calloutStore,
+      footnotes: footnoteStore,
     }
   }, [content])
 
-  const customComponents = useMemo(() => createCustomComponents(blockMathExpressions), [blockMathExpressions])
+  const customComponents = useMemo(
+    () => createCustomComponents(blockMathExpressions, callouts, footnotes),
+    [blockMathExpressions, callouts, footnotes],
+  )
 
   return (
     <Fragment>

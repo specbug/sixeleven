@@ -274,6 +274,24 @@
     text-decoration: none;
   }
 
+  /* GFM footnotes - the notes close the post under a hairline in the caption size.
+     On wide screens they appear as sidenotes beside their paragraph instead, so the
+     block is hidden there. */
+  section[data-footnotes] {
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--foreground-muted);
+  }
+  section[data-footnotes] ol { margin-bottom: 0; color: var(--foreground-muted); }
+  section[data-footnotes] p { margin-bottom: 0.5rem; color: var(--foreground-muted); }
+  section[data-footnotes] a[data-footnote-backref] { text-decoration: none; }
+  @media (min-width: 1280px) {
+    section[data-footnotes] { display: none; }
+  }
+
   /* Tag - plain text, no pill styling; lowercase because tags are identifiers */
   .tag {
     font-size: 0.75rem;
