@@ -22,6 +22,16 @@ const nextConfig = {
   turbopack: {
     root: resolve(__dirname),
   },
+  // Pages that also answer in markdown (see middleware.ts) must tell caches that
+  // the response depends on Accept. Next's page and route handlers replace any
+  // Vary set by middleware, so it's declared here, where the host applies it to
+  // the final response.
+  async headers() {
+    return ["/", "/about", "/about.md", "/blog/:slug"].map((source) => ({
+      source,
+      headers: [{ key: "Vary", value: "Accept" }],
+    }))
+  },
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,

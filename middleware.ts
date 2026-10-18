@@ -1,20 +1,47 @@
 import { NextResponse, type NextRequest } from "next/server"
 
-// Markdown for agents. A request whose Accept header asks for text/markdown (with
-// a non-zero q) gets the page's markdown; browsers never send that type, so they
-// keep getting HTML. `/blog/<slug>.md` and `/about.md` return markdown regardless
-// of the header, for clients that can't set one. The markdown carries
-// `Vary: Accept`, so no shared cache can serve it to a browser; the rewrite runs
-// before Vercel's cache, which keys the two representations separately.
+// Markdown for agents. `/`, `/about` and posts return markdown when the request's
+// Accept header prefers it, and HTML otherwise; `/blog/<slug>.md` and `/about.md`
+// return markdown for clients that can't set a header. Every response on these
+// paths must carry `Vary: Accept` so shared caches keep the two representations
+// apart; that is declared in next.config.mjs, because Next replaces a Vary header
+// set here.
 const MARKDOWN_PATHS: Record<string, string> = { "/": "/markdown", "/about": "/markdown/about" }
 
-const wantsMarkdown = (accept: string | null) =>
-  !!accept &&
-  accept.split(",").some((part) => {
-    const [type, ...params] = part.trim().toLowerCase().split(";")
-    const q = params.map((p) => p.trim()).find((p) => p.startsWith("q="))
-    return type.trim() === "text/markdown" && (q === undefined || Number.parseFloat(q.slice(2)) > 0)
-  })
+type Range = { type: string; subtype: string; q: number }
+
+const parseAccept = (accept: string): Range[] =>
+  accept
+    .split(",")
+    .map((part) => {
+      const [range, ...params] = part.trim().toLowerCase().split(";")
+      const [type, subtype] = range.trim().split("/")
+      const q = params.map((p) => p.trim()).find((p) => p.startsWith("q="))
+      const value = q === undefined ? 1 : Number.parseFloat(q.slice(2))
+      return { type, subtype, q: Number.isFinite(value) ? value : 0 }
+    })
+    .filter((r) => r.type && r.subtype)
+
+// The quality a client gives a media type: from the most specific range that
+// matches it (exact, then type/*, then */*), per RFC 9110 §12.5.1
+const quality = (ranges: Range[], type: string, subtype: string) => {
+  const match =
+    ranges.find((r) => r.type === type && r.subtype === subtype) ??
+    ranges.find((r) => r.type === type && r.subtype === "*") ??
+    ranges.find((r) => r.type === "*" && r.subtype === "*")
+  return match ? match.q : 0
+}
+
+// Markdown only when the client names it and prefers it at least as much as
+// HTML. Browsers never name it, and a bare */* still means HTML; a tie goes to
+// markdown, since a client that lists it explicitly is asking for it.
+export const prefersMarkdown = (accept: string | null) => {
+  if (!accept) return false
+  const ranges = parseAccept(accept)
+  const named = ranges.find((r) => r.type === "text" && r.subtype === "markdown")
+  if (!named || named.q <= 0) return false
+  return named.q >= quality(ranges, "text", "html")
+}
 
 const markdownTarget = (path: string): string | null => {
   if (MARKDOWN_PATHS[path]) return MARKDOWN_PATHS[path]
@@ -33,10 +60,9 @@ export function middleware(req: NextRequest) {
   }
 
   const target = markdownTarget(pathname)
-  if (target && wantsMarkdown(req.headers.get("accept"))) {
+  if (target && prefersMarkdown(req.headers.get("accept"))) {
     return NextResponse.rewrite(new URL(target, req.url))
   }
-
   return NextResponse.next()
 }
 

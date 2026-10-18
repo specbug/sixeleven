@@ -43,13 +43,21 @@ export function postMarkdown(content: string, siteUrl: string): string {
 const mathml = (tex: string, displayMode: boolean) =>
   katex.renderToString(tex, { displayMode, output: "mathml", throwOnError: false, strict: "ignore" })
 
+// Math is swapped for inert placeholders before markdown parsing and restored
+// after: parsed as markdown, TeX loses its `\\` line breaks to backslash escapes
+// and a numbered line inside an equation turns into an ordered list
 export function postHtml(content: string, siteUrl: string): string {
+  const math: string[] = []
+  const hold = (html: string) => `MATHPLACEHOLDER${math.push(html) - 1}X`
   const md = outsideCode(content, (prose) =>
     portableProse(prose, siteUrl)
-      .replace(/\$\$([\s\S]*?)\$\$/g, (_m, tex) => mathml(tex.trim(), true))
-      .replace(/\$([^$\n]+?)\$/g, (_m, tex) => mathml(tex, false)),
+      .replace(/\$\$([\s\S]*?)\$\$/g, (_m, tex) => hold(mathml(tex.trim(), true)))
+      .replace(/\$([^$\n]+?)\$/g, (_m, tex) => hold(mathml(tex, false))),
   )
-  return micromark(md, { allowDangerousHtml: true, extensions: [gfm()], htmlExtensions: [gfmHtml()] })
+  return micromark(md, { allowDangerousHtml: true, extensions: [gfm()], htmlExtensions: [gfmHtml()] }).replace(
+    /MATHPLACEHOLDER(\d+)X/g,
+    (_m, i) => math[Number(i)],
+  )
 }
 
 export const escapeXml = (s: string) =>
@@ -64,10 +72,10 @@ export const frontmatter = (fields: Record<string, string | string[] | undefined
     .join("\n") +
   "\n---\n\n"
 
-// A markdown response for an HTML page's URL. `Vary: Accept` keeps caches from
-// serving one representation in place of the other; the canonical Link points
-// search engines back at the HTML page; the token count is an estimate (about
-// four characters per token), for agents budgeting context.
+// A markdown response for an HTML page's URL. The canonical Link points search
+// engines back at the HTML page; the token count is an estimate (about four
+// characters per token), for agents budgeting context. `Vary: Accept` is also
+// declared in next.config.mjs, since Next can replace this one.
 export function markdownResponse(body: string, canonical: string) {
   return new Response(body, {
     headers: {
