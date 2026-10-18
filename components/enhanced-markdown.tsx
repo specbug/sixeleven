@@ -370,7 +370,7 @@ const createCustomComponents = (blockMathExpressions: string[]) => ({
     if (!isCodeBlock) {
       return (
         <code
-          className="bg-[var(--surface)] text-[var(--foreground)] rounded-[2px] px-[0.3em] py-[0.1em] font-mono text-[0.85em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
+          className="bg-[var(--surface)] text-[var(--foreground)] rounded-[2px] px-[0.3em] py-[0.1em] font-mono text-[0.89em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
           {...props}
         >
           {children}
