@@ -50,8 +50,8 @@ const Inline = ({ text }: { text: string }) => (
 
 // Callouts - set off by hairlines and a mono label, not a tinted box with a
 // colored stripe. Type is carried by the label's word and hue.
-const Callout = ({ type, text }: { type: "info" | "warning" | "error"; text: string }) => {
-  const label = { info: "note", warning: "caution", error: "important" }[type]
+const Callout = ({ type, label: custom, text }: { type: "info" | "warning" | "error"; label?: string; text: string }) => {
+  const label = custom || { info: "note", warning: "caution", error: "important" }[type]
   const labelColor = {
     info: "text-[var(--braun-orange)]",
     warning: "text-[var(--braun-cream)]",
@@ -105,7 +105,7 @@ const hastText = (node: any): string =>
 // Custom components for ReactMarkdown - Dieter Rams inspired styling
 const createCustomComponents = (
   blockMathExpressions: string[],
-  callouts: Array<{ type: "info" | "warning" | "error"; text: string }>,
+  callouts: Array<{ type: "info" | "warning" | "error"; label?: string; text: string }>,
   footnotes: Record<string, string>,
 ) => ({
   p: ({ children, node, ...props }: any) => {
@@ -138,8 +138,6 @@ const createCustomComponents = (
                 <span key={`youtube-${index}`} className={PLATE_OUTER}>
                   <span className={PLATE}>
                     <iframe
-                      width="560"
-                      height="315"
                       src={`https://www.youtube.com/embed/${videoId}`}
                       title="YouTube video player"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -232,8 +230,6 @@ const createCustomComponents = (
             <div className={PLATE_OUTER}>
               <div className={PLATE}>
                 <iframe
-                  width="560"
-                  height="315"
                   src={`https://www.youtube.com/embed/${videoId}`}
                   title={caption || "YouTube video player"}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -269,7 +265,7 @@ const createCustomComponents = (
       if (text.includes("{{callout-ref:")) {
         const match = text.match(/\{\{callout-ref:(\d+)\}\}/)
         const callout = match && callouts[Number.parseInt(match[1], 10)]
-        if (callout) return <Callout type={callout.type} text={callout.text} />
+        if (callout) return <Callout type={callout.type} label={callout.label} text={callout.text} />
       }
     }
 
@@ -316,6 +312,7 @@ const createCustomComponents = (
 
     let width = 800
     let height = 450
+    let maxWidth: number | undefined
     let finalSrc = src
 
     try {
@@ -325,9 +322,14 @@ const createCustomComponents = (
 
         const widthParam = params.get("width")
         const heightParam = params.get("height")
+        // `maxwidth=N` caps how wide a figure renders on its plate (in CSS px):
+        // tall and square images otherwise fill the whole column and tower over
+        // the prose. The image keeps its aspect ratio and sits centred.
+        const maxWidthParam = params.get("maxwidth")
 
         if (widthParam) width = Number.parseInt(widthParam, 10)
         if (heightParam) height = Number.parseInt(heightParam, 10)
+        if (maxWidthParam) maxWidth = Number.parseInt(maxWidthParam, 10)
 
         if (!src.startsWith("http")) {
           finalSrc = urlObj.pathname
@@ -350,6 +352,7 @@ const createCustomComponents = (
             height={height}
             unoptimized={src.startsWith("http") || isGif}
             className="block mx-auto h-auto max-w-full"
+            style={maxWidth ? { maxWidth: `min(100%, ${maxWidth}px)` } : undefined}
           />
         </span>
         {caption && (
@@ -527,10 +530,12 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
     const footnoteStore: Record<string, string> = {}
     for (const m of content.matchAll(/^\[\^([^\]]+)\]:[ \t]*(.+)$/gm)) footnoteStore[m[1]] = m[2].trim()
 
-    // Lift callouts out whole, so markdown inside them (links, emphasis) survives parsing
-    const calloutStore: Array<{ type: "info" | "warning" | "error"; text: string }> = []
-    let contentWithoutBlockMath = content.replace(/\{\{callout:(info|warning|error)\|([\s\S]*?)\}\}/g, (_m, type, text) => {
-      calloutStore.push({ type, text: text.trim() })
+    // Lift callouts out whole, so markdown inside them (links, emphasis) survives parsing.
+    // `{{callout:type|text}}` or `{{callout:type|Label|text}}` - a label of a few words
+    // replaces the default one (note / caution / important)
+    const calloutStore: Array<{ type: "info" | "warning" | "error"; label?: string; text: string }> = []
+    let contentWithoutBlockMath = content.replace(/\{\{callout:(info|warning|error)\|(?:([^|{}\n]{1,24})\|)?([\s\S]*?)\}\}/g, (_m, type, label, text) => {
+      calloutStore.push({ type, label: label?.trim(), text: text.trim() })
       return `{{callout-ref:${calloutStore.length - 1}}}`
     })
     const mathBlocks: string[] = []
@@ -653,6 +658,7 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
     const processed = processedWithSideBySide.replace(/!\[(.*?)::(.+?)\]$$(.+?)$$/g, (_match, alt, caption, src) => {
       let width = 800
       let height = 450
+    let maxWidth: number | undefined
       let finalSrc = src
 
       try {
