@@ -49,7 +49,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <header className="mb-10">
         {/* Title - project content uses normal case for readability */}
-        <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.02em] mb-4">
+        <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-4">
           {project.title}
         </h1>
 

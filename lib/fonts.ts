@@ -18,7 +18,15 @@ export const rSans = localFont({
   variable: "--font-rsans",
 })
 
-// Headings use Geist, loaded in app/layout.tsx from the `geist` package
+// Headings: Google Sans, open-sourced by Google under the OFL in 2025. The file is the
+// Text design (opsz pinned to 17, grade 0) with a variable weight axis 400-700, subset to
+// Latin. License: public/fonts/GoogleSans-OFL.txt
+export const headingFont = localFont({
+  src: "../public/fonts/GoogleSansText-Variable.woff2",
+  weight: "400 700",
+  display: "swap",
+  variable: "--font-heading",
+})
 
 // Logo font: Et Book Bold Line Figures - distinctive, classic
 export const logoFont = localFont({

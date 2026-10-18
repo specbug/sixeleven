@@ -181,7 +181,7 @@ function Hero() {
   return (
     <section className="min-h-[50vh] flex flex-col justify-end pb-20">
       <Reveal visible={mounted} delay={200}>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-[-0.02em] leading-[1.08]">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-[-0.015em] leading-[1.08]">
           Post Narrative Depression
         </h1>
       </Reveal>
