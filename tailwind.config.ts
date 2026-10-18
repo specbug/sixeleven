@@ -174,7 +174,9 @@ const config: Config = {
             code: {
               fontFamily: "var(--font-mono)",
               fontWeight: "400",
-              fontSize: "0.85em",
+              // R Mono x-height 0.520 vs R Sans 0.525: 0.89em keeps code's
+              // x-height at 0.88 of the surrounding text
+              fontSize: "0.89em",
               backgroundColor: "var(--surface)",
               padding: "0.1em 0.3em",
               borderRadius: "2px",
