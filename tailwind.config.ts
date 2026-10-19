@@ -7,7 +7,7 @@ const config: Config = {
     extend: {
       // Dieter Rams / Braun inspired color palette
       colors: {
-        // The iconic Braun orange - ONLY for interactive elements
+        // The iconic Braun orange - interactive accents and quiet quote rules
         braun: {
           orange: "#ed8008",
           "orange-hover": "#d67307",
@@ -164,7 +164,7 @@ const config: Config = {
             // Blockquote - left border, no italics (Rams preferred clean type)
             blockquote: {
               borderLeftWidth: "2px",
-              borderLeftColor: "var(--border)",
+              borderLeftColor: "var(--quote-border)",
               paddingLeft: "1.5rem",
               fontStyle: "normal",
               color: "var(--foreground-muted)",

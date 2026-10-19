@@ -72,7 +72,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       )
     },
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-gray-300 dark:border-gray-700 pl-4 my-6 italic text-lg">
+      <blockquote className="border-l-4 border-[var(--quote-border)] pl-4 my-6 italic text-lg">
         {children}
       </blockquote>
     ),
