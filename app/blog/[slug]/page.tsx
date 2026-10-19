@@ -8,9 +8,9 @@ import BlogPostSchema from "@/components/blog-schema"
 import PostCover from "@/components/PostCover"
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: post.title,
       description: post.excerpt,
       images: [ogImageUrl],
-      creator: "Rishit Vora",
+      creator: "@irishvora",
     },
     alternates: {
       canonical: `${baseUrl}/blog/${post.slug}`,

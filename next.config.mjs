@@ -22,13 +22,16 @@ const nextConfig = {
   turbopack: {
     root: resolve(__dirname),
   },
-  // Markdown for agents lives at its own URLs: /blog/<slug>.md and /about.md.
-  // Not content negotiation on the HTML URLs: that needs `Vary: Accept` on both
-  // representations to be cache-safe, and Next replaces Vary on page responses.
+  // Explicit Markdown URLs also work for clients unable to set Accept.
   async rewrites() {
     return [
       { source: "/blog/:slug.md", destination: "/markdown/blog/:slug" },
+      { source: "/projects/:slug.md", destination: "/markdown/projects/:slug" },
       { source: "/about.md", destination: "/markdown/about" },
+      { source: "/index.md", destination: "/markdown" },
+      { source: "/blog.md", destination: "/markdown/blog" },
+      { source: "/archive.md", destination: "/markdown/archive" },
+      { source: "/projects.md", destination: "/markdown/projects" },
     ]
   },
   experimental: {

@@ -30,6 +30,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
       readingTime: post.readingTime ? `${post.readingTime} min` : undefined,
     }) +
     `# ${post.title}\n\n` +
-    postMarkdown(post.content, SITE_URL)
+    postMarkdown(post.content, url)
   return markdownResponse(body, url)
 }

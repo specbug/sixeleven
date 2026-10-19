@@ -7,6 +7,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Archive | sixeleven",
   description: "Every post on sixeleven, searchable by title and tag.",
   path: "/archive",
+  markdown: "/archive.md",
 })
 
 export default async function ArchivePage() {

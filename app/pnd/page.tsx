@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description:
       "Some stories don't just end. They leave a space where they used to be.",
     type: "article",
+    url: "/pnd",
   },
   alternates: { canonical: "/pnd" },
 }

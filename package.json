@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "bun test tests"
+    "test": "bun test tests/portable.test.ts tests/markdown-negotiation.test.ts",
+    "test:seo": "playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -50,6 +51,7 @@
     "input-otp": "1.4.1",
     "katex": "^0.16.28",
     "lucide-react": "^0.454.0",
+    "mdast-util-from-markdown": "^2.0.2",
     "micromark": "^4.0.2",
     "micromark-extension-gfm": "^3.0.0",
     "next": "^15.3.3",
@@ -72,6 +74,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.56.1",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",

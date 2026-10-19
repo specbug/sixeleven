@@ -21,7 +21,10 @@ export function pageMetadata({
     title,
     description,
     alternates: { canonical: path, ...(markdown ? { types: { "text/markdown": markdown } } : {}) },
-    openGraph: { title, description, url: path, type: "website", locale: "en_US", siteName: "sixeleven" },
-    twitter: { card: "summary", title, description, creator: "Rishit Vora" },
+    openGraph: {
+      title, description, url: path, type: "website", locale: "en_US", siteName: "sixeleven",
+      images: [{ url: `/api/og?title=${encodeURIComponent(title)}`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: "summary_large_image", title, description, creator: "@irishvora" },
   }
 }

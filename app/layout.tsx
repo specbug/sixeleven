@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "sixeleven",
     description: "Personal blog of Rishit Vora.",
-    creator: "Rishit Vora",
+    creator: "@irishvora",
   },
   // No canonical here: it would be inherited by every page that doesn't set its
   // own, telling search engines those pages are copies of the homepage. Each page

@@ -7,6 +7,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Projects | sixeleven",
   description: "Projects by Rishit Vora.",
   path: "/projects",
+  markdown: "/projects.md",
 })
 
 export default async function ProjectsPage() {

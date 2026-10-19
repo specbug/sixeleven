@@ -7,6 +7,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Blog | sixeleven",
   description: "Every post on sixeleven, newest first.",
   path: "/blog",
+  markdown: "/blog.md",
 })
 
 export default async function BlogPage() {

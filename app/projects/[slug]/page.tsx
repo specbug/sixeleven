@@ -1,13 +1,14 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 import { notFound } from "next/navigation"
 import { getProjectBySlug, getAllProjects } from "@/lib/mdx"
 import ReadingProgressBar from "@/components/ReadingProgressBar"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
@@ -21,11 +22,12 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     }
   }
 
-  return {
+  return pageMetadata({
     title: `${project.title} | sixeleven`,
     description: project.excerpt,
-    alternates: { canonical: `/projects/${project.slug}` },
-  }
+    path: `/projects/${project.slug}`,
+    markdown: `/projects/${project.slug}.md`,
+  })
 }
 
 export async function generateStaticParams() {

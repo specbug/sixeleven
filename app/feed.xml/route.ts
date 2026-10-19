@@ -11,7 +11,7 @@ export async function GET() {
   const items = posts
     .map((post) => {
       const url = post.link || `${SITE_URL}/blog/${post.slug}`
-      const html = postHtml(post.content, SITE_URL).replace(/]]>/g, "]]]]><![CDATA[>")
+      const html = postHtml(post.content, `${SITE_URL}/blog/${post.slug}`).replace(/]]>/g, "]]]]><![CDATA[>")
       const categories = (post.tags ?? []).map((tag) => `      <category>${escapeXml(tag.trim())}</category>`).join("\n")
       return `    <item>
       <title>${escapeXml(post.title)}</title>

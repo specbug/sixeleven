@@ -8,6 +8,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Essays and experiments by Rishit Vora, a software engineer in Bengaluru, on science, AI, philosophy and programming.",
   path: "/",
+  markdown: "/index.md",
 })
 
 export default async function Home() {

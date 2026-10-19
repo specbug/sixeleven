@@ -22,3 +22,7 @@ bun-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# browser validation
+/test-results/
+/playwright-report/

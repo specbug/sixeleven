@@ -11,6 +11,6 @@ export async function GET() {
   const body =
     frontmatter({ title: "About Rishit Vora", url, author: "Rishit Vora" }) +
     "# About Rishit Vora\n\n" +
-    postMarkdown(about?.content ?? "", SITE_URL)
+    postMarkdown(about?.content ?? "", url)
   return markdownResponse(body, url)
 }
