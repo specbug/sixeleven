@@ -1,5 +1,10 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { getAllPosts } from "@/lib/mdx"
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+}
 
 export default async function Home() {
   const posts = await getAllPosts()

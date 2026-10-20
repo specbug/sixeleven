@@ -5,6 +5,7 @@ import SearchPosts from "@/components/search-posts"
 export const metadata: Metadata = {
   title: "Archive | sixeleven",
   description: "All blog posts",
+  alternates: { canonical: "/archive" },
 }
 
 export default async function ArchivePage() {

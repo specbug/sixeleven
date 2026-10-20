@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import PNDGallery from "@/components/pnd/PNDGallery"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/pnd" },
   title: "Post Narrative Depression — sixeleven",
   description:
     "A hall of fame for the works of art that left a void. The stories, games, and worlds that changed everything.",

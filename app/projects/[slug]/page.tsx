@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   return {
     title: `${project.title} | sixeleven`,
     description: project.excerpt,
+    alternates: { canonical: `/projects/${project.slug}` },
   }
 }
 
