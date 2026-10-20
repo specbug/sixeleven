@@ -32,14 +32,14 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const ogImageSize = post.cover ? { width: 1920, height: 1080 } : { width: 1200, height: 630 }
 
   return {
-    title: `${post.title} | sixeleven`,
-    description: post.excerpt,
+    title: `${post.seoTitle || post.title} | sixeleven`,
+    description: post.seoDescription || post.excerpt,
     authors: [{ name: "Rishit Vora" }],
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
-      publishedTime: post.date,
+      publishedTime: new Date(post.date).toISOString(),
       url: `${baseUrl}/blog/${post.slug}`,
       images: [
         {

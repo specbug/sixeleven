@@ -8,6 +8,9 @@ export interface Post {
   title: string
   date: string
   excerpt: string
+  // Search metadata overrides; the authored title and excerpt stay visible.
+  seoTitle?: string
+  seoDescription?: string
   content: string
   readingTime?: string
   tags?: string[]
