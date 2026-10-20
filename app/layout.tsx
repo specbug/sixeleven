@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
 import { rSans, headingFont, monoFont, logoFont } from "@/lib/fonts"
+import { Analytics } from "@vercel/analytics/next"
 
 function WebsiteSchema() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"
@@ -85,6 +86,7 @@ export default function RootLayout({
           </div>
         </main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   )
