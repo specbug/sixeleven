@@ -7,6 +7,7 @@ import SpecialCode from "@/components/SpecialCode"
 export const metadata: Metadata = {
   title: "About | sixeleven",
   description: "About Rishit Vora and this blog",
+  alternates: { canonical: "/about" },
 }
 
 export default async function AboutPage() {

@@ -25,11 +25,6 @@ function WebsiteSchema() {
       name: "Rishit Vora",
       url: `${baseUrl}/about`,
     },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${baseUrl}/search?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
   }
 
   return (
@@ -47,6 +42,7 @@ function WebsiteSchema() {
 const themeScript = `(function(){try{var s=localStorage.getItem("darkMode");if(s==="true"||(s===null&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})()`
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in"),
   title: "sixeleven",
   description: "Personal blog of Rishit Vora.",
   icons: {
@@ -66,9 +62,6 @@ export const metadata: Metadata = {
     title: "sixeleven",
     description: "Personal blog of Rishit Vora.",
     creator: "Rishit Vora",
-  },
-  alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://sixeleven.in",
   },
 }
 

@@ -5,6 +5,7 @@ import { getAllProjects } from "@/lib/mdx"
 export const metadata: Metadata = {
   title: "Projects | sixeleven",
   description: "Projects and work",
+  alternates: { canonical: "/projects" },
 }
 
 export default async function ProjectsPage() {
