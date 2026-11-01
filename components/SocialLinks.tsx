@@ -31,7 +31,7 @@ export default function SocialLinks() {
         href="https://x.com/irishvora"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm"
+        className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-center gap-2 text-sm"
       >
         <XIcon size={16} />
         X
@@ -40,7 +40,7 @@ export default function SocialLinks() {
         href="https://github.com/specbug"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm"
+        className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-center gap-2 text-sm"
       >
         <GithubIcon size={16} />
         GitHub
@@ -49,7 +49,7 @@ export default function SocialLinks() {
         href="https://www.goodreads.com/user/show/71020611-specbug"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors flex items-center gap-2 text-sm"
+        className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-center gap-2 text-sm"
       >
         <BookIcon size={16} />
         Goodreads

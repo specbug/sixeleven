@@ -5,62 +5,30 @@ const config: Config = {
   content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
-      // Dieter Rams / Braun inspired color palette
+      // Colour comes from the tokens in globals.css: neutrals plus the four signals.
+      // The legacy names map onto them for the shadcn primitives in components/ui.
       colors: {
-        // The iconic Braun orange - interactive accents and quiet quote rules
-        braun: {
-          orange: "#ed8008",
-          "orange-hover": "#d67307",
-          "orange-muted": "rgba(237, 128, 8, 0.12)",
-        },
-        // Light mode neutrals
-        rams: {
-          white: "#ffffff",
-          "off-white": "#f8f8f8",
-          "near-black": "#1a1a1a",
-          "dark-gray": "#666666",
-          "light-gray": "#e0e0e0",
-          "muted-gray": "#999999",
-          // Dark mode
-          "dark-bg": "#0a0a0a",
-          "dark-surface": "#141414",
-          "dark-text": "#f0f0f0",
-          "dark-muted": "#888888",
-        },
-        // Legacy color mappings for compatibility
+        ground: "var(--ground)",
+        sheet: "var(--sheet)",
+        ink: { DEFAULT: "var(--ink)", 2: "var(--ink-2)", 3: "var(--ink-3)" },
+        rule: "var(--rule)",
+        grid: "var(--grid)",
+        link: "var(--link)",
+        note: "var(--note)",
+        data: "var(--data)",
+        you: "var(--you)",
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary: {
-          DEFAULT: "#ed8008",
-          foreground: "#ffffff",
-        },
-        secondary: {
-          DEFAULT: "#f8f8f8",
-          foreground: "#1a1a1a",
-        },
-        muted: {
-          DEFAULT: "#f8f8f8",
-          foreground: "#666666",
-        },
-        accent: {
-          DEFAULT: "#ed8008",
-          foreground: "#ffffff",
-        },
-        destructive: {
-          DEFAULT: "#dc2626",
-          foreground: "#ffffff",
-        },
-        popover: {
-          DEFAULT: "#ffffff",
-          foreground: "#1a1a1a",
-        },
-        card: {
-          DEFAULT: "#ffffff",
-          foreground: "#1a1a1a",
-        },
+        primary: { DEFAULT: "var(--primary)", foreground: "var(--primary-foreground)" },
+        secondary: { DEFAULT: "var(--secondary)", foreground: "var(--secondary-foreground)" },
+        muted: { DEFAULT: "var(--muted)", foreground: "var(--muted-foreground)" },
+        accent: { DEFAULT: "var(--accent)", foreground: "var(--accent-foreground)" },
+        destructive: { DEFAULT: "var(--destructive)", foreground: "var(--destructive-foreground)" },
+        popover: { DEFAULT: "var(--popover)", foreground: "var(--popover-foreground)" },
+        card: { DEFAULT: "var(--card)", foreground: "var(--card-foreground)" },
       },
       // No rounded corners - Rams aesthetic
       borderRadius: {
@@ -72,14 +40,15 @@ const config: Config = {
       // R Sans as primary font
       fontFamily: {
         sans: ["var(--font-rsans)", "system-ui", "sans-serif"],
+        flex: ["var(--font-flex)", "var(--font-rsans)", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
         logo: ["var(--font-logo)", "var(--font-rsans)", "system-ui", "sans-serif"],
       },
       // Type scale based on 1.333 perfect fourth
       fontSize: {
-        "xs": ["0.75rem", { lineHeight: "1.5", letterSpacing: "0.05em" }],
+        "xs": ["0.75rem", { lineHeight: "1.5" }],
         "sm": ["0.875rem", { lineHeight: "1.5" }],
-        "base": ["1.0625rem", { lineHeight: "1.6" }],
+        "base": ["1.15625rem", { lineHeight: "1.62" }],
         "lg": ["1.5rem", { lineHeight: "1.4" }],
         "xl": ["2rem", { lineHeight: "1.2" }],
         "2xl": ["2.5rem", { lineHeight: "1.15" }],
@@ -97,121 +66,80 @@ const config: Config = {
         "22": "5.5rem",
       },
       // Prose / Typography plugin configuration
+      // Prose (the About page): the same reading measure, weights and signals as posts
       typography: {
         DEFAULT: {
           css: {
             maxWidth: "640px",
-            color: "var(--foreground-body)",
+            color: "var(--ink)",
             fontFamily: "var(--font-rsans), system-ui, sans-serif",
-            fontSize: "1.0625rem",
+            fontSize: "1.15625rem",
             fontWeight: "inherit",
-            lineHeight: "1.6",
+            lineHeight: "1.62",
             letterSpacing: "0",
-            "--tw-prose-body": "var(--foreground-body)",
-            "--tw-prose-headings": "var(--foreground)",
-            "--tw-prose-links": "var(--foreground)",
-            "--tw-prose-bold": "var(--foreground)",
-            "--tw-prose-quotes": "var(--foreground-muted)",
-            "--tw-prose-code": "var(--foreground)",
+            "--tw-prose-body": "var(--ink)",
+            "--tw-prose-headings": "var(--ink)",
+            "--tw-prose-links": "var(--link)",
+            "--tw-prose-bold": "var(--ink)",
+            "--tw-prose-quotes": "var(--ink-2)",
+            "--tw-prose-code": "var(--ink)",
             "--tw-prose-pre-bg": "var(--code-bg)",
-            "--tw-prose-bullets": "var(--foreground-subtle)",
-            "--tw-prose-counters": "var(--foreground-subtle)",
-            "--tw-prose-hr": "var(--border)",
-            p: {
-              marginTop: "1em",
-              marginBottom: "1em",
-            },
-            // Blog content headings stay normal case
-            h1: {
-              fontWeight: "600",
-              letterSpacing: "-0.02em",
-              marginTop: "0",
-              marginBottom: "0.5em",
-            },
-            h2: {
-              fontWeight: "600",
-              letterSpacing: "-0.01em",
-              marginTop: "2em",
-              marginBottom: "0.5em",
-            },
-            h3: {
-              fontWeight: "600",
-              letterSpacing: "0",
-              marginTop: "1.5em",
-              marginBottom: "0.5em",
-            },
-            h4: {
-              fontWeight: "500",
-              marginTop: "1.25em",
-              marginBottom: "0.5em",
-            },
-            // Links - orange, underline on hover
-            // Links - ink with an orange hairline; color is a guest, not a host
+            "--tw-prose-bullets": "var(--ink-3)",
+            "--tw-prose-counters": "var(--ink-3)",
+            "--tw-prose-hr": "var(--rule)",
+            p: { marginTop: "0", marginBottom: "1rem" },
+            h2: { fontSize: "1.3125rem", fontWeight: "620", letterSpacing: "-0.012em", lineHeight: "1.3", marginTop: "3rem", marginBottom: "0.5rem" },
+            h3: { fontSize: "1.3125rem", fontWeight: "620", letterSpacing: "-0.012em", lineHeight: "1.3", marginTop: "3rem", marginBottom: "0.5rem" },
             a: {
-              color: "var(--foreground)",
+              color: "var(--link)",
               textDecorationLine: "underline",
-              textDecorationColor: "var(--braun-orange)",
               textDecorationThickness: "1px",
-              textUnderlineOffset: "0.2em",
+              textUnderlineOffset: "0.22em",
+              textDecorationColor: "color-mix(in oklch, var(--link) 45%, transparent)",
               fontWeight: "inherit",
-              "&:hover": {
-                color: "var(--braun-orange)",
-              },
+              "&:hover": { textDecorationColor: "var(--link)" },
             },
-            strong: {
-              fontWeight: "600",
-            },
-            // Blockquote - left border, no italics (Rams preferred clean type)
+            strong: { fontWeight: "620" },
             blockquote: {
-              borderLeftWidth: "2px",
-              borderLeftColor: "var(--quote-border)",
+              borderLeftWidth: "1px",
+              borderLeftColor: "var(--rule)",
               paddingLeft: "1.5rem",
               fontStyle: "normal",
-              color: "var(--foreground-muted)",
+              color: "var(--ink-2)",
               quotes: "none",
             },
-            // Code - 4px blocks, 2px inline (matches the markdown renderer)
             code: {
               fontFamily: "var(--font-mono)",
               fontWeight: "400",
-              // R Mono x-height 0.520 vs R Sans 0.525: 0.89em keeps code's
-              // x-height at 0.88 of the surrounding text
+              // R Mono x-height 0.520 vs R Sans 0.525: 0.89em keeps code's x-height in step
               fontSize: "0.89em",
-              backgroundColor: "var(--surface)",
+              backgroundColor: "var(--sheet)",
               padding: "0.1em 0.3em",
-              borderRadius: "2px",
+              borderRadius: "0",
               "&::before": { content: "none" },
               "&::after": { content: "none" },
             },
             pre: {
               fontFamily: "var(--font-mono)",
               backgroundColor: "var(--code-bg)",
-              borderRadius: "4px",
-              padding: "1.25rem 1.5rem",
+              border: "1px solid var(--rule)",
+              borderRadius: "0",
+              padding: "1.5rem",
               overflow: "auto",
             },
-            // Images - no rounded corners
-            img: {
-              borderRadius: "0",
-            },
-            // Lists
-            "ul > li": {
-              paddingLeft: "0.25em",
-            },
-            "ol > li": {
-              paddingLeft: "0.25em",
-            },
+            img: { borderRadius: "0" },
+            "ul > li": { paddingLeft: "0.25em" },
+            "ol > li": { paddingLeft: "0.25em" },
           },
         },
-        // Dark mode prose - tokens already flip under .dark
         invert: {
           css: {
-            "--tw-prose-body": "var(--foreground-body)",
-            "--tw-prose-headings": "var(--foreground)",
-            "--tw-prose-links": "var(--foreground)",
-            "--tw-prose-bold": "var(--foreground)",
-            "--tw-prose-quotes": "var(--foreground-muted)",
-            "--tw-prose-code": "var(--foreground)",
+            "--tw-prose-body": "var(--ink)",
+            "--tw-prose-headings": "var(--ink)",
+            "--tw-prose-links": "var(--link)",
+            "--tw-prose-bold": "var(--ink)",
+            "--tw-prose-quotes": "var(--ink-2)",
+            "--tw-prose-code": "var(--ink)",
             "--tw-prose-pre-bg": "var(--code-bg)",
           },
         },

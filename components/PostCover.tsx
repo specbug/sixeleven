@@ -12,7 +12,7 @@ export default function PostCover({ src, alt, credit }: { src: string; alt?: str
   return (
     <figure className={`${PLATE_OUTER} mt-2`}>
       <span className={PLATE}>
-        <Image src={src} alt={alt || ""} width={1920} height={1080} priority className="block w-full h-auto rounded-[2px]" />
+        <Image src={src} alt={alt || ""} width={1920} height={1080} priority className="block w-full h-auto" />
       </span>
       {credit && (
         <figcaption className={PLATE_CAPTION}>

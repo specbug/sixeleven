@@ -14,55 +14,33 @@ export default async function ProjectsPage() {
   if (projects.length === 0) {
     return (
       <div>
-        <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-12">Projects</h1>
-        <div className="text-center py-10">
-          <p className="text-[var(--foreground-muted)]">
-            No projects found.
-          </p>
-        </div>
+        <h1 className="display text-[2.5rem] md:text-[3.25rem] mb-12">Projects</h1>
+        <p className="text-[var(--ink-2)]">No projects.</p>
       </div>
     )
   }
 
   return (
     <div>
-      <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-12">Projects</h1>
+      <h1 className="display text-[2.5rem] md:text-[3.25rem] mb-12">Projects</h1>
 
       <div className="space-y-12">
         {projects.map((project) => (
           <article key={project.slug}>
-            {/* Title - orange on hover */}
-            <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] mb-3">
-              <Link
-                href={`/projects/${project.slug}`}
-                className="text-[var(--foreground)] hover:text-[var(--braun-orange)] transition-colors"
-              >
+            <Link href={`/projects/${project.slug}`} className="group block">
+              <h2 className="text-[1.3125rem] leading-[1.3] mb-2 decoration-1 underline-offset-[0.22em] decoration-[color-mix(in_oklch,var(--link)_45%,transparent)] group-hover:underline">
                 {project.title}
-              </Link>
-            </h2>
-
-            {/* Description */}
-            <p className="text-[var(--foreground-muted)] mb-4">
-              {project.excerpt}
-            </p>
-
-            {/* Technologies - plain text tags */}
-            {project.technologies && project.technologies.length > 0 && (
-              <div className="flex flex-wrap gap-x-3 gap-y-1 mb-4">
-                {project.technologies.map((tech) => (
-                  <span key={tech} className="tag">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Read more link - orange */}
-            <Link
-              href={`/projects/${project.slug}`}
-              className="text-sm text-[var(--braun-orange)] hover:underline"
-            >
-              Read more
+              </h2>
+              <p className="text-[var(--ink-2)] mb-2">{project.excerpt}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="flex flex-wrap gap-x-3 gap-y-1">
+                  {project.technologies.map((tech) => (
+                    <span key={tech} className="tag">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
             </Link>
           </article>
         ))}

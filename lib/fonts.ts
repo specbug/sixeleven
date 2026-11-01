@@ -1,16 +1,16 @@
 import localFont from "next/font/local"
 
-// Primary font: R Sans - custom sans-serif variable font
+// Running text: R Sans, Rishit's own face (variable: opsz 9–40, wght 100–1000)
 export const rSans = localFont({
   src: [
     {
       path: "../public/fonts/RSans-Variable.woff2",
-      weight: "100 900",
+      weight: "100 1000",
       style: "normal",
     },
     {
       path: "../public/fonts/RSans-Italic-Variable.woff2",
-      weight: "100 900",
+      weight: "100 1000",
       style: "italic",
     },
   ],
@@ -18,14 +18,14 @@ export const rSans = localFont({
   variable: "--font-rsans",
 })
 
-// Headings: Google Sans, open-sourced by Google under the OFL in 2025. The file is the
-// Text design (opsz pinned to 17, grade 0) with a variable weight axis 400-700, subset to
-// Latin. License: public/fonts/GoogleSans-OFL.txt
-export const headingFont = localFont({
-  src: "../public/fonts/GoogleSansText-Variable.woff2",
-  weight: "400 700",
+// Small text and every number: Google Sans Flex (OFL, Google 2025). The file is the
+// variable font pinned to ROND 0, slnt 0, wdth 100, keeping opsz (8–32, left on auto)
+// and wght (300–700), subset to Latin. License: public/fonts/GoogleSansFlex-OFL.txt
+export const flexFont = localFont({
+  src: "../public/fonts/GoogleSansFlex-Variable.woff2",
+  weight: "300 700",
   display: "swap",
-  variable: "--font-heading",
+  variable: "--font-flex",
 })
 
 // Logo font: Et Book Bold Line Figures - distinctive, classic
@@ -36,7 +36,7 @@ export const logoFont = localFont({
   preload: true,
 })
 
-// Monospace font: R Mono for code blocks
+// Code only: R Mono
 export const monoFont = localFont({
   src: [
     {

@@ -2,125 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dieter Rams inspired design system
-   "Less, but better" - every element must justify its existence */
+/* sixeleven — Rams: less, but better. Cool neutrals and ink carry everything; colour
+   appears only as a signal, and each signal hue has exactly one meaning:
+     link  something you can follow
+     note  your own marks (footnote and sidenote numerals)
+     data  measured or computed values
+     you   where you are (the position on the Rule)                                  */
 
 @layer base {
   :root {
-    /* Braun orange - interactive accents and quiet quote rules */
-    --braun-orange: #ed8008;
-    --braun-orange-hover: #d67307;
-    --braun-orange-muted: rgba(237, 128, 8, 0.12);
-    --quote-border: color-mix(in srgb, var(--primary) 55%, transparent);
+    --ground: oklch(0.972 0.002 250); /* cool neutral, no cream */
+    --sheet: oklch(0.995 0.001 250); /* a figure, code block or card sitting on the ground */
+    --ink: oklch(0.19 0.004 250);
+    --ink-2: oklch(0.47 0.004 250); /* secondary text, notes, readouts */
+    --ink-3: oklch(0.6 0.004 250); /* tertiary: dates, tags, folios */
+    --rule: oklch(0.87 0.003 250); /* hairlines */
+    --grid: oklch(0.915 0.003 250); /* chart gridlines */
 
-    /* Dieter Rams / Braun callout palette */
-    --braun-grey: #d9d2c6;
-    --braun-grey-muted: #f5f3ef;
-    --braun-cream: #bf7c2a;
-    --braun-cream-muted: #faf6ed;
-    --braun-red: #ad1d1d;
-    --braun-red-muted: #faf0f0;
+    --link: oklch(0.5 0.16 255);
+    --note: oklch(0.64 0.17 52);
+    --data: oklch(0.55 0.13 152);
+    --you: oklch(0.6 0.2 30);
 
-    /* Light mode — warm paper, graphite ink (never pure #fff / #000) */
-    --background: oklch(0.985 0.004 85);
-    --surface: oklch(0.962 0.007 85);
-    --plate: oklch(0.945 0.010 85); /* behind figures: a step darker than code */
-    --foreground: oklch(0.20 0.008 265);
-    --foreground-muted: oklch(0.47 0.008 265);
-    --foreground-subtle: oklch(0.55 0.008 265); /* ≥4.5:1 on paper, safe for 12px meta */
-    --foreground-body: oklch(0.20 0.008 265); /* near-ink, 17.4:1 on paper */
     --body-weight: 450;
-    --border: oklch(0.905 0.008 85);
-    --input: oklch(0.905 0.008 85);
-    --ring: #ed8008;
 
-    /* Syntax — ink tones plus the orange family; one cool neutral for keywords */
-    --code-bg: var(--surface);
-    --code-fg: oklch(0.30 0.008 265);
-    --code-comment: oklch(0.58 0.008 265);
-    --code-punct: oklch(0.52 0.008 265);
-    --code-keyword: oklch(0.42 0.05 255);
-    --code-string: oklch(0.48 0.10 60);
-    --code-number: oklch(0.56 0.15 48);
-    --code-function: oklch(0.22 0.008 265);
-    --code-tag: oklch(0.47 0.11 35);
-    --code-line-number: oklch(0.72 0.006 85);
+    /* Code is set in ink alone: syntax hues would collide with the signal code */
+    --code-fg: var(--ink);
+    --code-comment: var(--ink-3);
+    --code-punct: var(--ink-2);
+    --code-keyword: var(--ink);
+    --code-string: var(--ink-2);
+    --code-number: var(--ink);
+    --code-function: var(--ink);
+    --code-tag: var(--ink-2);
+    --code-line-number: var(--ink-3);
+    --code-bg: var(--sheet);
 
-    /* Motion — stolid kinetics */
     --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-    /* Legacy variables for compatibility */
-    --card: var(--background);
-    --card-foreground: var(--foreground);
-    --popover: var(--background);
-    --popover-foreground: var(--foreground);
-    --primary: #ed8008;
-    --primary-foreground: #ffffff;
-    --secondary: var(--surface);
-    --secondary-foreground: var(--foreground);
-    --muted: var(--surface);
-    --muted-foreground: var(--foreground-muted);
-    --accent: #ed8008;
-    --accent-foreground: #ffffff;
-    --destructive: #dc2626;
-    --destructive-foreground: #ffffff;
-
-    /* No rounded corners */
+    /* Legacy names used by the shadcn primitives in components/ui */
+    --background: var(--ground);
+    --foreground: var(--ink);
+    --border: var(--rule);
+    --input: var(--rule);
+    --ring: var(--link);
+    --card: var(--sheet);
+    --card-foreground: var(--ink);
+    --popover: var(--sheet);
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--ground);
+    --secondary: var(--sheet);
+    --secondary-foreground: var(--ink);
+    --muted: var(--sheet);
+    --muted-foreground: var(--ink-2);
+    --accent: var(--sheet);
+    --accent-foreground: var(--ink);
+    --destructive: var(--you);
+    --destructive-foreground: var(--ground);
     --radius: 0;
 
     color-scheme: light;
   }
 
+  /* Dark mode: graphite on the same hue */
   .dark {
+    --ground: oklch(0.175 0.004 250);
+    --sheet: oklch(0.205 0.004 250);
+    --ink: oklch(0.925 0.003 250);
+    --ink-2: oklch(0.7 0.004 250);
+    --ink-3: oklch(0.55 0.004 250);
+    --rule: oklch(0.3 0.004 250);
+    --grid: oklch(0.25 0.004 250);
+
+    --link: oklch(0.74 0.12 250);
+    --note: oklch(0.78 0.14 62);
+    --data: oklch(0.76 0.13 152);
+    --you: oklch(0.7 0.17 30);
+
+    --body-weight: 425; /* light text on a dark ground blooms */
+
     color-scheme: dark;
-
-    /* Dark mode — warm graphite, not inverted black */
-    --background: oklch(0.18 0.004 75);
-    --surface: oklch(0.215 0.005 75);
-    --plate: oklch(0.225 0.005 75);
-    --foreground: oklch(0.93 0.006 85);
-    --foreground-muted: oklch(0.71 0.006 85);
-    --foreground-subtle: oklch(0.60 0.006 85);
-    --foreground-body: oklch(0.92 0.006 85);
-    --body-weight: 425; /* light text on dark blooms; a step lighter */
-    --border: oklch(0.29 0.005 75);
-    --input: oklch(0.29 0.005 75);
-
-    --code-fg: oklch(0.86 0.006 85);
-    --code-comment: oklch(0.58 0.006 85);
-    --code-punct: oklch(0.66 0.006 85);
-    --code-keyword: oklch(0.76 0.05 250);
-    --code-string: oklch(0.78 0.09 75);
-    --code-number: oklch(0.74 0.14 52);
-    --code-function: oklch(0.94 0.006 85);
-    --code-tag: oklch(0.72 0.11 40);
-    --code-line-number: oklch(0.40 0.005 75);
-
-    /* Dieter Rams / Braun callout palette - dark mode */
-    --braun-grey: #736356;
-    --braun-grey-muted: rgba(115, 99, 86, 0.15);
-    --braun-cream: #bf7c2a;
-    --braun-cream-muted: rgba(191, 124, 42, 0.12);
-    --braun-red: #ad1d1d;
-    --braun-red-muted: rgba(173, 29, 29, 0.12);
-
-    /* Legacy variables for compatibility */
-    --card: var(--surface);
-    --card-foreground: var(--foreground);
-    --popover: var(--surface);
-    --popover-foreground: var(--foreground);
-    --primary: #ed8008;
-    --primary-foreground: #ffffff;
-    --secondary: var(--surface);
-    --secondary-foreground: var(--foreground);
-    --muted: var(--surface);
-    --muted-foreground: var(--foreground-muted);
-    --accent: #ed8008;
-    --accent-foreground: #ffffff;
   }
 
   * {
-    border-color: var(--border);
+    border-color: var(--rule);
   }
 
   html {
@@ -133,69 +99,66 @@
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--ground);
+    color: var(--ink);
     font-weight: var(--body-weight);
-    font-size: 1.0625rem;
-    line-height: 1.6;
+    font-size: 1.15625rem; /* 18.5px */
+    line-height: 1.62;
   }
 
-  /* Headings - Google Sans (Text design); R Sans stays the reading face. The face's own
-     defaults, not the R Sans character variants set on html. */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading), var(--font-rsans), system-ui, sans-serif;
-    font-feature-settings: normal;
-    color: var(--foreground);
+    color: var(--ink);
     text-wrap: balance;
   }
 
-  /* No orphans or ragged last lines in reading text */
+  h1, h2 {
+    font-weight: 620;
+    letter-spacing: -0.012em;
+  }
+
+  h3, h4, h5, h6 {
+    font-weight: 620;
+    letter-spacing: -0.006em;
+  }
+
   p, li, blockquote, figcaption {
     text-wrap: pretty;
+    hanging-punctuation: first;
   }
 
-  h1 {
-    font-weight: 600;
-    letter-spacing: -0.02em;
+  strong, b {
+    font-weight: 620;
   }
 
-  h2, h3 {
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-
-  h4, h5, h6 {
-    font-weight: 500;
-  }
-
-  /* Links - orange accent, underline on hover */
   a {
-    color: var(--braun-orange);
+    color: inherit;
     text-decoration: none;
-    transition: color 0.18s var(--ease-out);
+    transition: color 0.2s var(--ease-out), text-decoration-color 0.2s var(--ease-out);
   }
 
-  a:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
-  }
-
-  /* Code */
-  code, pre, kbd {
+  code, pre, kbd, samp {
     font-family: var(--font-mono), ui-monospace, monospace;
   }
 
-  /* Focus states - orange ring */
+  /* Superscripts: Google Sans Flex numerals, raised without disturbing the line */
+  sup {
+    font-family: var(--font-flex), var(--font-rsans), sans-serif;
+    font-size: 0.62em;
+    line-height: 0;
+    position: relative;
+    top: -0.55em;
+    vertical-align: baseline;
+    font-variant-numeric: lining-nums;
+  }
+
   *:focus-visible {
-    outline: 2px solid var(--braun-orange);
+    outline: 2px solid var(--link);
     outline-offset: 2px;
   }
 
-  /* Selection */
   ::selection {
-    background-color: var(--braun-orange-muted);
-    color: var(--foreground);
+    background-color: color-mix(in oklch, var(--link) 22%, transparent);
+    color: var(--ink);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -208,106 +171,101 @@
   }
 }
 
+@layer components {
+  /* Something you can follow: link hue, 1px underline at 45%, full on hover */
+  .link {
+    color: var(--link);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in oklch, var(--link) 45%, transparent);
+  }
+  .link:hover {
+    text-decoration-color: var(--link);
+  }
+
+  /* Display: post and page titles */
+  .display {
+    font-variation-settings: "opsz" 40;
+    font-weight: 520;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  /* Small text and every number: Google Sans Flex, natural case and tracking */
+  .meta {
+    font-family: var(--font-flex), var(--font-rsans), sans-serif;
+    font-size: 0.8125rem; /* 13px */
+    font-weight: 450;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+
+  /* Notes and captions */
+  .note-text {
+    font-size: 0.84375rem; /* 13.5px */
+    line-height: 1.48;
+    color: var(--ink-2);
+  }
+
+  /* Tags: identifiers, so lowercase */
+  .tag {
+    font-family: var(--font-flex), var(--font-rsans), sans-serif;
+    font-size: 0.75rem;
+    font-weight: 450;
+    color: var(--ink-3);
+    text-transform: lowercase;
+  }
+  .tag-interactive {
+    cursor: pointer;
+    transition: color 0.2s var(--ease-out);
+  }
+  .tag-interactive:hover {
+    color: var(--ink);
+  }
+  /* A selected filter is the reader's current state */
+  .tag-interactive.active {
+    color: var(--ink);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.3em;
+    text-decoration-color: var(--you);
+  }
+
+  /* GFM footnotes close the post under a hairline. On wide screens each note sits in
+     the right margin beside the line that cites it, so the block is hidden there. */
+  section[data-footnotes] {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.84375rem;
+    line-height: 1.48;
+    color: var(--ink-2);
+  }
+  section[data-footnotes] ol { margin-bottom: 0; }
+  section[data-footnotes] li::marker {
+    font-family: var(--font-flex), var(--font-rsans), sans-serif;
+    color: var(--note);
+  }
+  section[data-footnotes] p { margin-bottom: 0.5rem; color: var(--ink-2); }
+  section[data-footnotes] a[data-footnote-backref] { color: var(--ink-3); text-decoration: none; }
+  @media (min-width: 1280px) {
+    section[data-footnotes] { display: none; }
+  }
+}
+
 @layer utilities {
-  /* Block links that should not underline on hover */
   .no-underline,
   .no-underline:hover {
     text-decoration: none !important;
   }
 
-  /* Lowercase utility for UI elements */
-  .lowercase-ui {
-    text-transform: lowercase;
-  }
-
-  /* Uppercase for meta text */
-  /* Meta (dates, durations) - the monospace signal: this is data, not prose */
-  .uppercase-meta {
-    font-family: var(--font-mono), ui-monospace, monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.6875rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* No border-radius override */
-  .no-radius {
-    border-radius: 0 !important;
-  }
-
-  /* Hide browser's default clear button */
   input[type="search"]::-webkit-search-cancel-button,
   input[type="text"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
     display: none;
-  }
-}
-
-@layer components {
-  /* Braun orange button */
-  .btn-braun {
-    background-color: var(--braun-orange);
-    color: white;
-    font-weight: 500;
-    padding: 0.5rem 1.25rem;
-    border: none;
-    transition: background-color 0.18s var(--ease-out);
-  }
-
-  .btn-braun:hover {
-    background-color: var(--braun-orange-hover);
-    text-decoration: none;
-  }
-
-  /* Ghost button */
-  .btn-ghost {
-    background-color: transparent;
-    color: var(--foreground);
-    border: 1px solid var(--border);
-    font-weight: 500;
-    padding: 0.5rem 1.25rem;
-    transition: border-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
-  }
-
-  .btn-ghost:hover {
-    border-color: var(--braun-orange);
-    color: var(--braun-orange);
-    text-decoration: none;
-  }
-
-  /* GFM footnotes - the notes close the post under a hairline in the caption size.
-     On wide screens they appear as sidenotes beside their paragraph instead, so the
-     block is hidden there. */
-  section[data-footnotes] {
-    margin-top: 3rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--border);
-    font-size: 0.875rem;
-    line-height: 1.55;
-    color: var(--foreground-muted);
-  }
-  section[data-footnotes] ol { margin-bottom: 0; color: var(--foreground-muted); }
-  section[data-footnotes] p { margin-bottom: 0.5rem; color: var(--foreground-muted); }
-  section[data-footnotes] a[data-footnote-backref] { text-decoration: none; }
-  @media (min-width: 1280px) {
-    section[data-footnotes] { display: none; }
-  }
-
-  /* Tag - plain text, no pill styling; lowercase because tags are identifiers */
-  .tag {
-    font-size: 0.75rem;
-    color: var(--foreground-subtle);
-    text-transform: lowercase;
-  }
-
-  .tag-interactive {
-    color: var(--foreground-subtle);
-    cursor: pointer;
-    transition: color 0.18s var(--ease-out);
-  }
-
-  .tag-interactive:hover,
-  .tag-interactive.active {
-    color: var(--braun-orange);
   }
 }

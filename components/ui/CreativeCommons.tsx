@@ -10,10 +10,10 @@ export function CreativeCommons() {
   };
 
   return (
-    <p className="mt-6 mb-2 text-sm text-[var(--foreground-muted)]">
-      <a href="https://sixeleven.in" target="_blank" rel="noopener noreferrer" className="text-[var(--foreground-muted)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors">sixeleven.in</a> by{' '}
-      <a href="https://github.com/specbug" target="_blank" rel="noopener noreferrer" className="text-[var(--foreground-muted)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors">Rishit Vora</a> is marked{' '}
-      <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer" className="text-[var(--foreground-muted)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors">
+    <p className="meta mt-12 mb-2">
+      <a href="https://sixeleven.in" target="_blank" rel="noopener noreferrer" className="link">sixeleven.in</a> by{' '}
+      <a href="https://github.com/specbug" target="_blank" rel="noopener noreferrer" className="link">Rishit Vora</a> is marked{' '}
+      <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer" className="link">
         CC0 1.0
       </a>
       <img

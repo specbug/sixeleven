@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getPostBySlug, getAllPosts, parseHeadings } from "@/lib/mdx"
-import TableOfContents, { TocRail } from "@/components/TableOfContents"
-import ReadingProgressBar from "@/components/ReadingProgressBar"
+import TableOfContents from "@/components/TableOfContents"
+import Rule from "@/components/Rule"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import BlogPostSchema from "@/components/blog-schema"
 import PostCover from "@/components/PostCover"
@@ -93,34 +93,26 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         image={post.cover ? `${baseUrl}${post.cover}` : undefined}
       />
       <article className="max-w-none relative">
-        <ReadingProgressBar />
-
         <header className="mb-8">
-          {/* Date and reading time - uppercase meta */}
-          <div className="uppercase-meta text-[var(--foreground-subtle)] mb-3">
+          <div className="meta mb-4">
             <time dateTime={post.date}>
               {new Date(post.date).toLocaleDateString("en-US", {
                 month: "long",
                 day: "numeric",
                 year: "numeric",
-              }).toLowerCase()}
+              })}
             </time>
-            {post.readingTime && <span> · {post.readingTime} min read</span>}
+            {post.readingTime && <span> · {post.readingTime}&nbsp;min read</span>}
           </div>
 
-          {/* Title - Title Case, as authored in frontmatter */}
-          <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-4">
-            {post.title}
-          </h1>
+          {/* Title as authored in frontmatter */}
+          <h1 className="display text-[2.5rem] sm:text-[2.875rem] md:text-[3.25rem] mb-4">{post.title}</h1>
 
-          {/* Lede - the excerpt, so the post opens with what it is about */}
+          {/* Lede: the excerpt, so the post opens with what it is about */}
           {post.excerpt && (
-            <p className="text-[1.1875rem] md:text-[1.3125rem] leading-[1.45] text-[var(--foreground-muted)] mb-4">
-              {post.excerpt}
-            </p>
+            <p className="text-[1.25rem] md:text-[1.375rem] leading-[1.42] text-[var(--ink-2)] mb-4">{post.excerpt}</p>
           )}
 
-          {/* Tags - plain text, lowercase like identifiers */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {post.tags.map((tag: string) => (
@@ -136,16 +128,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             the post's figures, with its credit beneath */}
         {post.cover && <PostCover src={post.cover} alt={post.coverAlt} credit={post.coverCredit} />}
 
-        {/* Contents - a toggle in the column; on wide screens, a sticky rail in the margin */}
+        {/* Contents: a toggle in the column; on wide screens, the Rule in the margin */}
         <div className="xl:hidden">
           <TableOfContents headings={headings} />
         </div>
 
         <div className="relative">
-          <TocRail headings={headings} />
+          <Rule headings={headings} readingTime={post.readingTime ? Number.parseInt(post.readingTime, 10) : undefined} />
 
-          {/* Article content - inherits the 17px/1.6 body; long URLs and identifiers
-              wrap instead of overflowing on phones */}
+          {/* Article content: long URLs and identifiers wrap instead of overflowing on phones */}
           <div className="max-w-none break-words">
             <EnhancedMarkdown content={post.content} />
           </div>

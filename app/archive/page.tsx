@@ -14,19 +14,15 @@ export default async function ArchivePage() {
   if (posts.length === 0) {
     return (
       <div>
-        <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-12">Archive</h1>
-        <div className="text-center py-10">
-          <p className="text-[var(--foreground-muted)]">
-            No posts found.
-          </p>
-        </div>
+        <h1 className="display text-[2.5rem] md:text-[3.25rem] mb-12">Archive</h1>
+        <p className="text-[var(--ink-2)]">No posts.</p>
       </div>
     )
   }
 
   return (
     <div>
-      <h1 className="text-[2.25rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-12">Archive</h1>
+      <h1 className="display text-[2.5rem] md:text-[3.25rem] mb-12">Archive</h1>
       <SearchPosts posts={posts} />
     </div>
   )

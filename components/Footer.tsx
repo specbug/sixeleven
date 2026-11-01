@@ -28,40 +28,39 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="py-8 border-t border-[var(--border)]">
+    <footer className="py-8 border-t border-[var(--rule)]">
       <div className="max-w-[640px] mx-auto px-6 md:px-0">
         <div className="flex justify-between items-center">
-          {/* Copyright - wordmark stays lowercase */}
-          <p className="text-sm text-[var(--foreground-muted)]">
+          <p className="meta">
             {currentYear} sixeleven
           </p>
 
-          {/* Social icons - orange on hover */}
+
           <div className="flex items-center space-x-6">
             <a
               href="https://github.com/specbug"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+              className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
               aria-label="GitHub"
             >
-              <GithubIcon size={18} />
+              <GithubIcon size={20} />
             </a>
             <a
               href="https://x.com/irishvora"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+              className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
               aria-label="X"
             >
-              <XIcon size={18} />
+              <XIcon size={20} />
             </a>
             <a
               href="mailto:rishitv@proton.me"
-              className="text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+              className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
               aria-label="Email"
             >
-              <MailIcon size={18} />
+              <MailIcon size={20} />
             </a>
           </div>
         </div>

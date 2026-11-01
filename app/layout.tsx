@@ -4,7 +4,7 @@ import "./globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import KaTeXLoader from "@/components/KaTeXLoader"
-import { rSans, headingFont, monoFont, logoFont } from "@/lib/fonts"
+import { rSans, flexFont, monoFont, logoFont } from "@/lib/fonts"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -73,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${rSans.variable} ${headingFont.variable} ${monoFont.variable} ${logoFont.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${rSans.variable} ${flexFont.variable} ${monoFont.variable} ${logoFont.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <WebsiteSchema />

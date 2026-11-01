@@ -9,9 +9,9 @@ interface CodeBlockProps {
   showLineNumbers?: boolean
 }
 
-// Syntax theme drawn from the site's own tokens (see --code-* in globals.css), so it
-// follows light/dark mode: ink tones for structure, the orange family for literals,
-// one cool neutral for keywords. Comments recede in italic.
+// Syntax theme drawn from the site's tokens (see --code-* in globals.css), so it follows
+// light/dark mode. Ink only: syntax hues would collide with the signal code, so tokens
+// differ by ink level, and comments recede in italic.
 const theme: PrismTheme = {
   plain: {
     color: "var(--code-fg)",
@@ -39,7 +39,7 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
           // Ligatures off: R Mono joins `--` into a dash, so `--flag` would read as `—flag`
           return (
             <pre
-              className={`${className} px-6 py-5 rounded-[4px] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
+              className={`${className} px-6 py-5 border border-[var(--rule)] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
               style={style}
             >
               {tokens.map((line, i) => {

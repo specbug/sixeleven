@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Image from "next/image"
@@ -12,8 +12,7 @@ import { ClaudeDisclaimer } from "./ui/ClaudeDisclaimer"
 import { PLATE, PLATE_CAPTION, PLATE_OUTER } from "./plate"
 
 
-// Links - ink with an orange hairline underline. Orange text alone fails contrast on
-// paper (2.6:1); the hairline keeps the accent while the words stay readable.
+// Links: the link signal, with a 1px underline at 45% that strengthens on hover
 const MarkdownLink = ({ href, children, node, ...props }: any) => {
   if (!href) return <span>{children}</span>
 
@@ -24,7 +23,7 @@ const MarkdownLink = ({ href, children, node, ...props }: any) => {
       href={href}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className="text-[var(--foreground)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors"
+      className="link"
       {...props}
     >
       {children}
@@ -40,20 +39,15 @@ export const Inline = ({ text }: { text: string }) => (
   </ReactMarkdown>
 )
 
-// Callouts - set off by hairlines and a mono label, not a tinted box with a
-// colored stripe. Type is carried by the label's word and hue.
+// Callouts: set off by hairlines with a small label above. The label's word carries
+// the type; colour is reserved for the signal code.
 const Callout = ({ type, label: custom, text }: { type: "info" | "warning" | "error"; label?: string; text: string }) => {
-  const label = custom || { info: "note", warning: "caution", error: "important" }[type]
-  const labelColor = {
-    info: "text-[var(--braun-orange)]",
-    warning: "text-[var(--braun-cream)]",
-    error: "text-[var(--braun-red)]",
-  }[type]
+  const label = custom || { info: "Note", warning: "Caution", error: "Important" }[type]
 
   return (
-    <aside className="my-8 py-5 border-y border-[var(--border)]" role="note">
-      <span className={`uppercase-meta block mb-2 ${labelColor}`}>{label}</span>
-      <p className="m-0 text-[var(--foreground)] leading-[1.6]">
+    <aside className="my-8 py-6 border-y border-[var(--rule)]" role="note">
+      <span className="meta block mb-2 text-[var(--ink-2)]">{label}</span>
+      <p className="m-0 text-[var(--ink)]">
         <Inline text={text} />
       </p>
     </aside>
@@ -178,7 +172,7 @@ const createCustomComponents = (
         return child
       })
 
-      return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
+      return <p className="relative mt-0 mb-4 text-[var(--ink)]" {...props}>{processedChildren}</p>
     }
 
     const text = children ? String(children) : ""
@@ -289,10 +283,10 @@ const createCustomComponents = (
         parts.push(text.substring(lastIndex))
       }
 
-      return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{parts}</p>
+      return <p className="relative mt-0 mb-4 text-[var(--ink)]" {...props}>{parts}</p>
     }
 
-    return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{children}</p>
+    return <p className="relative mt-0 mb-4 text-[var(--ink)]" {...props}>{children}</p>
   },
 
   img: ({ src, alt, ...props }: any) => {
@@ -360,7 +354,7 @@ const createCustomComponents = (
   // Scale steps down from the 52px post title so sections read as sections, not
   // rival titles; 32px above, 8px below binds each heading to its text.
   h1: ({ children, node, ...props }: any) => (
-    <h1 className="text-[1.75rem] md:text-[2rem] leading-[1.15] font-semibold mt-10 mb-2 tracking-[-0.012em]" {...props}>
+    <h1 className="text-[1.625rem] leading-[1.2] mt-12 mb-2" {...props}>
       {children}
     </h1>
   ),
@@ -372,7 +366,7 @@ const createCustomComponents = (
       .replace(/\s+/g, "-")
 
     return (
-      <h2 id={id} className="text-[1.375rem] md:text-[1.5625rem] leading-[1.2] font-semibold mt-8 mb-2 tracking-[-0.01em] scroll-mt-24" {...props}>
+      <h2 id={id} className="text-[1.3125rem] leading-[1.3] mt-12 mb-2 scroll-mt-24" {...props}>
         {children}
       </h2>
     )
@@ -385,7 +379,7 @@ const createCustomComponents = (
       .replace(/\s+/g, "-")
 
     return (
-      <h3 id={id} className="text-[1.1875rem] leading-[1.25] font-semibold mt-8 mb-2 tracking-[-0.005em] scroll-mt-24" {...props}>
+      <h3 id={id} className="text-[1.15625rem] leading-[1.4] mt-8 mb-1 scroll-mt-24" {...props}>
         {children}
       </h3>
     )
@@ -398,7 +392,7 @@ const createCustomComponents = (
       .replace(/\s+/g, "-")
 
     return (
-      <h4 id={id} className="text-[1.0625rem] leading-[1.35] font-semibold mt-6 mb-2 scroll-mt-24" {...props}>
+      <h4 id={id} className="text-[1.15625rem] leading-[1.4] mt-6 mb-1 text-[var(--ink-2)] scroll-mt-24" {...props}>
         {children}
       </h4>
     )
@@ -406,25 +400,28 @@ const createCustomComponents = (
 
   a: MarkdownLink,
 
-  // Footnotes (GFM `[^1]`): an orange superscript marker in the text. On wide screens
-  // the note itself sits in the right margin beside its paragraph, mirroring the
-  // contents rail on the left; narrower screens get the notes under a hairline at
-  // the end of the post.
+  // Footnotes (GFM `[^1]`): a superscript numeral in the note hue. On wide screens the
+  // note itself sits in the right margin, its first baseline on the baseline of the line
+  // that cites it (aligned by alignSidenotes below, from the two zero-size anchors);
+  // narrower screens get the notes under a hairline at the end of the post.
   sup: ({ children, node, ...props }: any) => {
     const marker = hastText(node).trim()
     const isRef = node?.children?.[0]?.properties?.dataFootnoteRef !== undefined
     const note = isRef ? footnotes[marker] : undefined
     return (
       <>
-        <sup className="text-[0.7em] leading-none [&>a]:no-underline [&>a]:text-[var(--braun-orange)]" {...props}>
+        {note && <span data-sidenote-anchor={marker} className="inline-block w-0 h-0" aria-hidden="true" />}
+        <sup className="[&>a]:no-underline [&>a]:text-[var(--note)]" {...props}>
           {children}
         </sup>
         {note && (
           <span
             role="note"
-            className="hidden xl:block absolute left-full top-0 ml-[112px] w-[180px] text-[0.8125rem] leading-[1.45] text-[var(--foreground-muted)] [text-wrap:pretty]"
+            data-sidenote={marker}
+            className="note-text hidden xl:block absolute left-full top-0 ml-[104px] w-[200px] [text-wrap:pretty]"
           >
-            <span className="text-[var(--braun-orange)] mr-1.5">{marker}</span>
+            <span data-sidenote-baseline className="inline-block w-0 h-0" aria-hidden="true" />
+            <span className="font-flex tabular-nums text-[var(--note)] mr-1.5">{marker}</span>
             <Inline text={note} />
           </span>
         )}
@@ -434,10 +431,10 @@ const createCustomComponents = (
   // (The end-of-post footnote section itself is styled in globals.css via
   // `section[data-footnotes]`, and hidden where the sidenotes take over.)
 
-  // Blockquote - a quiet 2px rule (matching /pnd), no italics (Rams preferred clean type)
+  // Blockquote: a 1px rule, no italics
   blockquote: ({ children, node, ...props }: any) => (
     <blockquote
-      className="border-l-2 border-[var(--quote-border)] pl-6 mt-0 mb-6 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
+      className="border-l border-[var(--rule)] pl-6 mt-0 mb-6 text-[var(--ink-2)] [&>p]:text-[var(--ink-2)]"
       {...props}
     >
       {children}
@@ -457,7 +454,7 @@ const createCustomComponents = (
     if (!isCodeBlock) {
       return (
         <code
-          className="bg-[var(--surface)] text-[var(--foreground)] rounded-[2px] px-[0.3em] py-[0.1em] font-mono text-[0.89em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
+          className="bg-[var(--sheet)] text-[var(--ink)] px-[0.3em] py-[0.1em] font-mono text-[0.89em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
           {...props}
         >
           {children}
@@ -475,12 +472,12 @@ const createCustomComponents = (
   },
 
   ul: ({ children, node, ...props }: any) => (
-    <ul className="list-disc pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
+    <ul className="list-disc pl-6 mt-0 mb-4 text-[var(--ink)] marker:text-[var(--ink-3)]" {...props}>
       {children}
     </ul>
   ),
   ol: ({ children, node, ...props }: any) => (
-    <ol className="list-decimal pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
+    <ol className="list-decimal pl-6 mt-0 mb-4 text-[var(--ink)] marker:text-[var(--ink-3)] marker:tabular-nums" {...props}>
       {children}
     </ol>
   ),
@@ -493,27 +490,43 @@ const createCustomComponents = (
   // Tables - mono font for data alignment
   table: ({ children, node, ...props }: any) => (
     <div className="my-6 overflow-x-auto">
-      <table className="w-full text-sm border-collapse tabular-nums" style={{ fontFamily: "var(--font-mono), ui-monospace, monospace" }} {...props}>
+      <table className="w-full font-flex text-[0.875rem] leading-[1.45] border-collapse tabular-nums" {...props}>
         {children}
       </table>
     </div>
   ),
   thead: ({ children, node, ...props }: any) => (
-    <thead className="border-b border-[var(--foreground-subtle)]" {...props}>{children}</thead>
+    <thead className="border-b border-[var(--ink-3)]" {...props}>{children}</thead>
   ),
   th: ({ children, node, ...props }: any) => (
-    <th className="text-left py-2 pr-4 font-semibold whitespace-nowrap text-[var(--foreground)]" {...props}>{children}</th>
+    <th className="text-left py-2 pr-6 font-[560] whitespace-nowrap text-[var(--ink-2)]" {...props}>{children}</th>
   ),
   td: ({ children, node, ...props }: any) => (
-    <td className="py-2 pr-4 whitespace-nowrap text-[var(--foreground-body)] border-b border-[var(--border)]" {...props}>{mathify(children)}</td>
+    <td className="py-2 pr-6 whitespace-nowrap text-[var(--ink)] border-b border-[var(--rule)]" {...props}>{mathify(children)}</td>
   ),
 
   // Horizontal rule - subtle
-  hr: ({ node, ...props }: any) => <hr className="my-8 border-t border-[var(--border)]" {...props} />,
+  hr: ({ node, ...props }: any) => <hr className="my-8 border-t border-[var(--rule)]" {...props} />,
 })
 
 interface EnhancedMarkdownProps {
   content: string
+}
+
+// Sit each margin note so its first baseline lies on the baseline of the line that
+// cites it. Both baselines come from zero-size inline-blocks, whose bottom edge is the
+// baseline of their line: one just before the citing superscript, one at the start of
+// the note.
+function alignSidenotes() {
+  document.querySelectorAll<HTMLElement>("[data-sidenote]").forEach((note) => {
+    const anchor = document.querySelector<HTMLElement>(`[data-sidenote-anchor="${note.dataset.sidenote}"]`)
+    const own = note.querySelector<HTMLElement>("[data-sidenote-baseline]")
+    const parent = note.offsetParent as HTMLElement | null
+    if (!anchor || !own || !parent || note.offsetWidth === 0) return
+    const lineBaseline = anchor.getBoundingClientRect().bottom - parent.getBoundingClientRect().top
+    const noteBaseline = own.getBoundingClientRect().bottom - note.getBoundingClientRect().top
+    note.style.top = `${lineBaseline - noteBaseline}px`
+  })
 }
 
 export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
@@ -687,6 +700,13 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
     }
   }, [content])
 
+  useEffect(() => {
+    alignSidenotes()
+    document.fonts?.ready.then(alignSidenotes)
+    window.addEventListener("resize", alignSidenotes)
+    return () => window.removeEventListener("resize", alignSidenotes)
+  }, [content])
+
   const customComponents = useMemo(
     () => createCustomComponents(blockMathExpressions, callouts, footnotes),
     [blockMathExpressions, callouts, footnotes],
@@ -709,7 +729,7 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
               height={img.height}
               unoptimized={img.src.startsWith("http") || img.src.toLowerCase().endsWith(".gif")}
             />
-            <p className="text-center text-sm leading-snug text-[var(--foreground-muted)] mt-3">{img.caption}</p>
+            <p className="note-text mt-2">{img.caption}</p>
           </div>
         </div>
       ))}

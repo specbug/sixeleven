@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useMemo } from "react"
-import Link from "next/link"
+import { PostListItem } from "@/components/PostListItem"
 
 // Minimal, geometric icons inspired by Braun/Rams design
 function SearchIcon({ size = 16 }: { size?: number }) {
@@ -156,20 +156,21 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-8">
         {/* Search input - underline style */}
         <div className="relative flex-grow">
-          <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-[var(--foreground-subtle)]">
+          <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-[var(--ink-3)]">
             <SearchIcon size={16} />
           </div>
           <input
             type="text"
-            placeholder="Search posts…"
+            placeholder="Search"
+            aria-label="Search posts"
             value={searchQuery}
             onChange={handleSearch}
-            className="w-full pl-6 pr-8 py-2 bg-transparent border-b border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--braun-orange)] transition-colors"
+            className="w-full pl-6 pr-8 py-2 bg-transparent border-b border-[var(--rule)] text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:outline-none focus:border-[var(--ink)] transition-colors"
           />
           {searchQuery && (
             <button
               onClick={clearSearch}
-              className="absolute inset-y-0 right-0 flex items-center text-[var(--foreground-subtle)] hover:text-[var(--foreground)] transition-colors"
+              className="absolute inset-y-0 right-0 flex items-center text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
               aria-label="Clear search"
             >
               <CloseIcon size={16} />
@@ -181,13 +182,13 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
         <div className="relative flex-shrink-0">
           <button
             onClick={() => setShowSortMenu(!showSortMenu)}
-            className="flex items-baseline gap-2 px-0 py-2 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+            className="flex items-baseline gap-2 px-0 py-2 text-sm text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
           >
             <span className="self-center"><SortIcon size={14} /></span>
             <span>{getSortLabel(sortOption)}</span>
           </button>
           {showSortMenu && (
-            <div className="absolute top-full right-0 mt-2 bg-[var(--background)] border border-[var(--border)] rounded-[4px] py-2 z-10 min-w-[140px]">
+            <div className="absolute top-full right-0 mt-2 bg-[var(--sheet)] border border-[var(--rule)] py-2 z-10 min-w-[144px]">
               {(["newest", "oldest", "title", "readingTime"] as SortOption[]).map((option) => (
                 <button
                   key={option}
@@ -197,8 +198,8 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
                   }}
                   className={`block w-full text-left px-4 py-1.5 text-sm transition-colors ${
                     sortOption === option
-                      ? "text-[var(--braun-orange)]"
-                      : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
+                      ? "text-[var(--ink)]"
+                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
                   {getSortLabel(option)}
@@ -213,7 +214,7 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
       <div>
         <button
           onClick={() => setShowTagFilter(!showTagFilter)}
-          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+          className="text-sm text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
         >
           {showTagFilter ? "Hide tags" : "Filter by tags"}
         </button>
@@ -224,7 +225,8 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`tag-interactive text-sm lowercase ${isTagSelected(tag) ? "active" : ""}`}
+                className={`tag tag-interactive text-[0.8125rem] ${isTagSelected(tag) ? "active" : ""}`}
+                aria-pressed={isTagSelected(tag)}
               >
                 {tag}
               </button>
@@ -233,94 +235,68 @@ export default function SearchPosts({ posts }: SearchPostsProps) {
         )}
 
         {selectedTags.length > 0 && (
-          <div className="flex items-center mt-4 gap-2">
-            <span className="text-sm text-[var(--foreground-subtle)]">Active:</span>
-            <div className="flex flex-wrap gap-x-3 gap-y-1">
-              {selectedTags.map((tag) => (
-                <span key={tag} className="tag text-[var(--braun-orange)] flex items-center gap-1">
-                  {tag}
-                  <button
-                    onClick={() => toggleTag(tag)}
-                    className="hover:opacity-70 transition-opacity"
-                  >
-                    <CloseIcon size={12} />
-                  </button>
-                </span>
-              ))}
+          <div className="flex flex-wrap items-center mt-4 gap-x-3 gap-y-1">
+            {selectedTags.map((tag) => (
               <button
-                onClick={clearFilters}
-                className="text-xs text-[var(--foreground-subtle)] hover:text-[var(--braun-orange)] transition-colors"
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                className="tag tag-interactive active text-[0.8125rem] flex items-center gap-1"
+                aria-label={`Remove ${tag} filter`}
               >
-                Clear
+                {tag}
+                <CloseIcon size={12} />
               </button>
-            </div>
+            ))}
+            <button
+              onClick={clearFilters}
+              className="meta hover:text-[var(--ink)] transition-colors"
+            >
+              Clear
+            </button>
           </div>
         )}
       </div>
 
       {/* Results count */}
-      <div className="uppercase-meta text-[var(--foreground-subtle)] border-b border-[var(--border)] pb-3">
-        {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"} found
+      <div className="meta border-b border-[var(--rule)] pb-2">
+        {filteredPosts.length === posts.length
+          ? `${posts.length} ${posts.length === 1 ? "post" : "posts"}`
+          : `${filteredPosts.length} of ${posts.length} posts`}
       </div>
 
       {/* Results */}
       {filteredPosts.length === 0 ? (
-        <div className="text-center py-10">
-          <p className="text-[var(--foreground-muted)]">No posts found.</p>
+        <div>
+          <p className="text-[var(--ink-2)]">No matching posts.</p>
           {(searchQuery || selectedTags.length > 0) && (
-            <button
-              onClick={clearFilters}
-              className="mt-2 text-[var(--braun-orange)] hover:underline text-sm"
-            >
+            <button onClick={clearFilters} className="link mt-2">
               Clear filters
             </button>
           )}
         </div>
       ) : (
-        <div className="space-y-10">
+        <div className="space-y-12">
           {filteredPosts.map((post) => (
-            <article key={post.slug}>
-              <Link href={post.link || `/blog/${post.slug}`} className="block group no-underline hover:no-underline">
-                {/* Date and reading time */}
-                <div className="uppercase-meta text-[var(--foreground-subtle)] mb-2">
-                  <time dateTime={post.date}>
-                    {new Date(post.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      year: "numeric",
-                    }).toLowerCase()}
-                  </time>
-                  {post.readingTime && <span> · {post.readingTime} min</span>}
-                </div>
-
-                {/* Title - only this gets underline on hover */}
-                <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-2">
-                  {post.title}
-                </h2>
-
-                {/* Excerpt */}
-                <p className="text-[var(--foreground-muted)] mb-2">
-                  {post.excerpt}
-                </p>
-
-                {/* Tags */}
-                {post.tags && post.tags.length > 0 && (
+            <PostListItem
+              key={post.slug}
+              post={post}
+              tags={
+                post.tags && post.tags.length > 0 ? (
                   <div className="flex flex-wrap gap-x-3 gap-y-1">
                     {post.tags.map((tag: string) => (
-                      <span
+                      <button
                         key={`${post.slug}-${tag}`}
-                        className="tag tag-interactive"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          toggleTag(tag)
-                        }}
+                        onClick={() => toggleTag(tag)}
+                        className={`tag tag-interactive ${isTagSelected(tag) ? "active" : ""}`}
+                        aria-pressed={isTagSelected(tag)}
                       >
                         {tag}
-                      </span>
+                      </button>
                     ))}
                   </div>
-                )}
-              </Link>
-            </article>
+                ) : undefined
+              }
+            />
           ))}
         </div>
       )}

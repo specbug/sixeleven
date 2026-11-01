@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
+import { useState } from "react"
 import Image from "next/image"
 
 // ---------------------------------------------------------------------------
@@ -91,135 +91,43 @@ const entries: Entry[] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Hooks
-// ---------------------------------------------------------------------------
-
-function useReveal(threshold = 0.12) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    // Respect prefers-reduced-motion
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-    if (prefersReduced) {
-      setVisible(true)
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.unobserve(el)
-        }
-      },
-      { threshold, rootMargin: "0px 0px -40px 0px" }
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [threshold])
-
-  return { ref, visible }
-}
-
-function useMounted() {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-    if (prefersReduced) {
-      setMounted(true)
-      return
-    }
-    const id = setTimeout(() => setMounted(true), 100)
-    return () => clearTimeout(id)
-  }, [])
-  return mounted
-}
-
-// ---------------------------------------------------------------------------
-// Shared reveal primitive
-// ---------------------------------------------------------------------------
-
-function Reveal({
-  children,
-  visible,
-  delay = 0,
-  className = "",
-}: {
-  children: ReactNode
-  visible: boolean
-  delay?: number
-  className?: string
-}) {
-  return (
-    <div
-      className={`transition-all duration-700 ease-out ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-      } ${className}`}
-      style={{ transitionDelay: `${delay}ms` } as CSSProperties}
-    >
-      {children}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
 // Hero
 // ---------------------------------------------------------------------------
 
 function Hero() {
-  const mounted = useMounted()
-
   return (
     <section className="min-h-[50vh] flex flex-col justify-end pb-20">
-      <Reveal visible={mounted} delay={200}>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-[-0.015em] leading-[1.08]">
+      <div>
+        <h1 className="display text-[2.5rem] md:text-[3.25rem]">
           Post Narrative Depression
         </h1>
-      </Reveal>
-
-      <Reveal visible={mounted} delay={350}>
-        <p className="text-[var(--foreground-subtle)] text-sm italic mt-3 max-w-[520px]">
+      </div>
+      <div>
+        <p className="text-[var(--ink-2)] italic mt-4 max-w-[520px]">
           The cognitive overhang of re-entering reality after deep immersion in
           a fictional world.
         </p>
-      </Reveal>
+      </div>
 
-      {/* Orange divider line — draws left-to-right */}
-      <div
-        className={`h-px bg-[var(--braun-orange)] mt-6 mb-6 origin-left transition-transform duration-700 ease-out ${
-          mounted ? "scale-x-100" : "scale-x-0"
-        }`}
-        style={{ transitionDelay: "500ms" } as CSSProperties}
-      />
-
-      <Reveal visible={mounted} delay={600}>
-        <p className="text-[var(--foreground-muted)] leading-relaxed max-w-[520px]">
+      <div className="h-px bg-[var(--rule)] mt-6 mb-6" />
+      <div>
+        <p className="text-[var(--ink-2)] max-w-[520px]">
           Some stories don&apos;t just end. They leave a space where they used
           to be.
-          <span className="block mt-1 text-[var(--foreground-subtle)]">
+          <span className="block mt-1 text-[var(--ink-3)]">
             This is that space.
           </span>
         </p>
-      </Reveal>
-
-      <Reveal visible={mounted} delay={800}>
-        <p className="text-[var(--foreground-subtle)] text-sm leading-relaxed mt-8 max-w-[520px]">
+      </div>
+      <div>
+        <p className="note-text mt-8 max-w-[520px]">
           These are not mere favorites, but an index of temporal watermarks.
           These works carried enough cognitive overhang to make
           context-switching back to reality highly difficult. The resulting
           baseline update acts as a permanent, irreversible partition in my
           timeline.
         </p>
-      </Reveal>
+      </div>
     </section>
   )
 }
@@ -229,81 +137,64 @@ function Hero() {
 // ---------------------------------------------------------------------------
 
 function EntryCard({ entry, index }: { entry: Entry; index: number }) {
-  const { ref, visible } = useReveal(0.08)
   const [imgError, setImgError] = useState(false)
 
   return (
-    <article ref={ref}>
+    <article>
       {/* Index + Experience year */}
-      <Reveal visible={visible} delay={0}>
+      <div>
         <div className="flex items-baseline justify-between">
-          <span
-            className="text-sm tracking-wide tabular-nums"
-            style={{
-              fontFamily: "var(--font-mono), ui-monospace, monospace",
-              color: "var(--braun-orange)",
-            }}
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span
-            className="text-sm tracking-wide tabular-nums"
-            style={{
-              fontFamily: "var(--font-mono), ui-monospace, monospace",
-              color: "var(--foreground-subtle)",
-            }}
-          >
-            {entry.experienced}
-          </span>
+          <span className="meta">{String(index + 1).padStart(2, "0")}</span>
+          <span className="meta">{entry.experienced}</span>
         </div>
-      </Reveal>
+      </div>
 
       {/* Title */}
-      <Reveal visible={visible} delay={80}>
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-[-0.01em] mt-3 leading-tight">
+      <div>
+        <h2 className="text-[1.3125rem] leading-[1.3] mt-2">
           {entry.title}
         </h2>
-      </Reveal>
+      </div>
 
       {/* Creator */}
-      <Reveal visible={visible} delay={140}>
-        <p className="text-[var(--foreground-muted)] mt-1">{entry.creator}</p>
-      </Reveal>
+      <div>
+        <p className="text-[var(--ink-2)] mt-1">{entry.creator}</p>
+      </div>
 
       {/* Medium · Year */}
-      <Reveal visible={visible} delay={180}>
-        <span className="uppercase-meta text-[var(--foreground-subtle)] mt-2 block">
-          {entry.medium} &middot; {entry.year}
+      <div>
+        <span className="meta mt-1 block">
+          {entry.medium[0].toUpperCase() + entry.medium.slice(1)} · {entry.year}
         </span>
-      </Reveal>
+      </div>
 
       {/* Image / Placeholder */}
-      <Reveal visible={visible} delay={260} className="mt-8">
-        <div className="aspect-[3/2] overflow-hidden relative group">
+      <div className="mt-8">
+        <div className="aspect-[3/2] overflow-hidden relative">
           {!imgError ? (
             <Image
               src={entry.image}
               alt={entry.title}
               fill
-              className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+              className="object-contain"
               onError={() => setImgError(true)}
             />
           ) : (
             <div className="absolute inset-0 flex items-end p-6 md:p-8">
-              <span className="text-4xl md:text-5xl font-semibold text-[var(--foreground)] opacity-[0.04] tracking-tight leading-none select-none">
+              <span className="display text-[2.5rem] md:text-[3.25rem] text-[var(--ink)] opacity-[0.06] select-none">
                 {entry.title}
               </span>
             </div>
           )}
         </div>
-      </Reveal>
+      </div>
 
       {/* Reflection */}
-      <Reveal visible={visible} delay={360} className="mt-8">
-        <p className="text-[var(--foreground-muted)] leading-relaxed border-l-[2px] border-[var(--border)] pl-5">
+      <div className="mt-8">
+        <p className="text-[var(--ink-2)] border-l border-[var(--rule)] pl-6">
           {entry.reflection}
         </p>
-      </Reveal>
+      </div>
     </article>
   )
 }
@@ -325,13 +216,8 @@ export default function PNDGallery() {
 
       {/* Closing */}
       <footer className="mt-32 mb-8 text-center">
-        <div className="w-10 h-px bg-[var(--border)] mx-auto mb-8" />
-        <span
-          className="uppercase-meta text-[var(--foreground-subtle)] block opacity-50"
-          style={{ fontSize: "0.65rem" }}
-        >
-          last updated march 2026
-        </span>
+        <div className="w-10 h-px bg-[var(--rule)] mx-auto mb-8" />
+        <span className="meta block">Last updated March 2026</span>
       </footer>
     </div>
   )
