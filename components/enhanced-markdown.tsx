@@ -47,14 +47,19 @@ export const Inline = ({ text }: { text: string }) => (
   </ReactMarkdown>
 )
 
-// Callouts: set off by hairlines, with a small label. Pigments each mean one thing and
-// none of them means "caution", so the label's word carries the type, in ink.
+// Callouts: an edge, a wash and a label in the pigment that fits the type. A note or
+// disclaimer is the author's aside, so ochre, the notes pigment; a caution or an
+// important point is an editor's mark, so cinnabar.
 const Callout = ({ type, label: custom, text }: { type: "info" | "warning" | "error"; label?: string; text: string }) => {
   const label = custom || { info: "Note", warning: "Caution", error: "Important" }[type]
 
   return (
-    <aside className="my-8 py-5 border-y border-[var(--rule)]" role="note">
-      <span className="font-flex block mb-2 text-[0.8125rem] leading-[1.4] font-[560] text-[var(--ink)]">{label}</span>
+    <aside
+      className="callout my-8"
+      role="note"
+      style={type === "info" ? undefined : ({ "--tone": "var(--cinnabar)" } as React.CSSProperties)}
+    >
+      <span className="callout-label block mb-1.5">{label}</span>
       <p className="m-0">
         <Inline text={text} />
       </p>
@@ -418,24 +423,26 @@ const createCustomComponents = (
     )
   },
 
-  // Headings: Literata at opsz 24, as authored. Ids match parseHeadings in lib/mdx.
+  // Headings: Google Sans, as authored. Ids match parseHeadings in lib/mdx. The scale steps
+  // down from the post title so sections read as sections; 48px above, 8px below binds
+  // each heading to its text.
   h1: ({ children, node, ...props }: any) => (
-    <h1 className="text-[1.75rem] leading-[1.15] [font-variation-settings:'opsz'_36] font-[520] tracking-[-0.01em] mt-12 mb-3" {...props}>
+    <h1 className="text-[1.75rem] md:text-[2rem] leading-[1.15] font-semibold tracking-[-0.012em] mt-12 mb-3" {...props}>
       {children}
     </h1>
   ),
   h2: ({ children, node, ...props }: any) => (
-    <h2 id={slug(children)} className="text-[1.3125rem] md:text-[1.375rem] leading-[1.25] font-[560] mt-12 mb-2 scroll-mt-24" {...props}>
+    <h2 id={slug(children)} className="text-[1.375rem] md:text-[1.5625rem] leading-[1.2] font-semibold tracking-[-0.01em] mt-12 mb-2 scroll-mt-24" {...props}>
       {children}
     </h2>
   ),
   h3: ({ children, node, ...props }: any) => (
-    <h3 id={slug(children)} className="text-[1.1875rem] leading-[1.3] font-[560] mt-10 mb-2 scroll-mt-24" {...props}>
+    <h3 id={slug(children)} className="text-[1.1875rem] leading-[1.25] font-semibold tracking-[-0.005em] mt-10 mb-2 scroll-mt-24" {...props}>
       {children}
     </h3>
   ),
   h4: ({ children, node, ...props }: any) => (
-    <h4 id={slug(children)} className="text-[1.0625rem] leading-[1.35] font-[600] mt-8 mb-2 scroll-mt-24" {...props}>
+    <h4 id={slug(children)} className="text-[1.0625rem] leading-[1.35] font-semibold tracking-normal mt-8 mb-2 scroll-mt-24" {...props}>
       {children}
     </h4>
   ),
@@ -465,9 +472,10 @@ const createCustomComponents = (
     )
   },
 
-  // Blockquote: a hairline, upright, in the secondary ink
+  // Blockquote: upright, in the secondary ink, with an ochre rule: a quoted passage is a
+  // highlight, and highlights are ochre
   blockquote: ({ children, node, ...props }: any) => (
-    <blockquote className="border-l border-[var(--rule)] pl-6 mt-0 mb-6 text-[var(--ink-2)]" {...props}>
+    <blockquote className="border-l-2 border-[color-mix(in_oklch,var(--ochre)_70%,transparent)] pl-6 mt-0 mb-6 text-[var(--ink-2)]" {...props}>
       {children}
     </blockquote>
   ),

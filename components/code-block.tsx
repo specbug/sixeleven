@@ -9,18 +9,20 @@ interface CodeBlockProps {
   showLineNumbers?: boolean
 }
 
-// Syntax in ink alone. Each pigment means one thing across the site, so code can't
-// borrow them: structure is carried by the ink steps, weight and italic instead.
+// Syntax tinted from the site's four pigments, darkened and quietened so code reads as
+// coloured ink beside the brighter link signal: keywords ultramarine, strings ochre,
+// numbers and constants viridian, tags and properties cinnabar. Comments and punctuation
+// recede in the lighter inks; names stay ink.
 const theme: PrismTheme = {
   plain: { color: "var(--ink)", backgroundColor: "var(--sheet)" },
   styles: [
     { types: ["comment", "prolog", "doctype", "cdata"], style: { color: "var(--ink-3)", fontStyle: "italic" } },
     { types: ["punctuation", "operator"], style: { color: "var(--ink-3)" } },
-    { types: ["keyword", "atrule", "selector", "important", "builtin"], style: { color: "var(--ink)", fontWeight: "700" } },
-    { types: ["string", "char", "attr-value", "regex", "inserted", "url"], style: { color: "var(--ink-2)" } },
-    { types: ["number", "boolean", "constant", "symbol", "variable"], style: { color: "var(--ink)" } },
+    { types: ["keyword", "atrule", "selector", "important", "builtin"], style: { color: "var(--code-keyword)" } },
+    { types: ["string", "char", "attr-value", "regex", "inserted", "url"], style: { color: "var(--code-string)" } },
+    { types: ["number", "boolean", "constant", "symbol", "variable"], style: { color: "var(--code-number)" } },
     { types: ["function", "class-name"], style: { color: "var(--ink)" } },
-    { types: ["tag", "property", "attr-name", "deleted", "namespace"], style: { color: "var(--ink-2)" } },
+    { types: ["tag", "property", "attr-name", "deleted", "namespace"], style: { color: "var(--code-tag)" } },
   ],
 }
 

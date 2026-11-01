@@ -30,7 +30,7 @@ export function PostListItem({ post, tags }: PostListItemProps) {
           <time dateTime={post.date}>{monthYear(post.date)}</time>
           {post.readingTime && <> · {post.readingTime}&nbsp;min</>}
         </p>
-        <h2 className="font-display text-[1.5rem] md:text-[1.625rem] leading-[1.18] font-[500] tracking-[-0.008em] [font-variation-settings:'opsz'_36] mb-2">
+        <h2 className="font-display text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] mb-2">
           <span className="pen-title">{smartQuotes(post.title)}</span>
         </h2>
         {post.excerpt && <p className="text-[var(--ink-2)] mb-2">{smartQuotes(post.excerpt)}</p>}

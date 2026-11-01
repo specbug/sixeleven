@@ -35,10 +35,10 @@ const config: Config = {
       boxShadow: { sm: "none", DEFAULT: "none", md: "none", lg: "none" },
       fontFamily: {
         sans: ["var(--font-rsans)", "system-ui", "sans-serif"],
-        display: ["var(--font-literata)", "Georgia", "serif"],
+        display: ["var(--font-heading)", "var(--font-rsans)", "system-ui", "sans-serif"],
         flex: ["var(--font-flex)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
-        logo: ["var(--font-logo)", "var(--font-literata)", "serif"],
+        logo: ["var(--font-logo)", "Georgia", "serif"],
       },
       transitionTimingFunction: {
         DEFAULT: "cubic-bezier(0.2, 0.7, 0.2, 1)",

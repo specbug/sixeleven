@@ -12,14 +12,14 @@ export const rSans = localFont({
   variable: "--font-rsans",
 })
 
-// Titles and headings: Literata (OFL), the variable upright, subset to Latin with its
-// small caps (smcp, c2sc) and oldstyle figures kept; opsz 7–72, wght 400–700.
-// License: public/fonts/Literata-OFL.txt
-export const literata = localFont({
-  src: "../public/fonts/Literata-Variable.woff2",
+// Titles and headings: Google Sans (OFL), the Text design (opsz pinned to 17, grade 0)
+// with a variable weight axis 400–700, subset to Latin.
+// License: public/fonts/GoogleSans-OFL.txt
+export const headingFont = localFont({
+  src: "../public/fonts/GoogleSansText-Variable.woff2",
   weight: "400 700",
   display: "swap",
-  variable: "--font-literata",
+  variable: "--font-heading",
 })
 
 // Small text and every number: Google Sans Flex (OFL), pinned to ROND 0, slnt 0,

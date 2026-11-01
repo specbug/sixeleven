@@ -142,7 +142,7 @@ export default function SearchPosts({ posts }: { posts: Post[] }) {
         groups.map((group) => (
           <section key={group.year ?? "all"} className="mt-10">
             {group.year !== null && (
-              <h2 className="font-display text-[1.375rem] font-[560] [font-variation-settings:'opsz'_24] [font-feature-settings:'onum'_1] mb-6">{group.year}</h2>
+              <h2 className="font-display text-[1.375rem] font-semibold tracking-[-0.01em] [font-variant-numeric:tabular-nums] mb-6">{group.year}</h2>
             )}
             <div className="space-y-12">
               {group.posts.map((post) => (

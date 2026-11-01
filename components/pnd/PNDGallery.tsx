@@ -122,7 +122,7 @@ function EntryCard({ entry }: { entry: Entry }) {
   return (
     <article>
       <div className="flex items-baseline justify-between gap-6">
-        <h2 className="font-display text-[1.625rem] md:text-[1.875rem] leading-[1.15] font-[500] tracking-[-0.01em] [font-variation-settings:'opsz'_48]">
+        <h2 className="font-display text-[1.625rem] md:text-[1.875rem] leading-[1.15] font-semibold tracking-[-0.01em]">
           {entry.title}
         </h2>
         {/* The year it was experienced */}

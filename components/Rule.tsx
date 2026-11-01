@@ -14,8 +14,9 @@ const MIN_GAP = 6 // least space between two section names
 // The Rule: a vertical scale in the left margin where height maps to the post. Minute
 // ticks run left of the spine, section ticks and their names to the right. An ink line
 // marks the distance read and an ultramarine line the current position, the page's one
-// moving part, with the minutes left beneath. Hidden until the pointer enters the left
-// margin or a section name takes keyboard focus. It stands 104px off the column, 24px
+// moving part, with the minutes left beneath. Always shown: at full strength at the top of
+// the page, at 55% once the reader scrolls, and full again while the pointer is in the left
+// margin or a section name has keyboard focus. It stands 104px off the column, 24px
 // clear of the widest plate. From 1280px; narrower, the Contents toggle serves.
 export default function Rule({ headings, readingTime }: { headings: TOCItem[]; readingTime?: number }) {
   const top = headings.length ? Math.min(...headings.map((h) => h.level)) : 2
@@ -29,9 +30,10 @@ export default function Rule({ headings, readingTime }: { headings: TOCItem[]; r
   const nameRefs = useRef<(HTMLAnchorElement | null)[]>([])
   const [height, setHeight] = useState(0)
   const [progress, setProgress] = useState(0)
+  const [scrolled, setScrolled] = useState(false)
   const [marks, setMarks] = useState<number[]>([]) // section starts, 0–1
   const [nameY, setNameY] = useState<number[]>([]) // laid-out name positions, px
-  const [current, setCurrent] = useState(0)
+  const [current, setCurrent] = useState(-1)
 
   // Where each section starts within the post, and how far through it the reader is
   useEffect(() => {
@@ -44,10 +46,15 @@ export default function Rule({ headings, readingTime }: { headings: TOCItem[]; r
     const update = () => {
       frame = 0
       const box = content.getBoundingClientRect()
-      // The reading line sits a third of the way down the viewport
-      const line = window.innerHeight * 0.33
+      // The reading line starts a third of the way down the viewport and slides to its
+      // bottom as the page scrolls to its end, so the last lines of a post, which can never
+      // scroll up to the one-third mark, still count as read: progress reaches 1 at the end
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+      const through = Math.min(1, window.scrollY / maxScroll)
+      const line = window.innerHeight * (0.33 + 0.67 * through)
       setProgress(Math.min(1, Math.max(0, (line - box.top) / Math.max(1, box.height))))
-      let idx = 0
+      setScrolled(window.scrollY > 8)
+      let idx = -1 // none until the first heading crosses the reading line
       sections.forEach((s, i) => {
         const el = document.getElementById(s.id)
         if (el && el.getBoundingClientRect().top <= line) idx = i
@@ -114,7 +121,9 @@ export default function Rule({ headings, readingTime }: { headings: TOCItem[]; r
       aria-label="Contents"
       className="group hidden xl:block absolute top-0 right-full h-full mr-[104px] w-[calc((100vw-640px)/2-104px)]"
     >
-      <div className="sticky top-24 ml-auto w-[168px] opacity-0 transition-opacity [transition-duration:400ms] ease-out group-hover:opacity-100 group-focus-within:opacity-100">
+      <div className={`sticky top-24 ml-auto w-[168px] transition-opacity [transition-duration:400ms] ease-out group-hover:opacity-100 group-focus-within:opacity-100 ${
+          scrolled ? "opacity-[0.55]" : "opacity-100"
+        }`}>
         <div ref={scaleRef} className="relative h-[min(560px,calc(100vh-12rem))]">
           {/* Spine, and the distance read in ink */}
           <div className="absolute top-0 bottom-0 w-px bg-[var(--rule)]" style={{ left: SPINE }} />
