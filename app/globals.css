@@ -116,9 +116,13 @@
   }
 
   code, pre, kbd, samp {
-    font-family: var(--font-mono), ui-monospace, monospace;
+    /* Menlo, as installed with macOS; elsewhere the self-hosted JetBrains Mono. Menlo is
+       Apple's and licensed for Apple systems only, so it is named, never served. */
+    font-family: Menlo, var(--font-mono), ui-monospace, monospace;
     font-feature-settings: normal;
-    font-variant-ligatures: none; /* R Mono joins `--` into a dash */
+    /* JetBrains Mono's ligatures (calt) keep every character's cell width, so columns
+       still align and copied code is unchanged */
+    font-variant-ligatures: contextual;
   }
 
   /* Superscripts: Google Sans Flex at 0.66em, raised 0.5em, adding nothing to the line */

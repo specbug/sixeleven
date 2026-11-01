@@ -34,10 +34,10 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
           // A lone "1" carries no information - number only multi-line blocks
           const numbered = showLineNumbers && tokens.length > 1
 
-          // Ligatures off: R Mono joins `--` into a dash, so `--flag` would read as `—flag`
+          // JetBrains Mono ligatures on (see code, pre in globals.css): each keeps its cells
           return (
             <pre
-              className={`${className} -mx-6 md:mx-0 px-6 py-5 border-y md:border border-[var(--rule)] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
+              className={`${className} -mx-6 md:mx-0 px-6 py-5 border-y md:border border-[var(--rule)] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7]`}
               style={style}
             >
               {tokens.map((line, i) => {

@@ -32,13 +32,14 @@ export const flex = localFont({
   variable: "--font-flex",
 })
 
-// Code only: R Mono.
+// Code: Menlo where it is installed (macOS; named first in the font stack, never served),
+// and otherwise JetBrains Mono (OFL), variable weight 100–800, upright and italic, with its
+// coding ligatures (calt). Subset to Latin, punctuation, arrows and box drawing.
+// License: public/fonts/JetBrainsMono-OFL.txt
 export const monoFont = localFont({
   src: [
-    { path: "../public/fonts/RMono-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../public/fonts/RMono-Italic.woff2", weight: "400", style: "italic" },
-    { path: "../public/fonts/RMono-Bold.woff2", weight: "700", style: "normal" },
-    { path: "../public/fonts/RMono-BoldItalic.woff2", weight: "700", style: "italic" },
+    { path: "../public/fonts/JetBrainsMono-Variable.woff2", weight: "100 800", style: "normal" },
+    { path: "../public/fonts/JetBrainsMono-Italic-Variable.woff2", weight: "100 800", style: "italic" },
   ],
   display: "swap",
   variable: "--font-mono",
