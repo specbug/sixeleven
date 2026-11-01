@@ -9,28 +9,26 @@ interface CodeBlockProps {
   showLineNumbers?: boolean
 }
 
-// Syntax theme drawn from the site's own tokens (see --code-* in globals.css), so it
-// follows light/dark mode: ink tones for structure, the orange family for literals,
-// one cool neutral for keywords. Comments recede in italic.
+// Syntax tinted from the site's pigments, darkened and quietened so code reads as
+// coloured ink beside the brighter link signal: keywords ultramarine, strings violet,
+// numbers and constants a deep rose, tags and properties cinnabar. Comments and punctuation
+// recede in the lighter inks; names stay ink.
 const theme: PrismTheme = {
-  plain: {
-    color: "var(--code-fg)",
-    backgroundColor: "var(--code-bg)",
-  },
+  plain: { color: "var(--ink)", backgroundColor: "var(--sheet)" },
   styles: [
-    { types: ["comment", "prolog", "doctype", "cdata"], style: { color: "var(--code-comment)", fontStyle: "italic" } },
-    { types: ["punctuation", "operator"], style: { color: "var(--code-punct)" } },
+    { types: ["comment", "prolog", "doctype", "cdata"], style: { color: "var(--ink-3)", fontStyle: "italic" } },
+    { types: ["punctuation", "operator"], style: { color: "var(--ink-3)" } },
     { types: ["keyword", "atrule", "selector", "important", "builtin"], style: { color: "var(--code-keyword)" } },
     { types: ["string", "char", "attr-value", "regex", "inserted", "url"], style: { color: "var(--code-string)" } },
     { types: ["number", "boolean", "constant", "symbol", "variable"], style: { color: "var(--code-number)" } },
-    { types: ["function", "class-name"], style: { color: "var(--code-function)" } },
+    { types: ["function", "class-name"], style: { color: "var(--ink)" } },
     { types: ["tag", "property", "attr-name", "deleted", "namespace"], style: { color: "var(--code-tag)" } },
   ],
 }
 
 export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockProps) {
   return (
-    <div className="not-prose my-6">
+    <div className="my-8">
       <Highlight theme={theme} code={code} language={language as any} prism={Prism}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => {
           // A lone "1" carries no information - number only multi-line blocks
@@ -39,7 +37,7 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
           // Ligatures off: R Mono joins `--` into a dash, so `--flag` would read as `—flag`
           return (
             <pre
-              className={`${className} px-6 py-5 rounded-[4px] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
+              className={`${className} -mx-6 md:mx-0 px-6 py-5 border-y md:border border-[var(--rule)] overflow-auto text-[0.8125rem] md:text-[0.875rem] leading-[1.7] [font-variant-ligatures:none]`}
               style={style}
             >
               {tokens.map((line, i) => {
@@ -49,7 +47,7 @@ export function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockP
                 return (
                   <div key={lineKey as React.Key} {...restLineProps} className="table-row">
                     {numbered && (
-                      <span className="table-cell text-right pr-5 select-none tabular-nums text-[var(--code-line-number)]">
+                      <span className="table-cell text-right pr-5 select-none font-flex text-[0.75rem] [font-variant-numeric:tabular-nums] text-[var(--ink-3)]">
                         {i + 1}
                       </span>
                     )}

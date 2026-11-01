@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getProjectBySlug, getAllProjects } from "@/lib/mdx"
-import ReadingProgressBar from "@/components/ReadingProgressBar"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
+import { penFor } from "@/lib/pencil"
+import { smartQuotes } from "@/lib/typography"
 
 interface ProjectPageProps {
   params: {
@@ -45,41 +46,28 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <article className="max-w-none relative">
-      <ReadingProgressBar />
-
+    <article className="relative">
       <header className="mb-10">
-        {/* Title - project content uses normal case for readability */}
-        <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-4">
-          {project.title}
-        </h1>
+        <h1 className="title text-[clamp(2rem,9vw,2.375rem)] sm:text-[2.75rem] md:text-[3.25rem] [overflow-wrap:break-word] mb-4">{smartQuotes(project.title)}</h1>
 
-        {/* Technologies - plain text tags */}
         {project.technologies && project.technologies.length > 0 && (
-          <div className="flex flex-wrap gap-x-3 gap-y-1 mb-4">
+          <ul className="flex flex-wrap gap-x-3 gap-y-1 mb-4">
             {project.technologies.map((tech) => (
-              <span key={tech} className="tag">
+              <li key={tech} className="tag">
                 {tech}
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
 
-        {/* External link - orange */}
         {project.link && (
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-[var(--braun-orange)] hover:underline"
-          >
+          <a href={project.link} target="_blank" rel="noopener noreferrer" className="pen" data-pen={penFor(project.link)}>
             View project
           </a>
         )}
       </header>
 
-      {/* Project content */}
-      <div className="prose dark:prose-invert max-w-none">
+      <div className="break-words">
         <EnhancedMarkdown content={project.content} />
       </div>
     </article>

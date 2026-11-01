@@ -1,36 +1,8 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect, useMemo } from "react"
-import Link from "next/link"
-
-// Minimal, geometric icons inspired by Braun/Rams design
-function SearchIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  )
-}
-
-function CloseIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  )
-}
-
-function SortIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <polyline points="19 12 12 19 5 12" />
-    </svg>
-  )
-}
+import { useMemo, useState } from "react"
+import { PostListItem } from "./PostListItem"
+import { ChevronIcon, CloseIcon, SearchIcon } from "./icons"
 
 interface Post {
   slug: string
@@ -40,289 +12,161 @@ interface Post {
   content: string
   readingTime?: string
   tags?: string[]
+  link?: string
 }
 
-interface SearchPostsProps {
-  posts: Post[]
-}
+type SortOption = "newest" | "oldest" | "title" | "length"
 
-type SortOption = "newest" | "oldest" | "title" | "readingTime"
+const SORTS: { value: SortOption; label: string }[] = [
+  { value: "newest", label: "Newest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "title", label: "Title" },
+  { value: "length", label: "Length" },
+]
 
-export default function SearchPosts({ posts }: SearchPostsProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts)
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [sortOption, setSortOption] = useState<SortOption>("newest")
-  const [showTagFilter, setShowTagFilter] = useState(false)
-  const [showSortMenu, setShowSortMenu] = useState(false)
+const norm = (tag: string) => tag.toLowerCase().trim()
 
-  // Extract all unique tags from posts
-  const allTags = useMemo(() => {
-    const tagsSet = new Set<string>()
-    posts.forEach((post) => {
-      post.tags?.forEach((tag) => {
-        const normalizedTag = tag.toLowerCase().trim()
-        tagsSet.add(normalizedTag)
-      })
-    })
-    return Array.from(tagsSet).sort()
-  }, [posts])
+// A selected control is the reader's own state: ink, with an ultramarine mark beneath
+const selected = "text-[var(--ink)] underline decoration-[var(--ultramarine)] decoration-[1.5px] underline-offset-[5px]"
 
-  // Filter and sort posts
-  useEffect(() => {
-    let filtered = [...posts]
+export default function SearchPosts({ posts }: { posts: Post[] }) {
+  const [query, setQuery] = useState("")
+  const [tags, setTags] = useState<string[]>([])
+  const [sort, setSort] = useState<SortOption>("newest")
+  const [tagsOpen, setTagsOpen] = useState(false)
 
-    if (searchQuery.trim() !== "") {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(
-        (post) =>
-          post.title.toLowerCase().includes(query) ||
-          post.excerpt.toLowerCase().includes(query) ||
-          (post.tags && post.tags.some((tag) => tag.toLowerCase().includes(query))),
-      )
-    }
+  const allTags = useMemo(() => Array.from(new Set(posts.flatMap((p) => (p.tags ?? []).map(norm)))).sort(), [posts])
 
-    if (selectedTags.length > 0) {
-      filtered = filtered.filter(
-        (post) =>
-          post.tags &&
-          selectedTags.every((tag) =>
-            post.tags.some((postTag) => postTag.toLowerCase().trim() === tag.toLowerCase().trim()),
-          ),
-      )
-    }
-
-    filtered.sort((a, b) => {
-      switch (sortOption) {
-        case "newest":
-          return new Date(b.date).getTime() - new Date(a.date).getTime()
-        case "oldest":
-          return new Date(a.date).getTime() - new Date(b.date).getTime()
-        case "title":
-          return a.title.localeCompare(b.title)
-        case "readingTime":
-          const aTime = a.readingTime ? Number.parseInt(a.readingTime) : 0
-          const bTime = b.readingTime ? Number.parseInt(b.readingTime) : 0
-          return aTime - bTime
-        default:
-          return 0
-      }
-    })
-
-    setFilteredPosts(filtered)
-  }, [searchQuery, selectedTags, sortOption, posts])
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
-  }
-
-  const clearSearch = () => {
-    setSearchQuery("")
-  }
-
-  const toggleTag = (tag: string) => {
-    const normalizedTag = tag.toLowerCase().trim()
-    setSelectedTags((prev) =>
-      prev.includes(normalizedTag) ? prev.filter((t) => t !== normalizedTag) : [...prev, normalizedTag],
+  const results = useMemo(() => {
+    const q = query.toLowerCase().trim()
+    const list = posts.filter(
+      (post) =>
+        (!q ||
+          post.title.toLowerCase().includes(q) ||
+          post.excerpt.toLowerCase().includes(q) ||
+          (post.tags ?? []).some((t) => t.toLowerCase().includes(q))) &&
+        tags.every((t) => (post.tags ?? []).some((pt) => norm(pt) === t)),
     )
-  }
+    const time = (p: Post) => new Date(p.date).getTime()
+    const length = (p: Post) => Number.parseInt(p.readingTime ?? "0", 10)
+    return list.sort((a, b) =>
+      sort === "newest" ? time(b) - time(a) : sort === "oldest" ? time(a) - time(b) : sort === "title" ? a.title.localeCompare(b.title) : length(a) - length(b),
+    )
+  }, [posts, query, tags, sort])
 
-  const clearFilters = () => {
-    setSelectedTags([])
-    setSortOption("newest")
-  }
-
-  const getSortLabel = (option: SortOption): string => {
-    switch (option) {
-      case "newest":
-        return "Newest"
-      case "oldest":
-        return "Oldest"
-      case "title":
-        return "Title"
-      case "readingTime":
-        return "Reading time"
+  // In date order the list falls into years
+  const groups = useMemo(() => {
+    if (sort !== "newest" && sort !== "oldest") return [{ year: null as number | null, posts: results }]
+    const out: { year: number | null; posts: Post[] }[] = []
+    for (const post of results) {
+      const year = new Date(post.date).getFullYear()
+      if (out.at(-1)?.year !== year) out.push({ year, posts: [] })
+      out.at(-1)!.posts.push(post)
     }
-  }
+    return out
+  }, [results, sort])
 
-  const isTagSelected = (tag: string) => {
-    const normalizedTag = tag.toLowerCase().trim()
-    return selectedTags.some((t) => t.toLowerCase().trim() === normalizedTag)
+  const toggleTag = (tag: string) => setTags((prev) => (prev.includes(norm(tag)) ? prev.filter((t) => t !== norm(tag)) : [...prev, norm(tag)]))
+  const clear = () => {
+    setQuery("")
+    setTags([])
   }
+  const filtered = query.trim() !== "" || tags.length > 0
+  const showTags = tagsOpen || tags.length > 0
 
   return (
-    <div className="space-y-8">
-      {/* Search and sort controls */}
-      <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-8">
-        {/* Search input - underline style */}
-        <div className="relative flex-grow">
-          <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-[var(--foreground-subtle)]">
-            <SearchIcon size={16} />
-          </div>
-          <input
-            type="text"
-            placeholder="Search posts…"
-            value={searchQuery}
-            onChange={handleSearch}
-            className="w-full pl-6 pr-8 py-2 bg-transparent border-b border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--braun-orange)] transition-colors"
-          />
-          {searchQuery && (
-            <button
-              onClick={clearSearch}
-              className="absolute inset-y-0 right-0 flex items-center text-[var(--foreground-subtle)] hover:text-[var(--foreground)] transition-colors"
-              aria-label="Clear search"
-            >
-              <CloseIcon size={16} />
-            </button>
-          )}
-        </div>
-
-        {/* Sort dropdown */}
-        <div className="relative flex-shrink-0">
-          <button
-            onClick={() => setShowSortMenu(!showSortMenu)}
-            className="flex items-baseline gap-2 px-0 py-2 text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
-          >
-            <span className="self-center"><SortIcon size={14} /></span>
-            <span>{getSortLabel(sortOption)}</span>
+    <div>
+      {/* Search */}
+      <label className="relative flex items-center border-b border-[var(--rule)] focus-within:border-[var(--ultramarine)] transition-colors">
+        <span className="text-[var(--ink-3)]">
+          <SearchIcon />
+        </span>
+        <span className="sr-only">Search posts</span>
+        <input
+          type="search"
+          placeholder="Search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full pl-3 pr-8 py-2 bg-transparent text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:outline-none"
+        />
+        {query && (
+          <button onClick={() => setQuery("")} className="absolute right-0 nav-link" aria-label="Clear search">
+            <CloseIcon />
           </button>
-          {showSortMenu && (
-            <div className="absolute top-full right-0 mt-2 bg-[var(--background)] border border-[var(--border)] rounded-[4px] py-2 z-10 min-w-[140px]">
-              {(["newest", "oldest", "title", "readingTime"] as SortOption[]).map((option) => (
-                <button
-                  key={option}
-                  onClick={() => {
-                    setSortOption(option)
-                    setShowSortMenu(false)
-                  }}
-                  className={`block w-full text-left px-4 py-1.5 text-sm transition-colors ${
-                    sortOption === option
-                      ? "text-[var(--braun-orange)]"
-                      : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
-                  }`}
-                >
-                  {getSortLabel(option)}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+        )}
+      </label>
 
-      {/* Tag filters */}
-      <div>
-        <button
-          onClick={() => setShowTagFilter(!showTagFilter)}
-          className="text-sm text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
-        >
-          {showTagFilter ? "Hide tags" : "Filter by tags"}
+      {/* Filter and sort */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 font-flex text-[0.875rem]">
+        <button onClick={() => setTagsOpen(!showTags)} className="nav-link flex items-center gap-1 -ml-1" aria-expanded={showTags}>
+          <ChevronIcon open={showTags} />
+          Tags
         </button>
-
-        {showTagFilter && (
-          <div className="flex flex-wrap gap-x-3 gap-y-2 mt-4">
-            {allTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => toggleTag(tag)}
-                className={`tag-interactive text-sm lowercase ${isTagSelected(tag) ? "active" : ""}`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {selectedTags.length > 0 && (
-          <div className="flex items-center mt-4 gap-2">
-            <span className="text-sm text-[var(--foreground-subtle)]">Active:</span>
-            <div className="flex flex-wrap gap-x-3 gap-y-1">
-              {selectedTags.map((tag) => (
-                <span key={tag} className="tag text-[var(--braun-orange)] flex items-center gap-1">
-                  {tag}
-                  <button
-                    onClick={() => toggleTag(tag)}
-                    className="hover:opacity-70 transition-opacity"
-                  >
-                    <CloseIcon size={12} />
-                  </button>
-                </span>
-              ))}
-              <button
-                onClick={clearFilters}
-                className="text-xs text-[var(--foreground-subtle)] hover:text-[var(--braun-orange)] transition-colors"
-              >
-                Clear
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Results count */}
-      <div className="uppercase-meta text-[var(--foreground-subtle)] border-b border-[var(--border)] pb-3">
-        {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"} found
-      </div>
-
-      {/* Results */}
-      {filteredPosts.length === 0 ? (
-        <div className="text-center py-10">
-          <p className="text-[var(--foreground-muted)]">No posts found.</p>
-          {(searchQuery || selectedTags.length > 0) && (
-            <button
-              onClick={clearFilters}
-              className="mt-2 text-[var(--braun-orange)] hover:underline text-sm"
-            >
-              Clear filters
+        <div className="flex gap-4" role="group" aria-label="Sort">
+          {SORTS.map((s) => (
+            <button key={s.value} onClick={() => setSort(s.value)} aria-pressed={sort === s.value} className={sort === s.value ? selected : "nav-link"}>
+              {s.label}
             </button>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-10">
-          {filteredPosts.map((post) => (
-            <article key={post.slug}>
-              <Link href={post.link || `/blog/${post.slug}`} className="block group no-underline hover:no-underline">
-                {/* Date and reading time */}
-                <div className="uppercase-meta text-[var(--foreground-subtle)] mb-2">
-                  <time dateTime={post.date}>
-                    {new Date(post.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      year: "numeric",
-                    }).toLowerCase()}
-                  </time>
-                  {post.readingTime && <span> · {post.readingTime} min</span>}
-                </div>
-
-                {/* Title - only this gets underline on hover */}
-                <h2 className="text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] text-[var(--foreground)] group-hover:text-[var(--braun-orange)] group-hover:underline group-hover:underline-offset-4 transition-colors mb-2">
-                  {post.title}
-                </h2>
-
-                {/* Excerpt */}
-                <p className="text-[var(--foreground-muted)] mb-2">
-                  {post.excerpt}
-                </p>
-
-                {/* Tags */}
-                {post.tags && post.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-x-3 gap-y-1">
-                    {post.tags.map((tag: string) => (
-                      <span
-                        key={`${post.slug}-${tag}`}
-                        className="tag tag-interactive"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          toggleTag(tag)
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </Link>
-            </article>
           ))}
         </div>
+      </div>
+
+      {showTags && (
+        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 font-flex text-[0.8125rem]">
+          {allTags.map((tag) => (
+            <button key={tag} onClick={() => toggleTag(tag)} aria-pressed={tags.includes(tag)} className={tags.includes(tag) ? selected : "nav-link"}>
+              {tag}
+            </button>
+          ))}
+          {tags.length > 0 && (
+            <button onClick={() => setTags([])} className="nav-link text-[var(--ink-3)]">
+              Clear
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Count */}
+      <p className="meta mt-8 pb-3 border-b border-[var(--rule)]" aria-live="polite">
+        {filtered ? `${results.length} of ${posts.length} posts` : `${posts.length} ${posts.length === 1 ? "post" : "posts"}`}
+      </p>
+
+      {results.length === 0 ? (
+        <div className="mt-8">
+          <p className="text-[var(--ink-2)]">No matching posts.</p>
+          <button onClick={clear} className="nav-link font-flex text-[0.875rem] mt-2">
+            Clear filters
+          </button>
+        </div>
+      ) : (
+        groups.map((group) => (
+          <section key={group.year ?? "all"} className="mt-10">
+            {group.year !== null && (
+              <h2 className="font-display text-[1.375rem] font-semibold tracking-[-0.01em] [font-variant-numeric:tabular-nums] mb-6">{group.year}</h2>
+            )}
+            <div className="space-y-12">
+              {group.posts.map((post) => (
+                <PostListItem
+                  key={post.slug}
+                  post={post}
+                  tags={
+                    post.tags && post.tags.length > 0 ? (
+                      <ul className="flex flex-wrap gap-x-3 gap-y-1 -mt-0">
+                        {post.tags.map((tag) => (
+                          <li key={tag}>
+                            <button onClick={() => toggleTag(tag)} aria-pressed={tags.includes(norm(tag))} className={`tag ${tags.includes(norm(tag)) ? selected : "hover:text-[var(--ink)] transition-colors"}`}>
+                              {tag}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : undefined
+                  }
+                />
+              ))}
+            </div>
+          </section>
+        ))
       )}
     </div>
   )
