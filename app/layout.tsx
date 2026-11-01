@@ -4,8 +4,7 @@ import "./globals.css"
 import "./pencil.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
-import KaTeXLoader from "@/components/KaTeXLoader"
-import { rSans, headingFont, flex, monoFont, monoSymbols, logoFont } from "@/lib/fonts"
+import { rSans, headingFont, flex, monoFont, monoSymbols, mathFont, logoFont } from "@/lib/fonts"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -74,13 +73,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${rSans.variable} ${headingFont.variable} ${flex.variable} ${monoFont.variable} ${monoSymbols.variable} ${logoFont.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${rSans.variable} ${headingFont.variable} ${flex.variable} ${monoFont.variable} ${monoSymbols.variable} ${mathFont.variable} ${logoFont.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <WebsiteSchema />
       </head>
       <body className="min-h-screen flex flex-col">
-        <KaTeXLoader />
         <Navigation />
         <main className="flex-grow pt-16">
           <div className="max-w-[640px] mx-auto px-6 md:px-0 pt-12 pb-24">

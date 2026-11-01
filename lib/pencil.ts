@@ -3,6 +3,11 @@
 // of the link before it takes the next one, so neighbours never look stamped from one die.
 export const PEN_VARIANTS = 4
 
+export const LOOP_VARIANTS = 3
+
+// Which of the three hand-drawn loops (app/pencil.css) circles a selected control
+export const loopFor = (key: string) => penFor(key) % LOOP_VARIANTS
+
 export function penFor(href: string): number {
   // FNV-1a
   let h = 0x811c9dc5

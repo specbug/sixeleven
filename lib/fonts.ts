@@ -64,6 +64,19 @@ export const monoSymbols = localFont({
   declarations: [{ prop: "unicode-range", value: "U+2600-27BF" }],
 })
 
+// Maths: TeX Gyre Pagella Math (GUST Font License), a Palatino with an OpenType MATH table,
+// so browsers lay out KaTeX's MathML with its own spacing and stretchy delimiters. The
+// whole font, losslessly compressed; fetched only on a page with maths.
+// License: public/fonts/TeXGyrePagellaMath-GUST-FONT-LICENSE.txt
+export const mathFont = localFont({
+  src: "../public/fonts/TeXGyrePagellaMath.woff2",
+  weight: "400",
+  display: "swap",
+  variable: "--font-math",
+  preload: false,
+  adjustFontFallback: false,
+})
+
 // The wordmark: Et Book Bold, line figures.
 export const logoFont = localFont({
   src: "../public/fonts/Et Book Bold Line Figures.woff",
