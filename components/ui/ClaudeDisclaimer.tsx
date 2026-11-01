@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, type CSSProperties } from "react"
+import { useState, useEffect } from "react"
 
 // Claude Code spinner - the morphing starburst animation
 // Characters: · ✻ ✽ ✶ ✳ ✢
@@ -36,7 +36,7 @@ function ClaudeSpinner() {
 
 export function ClaudeDisclaimer({ children }: { children?: React.ReactNode }) {
   return (
-    <aside className="callout my-8 flex items-start gap-3" role="note" style={{ "--tone": "var(--cinnabar)" } as CSSProperties}>
+    <aside className="callout my-8 flex items-start gap-3" role="note">
       <div className="flex-shrink-0 pt-[0.15rem]">
         <ClaudeSpinner />
       </div>

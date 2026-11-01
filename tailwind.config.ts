@@ -14,7 +14,6 @@ const config: Config = {
         rule: "var(--rule)",
         grid: "var(--grid)",
         cinnabar: "var(--cinnabar)",
-        ochre: "var(--ochre)",
         viridian: "var(--viridian)",
         ultramarine: "var(--ultramarine)",
         // Names the shadcn primitives in components/ui still use

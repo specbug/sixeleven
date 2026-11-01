@@ -47,18 +47,13 @@ export const Inline = ({ text }: { text: string }) => (
   </ReactMarkdown>
 )
 
-// Callouts: an edge, a wash and a label in the pigment that fits the type. A note or
-// disclaimer is the author's aside, so ochre, the notes pigment; a caution or an
-// important point is an editor's mark, so cinnabar.
+// Callouts: a red-pencil edge and label on the bare paper, like an editor's marginal
+// mark. The label's word carries the type (Note, Caution, Important, or the author's own).
 const Callout = ({ type, label: custom, text }: { type: "info" | "warning" | "error"; label?: string; text: string }) => {
   const label = custom || { info: "Note", warning: "Caution", error: "Important" }[type]
 
   return (
-    <aside
-      className="callout my-8"
-      role="note"
-      style={type === "info" ? undefined : ({ "--tone": "var(--cinnabar)" } as React.CSSProperties)}
-    >
+    <aside className="callout my-8" role="note">
       <span className="callout-label block mb-1.5">{label}</span>
       <p className="m-0">
         <Inline text={text} />
@@ -449,7 +444,7 @@ const createCustomComponents = (
 
   a: MarkdownLink,
 
-  // Footnotes (GFM `[^1]`): an ochre numeral in the text, not a link. From 1280px the note
+  // Footnotes (GFM `[^1]`): a red-pencil numeral in the text, not a link. From 1280px the note
   // sits in the right margin, its first baseline on the baseline of the line that cites it
   // (alignMarginNotes, from the two zero-size anchors); narrower, it follows its paragraph.
   sup: ({ children, node, ...props }: any) => {
@@ -472,10 +467,10 @@ const createCustomComponents = (
     )
   },
 
-  // Blockquote: upright, in the secondary ink, with an ochre rule: a quoted passage is a
-  // highlight, and highlights are ochre
+  // Blockquote: upright, in the secondary ink, set off by a red-pencil rule at half
+  // strength, quieter than a callout's edge
   blockquote: ({ children, node, ...props }: any) => (
-    <blockquote className="border-l-2 border-[color-mix(in_oklch,var(--ochre)_70%,transparent)] pl-6 mt-0 mb-6 text-[var(--ink-2)]" {...props}>
+    <blockquote className="border-l-2 border-[color-mix(in_oklch,var(--cinnabar)_50%,transparent)] pl-6 mt-0 mb-6 text-[var(--ink-2)]" {...props}>
       {children}
     </blockquote>
   ),

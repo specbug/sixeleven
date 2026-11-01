@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { SunIcon, MoonIcon, MenuIcon, CloseIcon } from "./icons"
+import { MenuIcon, CloseIcon } from "./icons"
+import ThemeToggle from "./ThemeToggle"
 
 export default function Navigation() {
   const [isDarkMode, setIsDarkMode] = useState(false)
@@ -93,23 +94,11 @@ export default function Navigation() {
               {link.label}
             </Link>
           ))}
-          <button
-            onClick={toggleDarkMode}
-            className={iconButton}
-            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {isDarkMode ? <SunIcon /> : <MoonIcon />}
-          </button>
+          <ThemeToggle isDark={isDarkMode} onToggle={toggleDarkMode} />
         </div>
 
         <div className="md:hidden flex items-center gap-6">
-          <button
-            onClick={toggleDarkMode}
-            className={iconButton}
-            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {isDarkMode ? <SunIcon /> : <MoonIcon />}
-          </button>
+          <ThemeToggle isDark={isDarkMode} onToggle={toggleDarkMode} />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={iconButton}

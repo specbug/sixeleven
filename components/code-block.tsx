@@ -9,9 +9,9 @@ interface CodeBlockProps {
   showLineNumbers?: boolean
 }
 
-// Syntax tinted from the site's four pigments, darkened and quietened so code reads as
-// coloured ink beside the brighter link signal: keywords ultramarine, strings ochre,
-// numbers and constants viridian, tags and properties cinnabar. Comments and punctuation
+// Syntax tinted from the site's pigments, darkened and quietened so code reads as
+// coloured ink beside the brighter link signal: keywords ultramarine, strings violet,
+// numbers and constants a deep rose, tags and properties cinnabar. Comments and punctuation
 // recede in the lighter inks; names stay ink.
 const theme: PrismTheme = {
   plain: { color: "var(--ink)", backgroundColor: "var(--sheet)" },
