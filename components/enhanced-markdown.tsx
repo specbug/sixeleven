@@ -483,7 +483,7 @@ const createCustomComponents = (
     if (!match) {
       return (
         <code
-          className="bg-[var(--grid)] px-[0.3em] py-[0.08em] text-[0.89em] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]"
+          className="bg-[var(--grid)] px-[0.3em] py-[0.08em] text-[0.875em] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]"
           {...props}
         >
           {children}

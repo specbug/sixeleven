@@ -82,5 +82,40 @@ for (const theme of ["light", "dark"]) {
     css += `${sel}{--pen:${uri(path(seed, 1), color, 0.9)};--pen-hover:${uri(path(seed, 1.35), color, 1)}}\n`
   })
 }
+// Loops: the editor's circle around a chosen word, used for the selected sort and tags.
+// An open ellipse drawn as one stroke that overruns its start a little and drifts outward
+// as it goes, the way a hand closes a circle; slightly tilted, its radius wavering. The
+// stroke keeps its width however the loop is stretched (vector-effect: non-scaling-stroke).
+const LOOP_SEEDS = [7, 19, 42]
+function loop(seed) {
+  const r = random(seed)
+  const start = -2.2 + r() * 0.6 // radians; starts upper left
+  const sweep = Math.PI * 2 + 0.35 + r() * 0.25 // overruns the start
+  const tilt = (-4 + r() * 3) * (Math.PI / 180)
+  const phase = r() * 6.28
+  const pts = []
+  for (let i = 0; i <= 64; i++) {
+    const u = i / 64
+    const t = start + sweep * u
+    const grow = 1 - 0.07 + 0.07 * u * 2 // starts a touch inside, ends a touch outside
+    const wob = 1 + 0.025 * Math.sin(3 * t + phase)
+    const x = 47 * Math.cos(t) * grow * wob
+    const y = 40 * Math.sin(t) * grow * wob
+    pts.push(`${(50 + x * Math.cos(tilt) - y * Math.sin(tilt)).toFixed(1)} ${(50 + x * Math.sin(tilt) + y * Math.cos(tilt)).toFixed(1)}`)
+  }
+  return `M${pts.join("L")}`
+}
+const loopUri = (d, color) =>
+  `url("data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 112 112' preserveAspectRatio='none'><path d='${d}' fill='none' stroke='${color}' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>`,
+  ).replace(/'/g, "%27")}")`
+for (const theme of ["light", "dark"]) {
+  const color = oklchToHex(CINNABAR[theme])
+  LOOP_SEEDS.forEach((seed, i) => {
+    const sel = theme === "light" ? `[data-loop="${i}"]` : `.dark [data-loop="${i}"]`
+    css += `${sel}{--loop:${loopUri(loop(seed), color)}}\n`
+  })
+}
+
 writeFileSync(new URL("../app/pencil.css", import.meta.url), css)
-console.log(`app/pencil.css: ${SEEDS.length} strokes × 2 themes, ${css.length} bytes`)
+console.log(`app/pencil.css: ${SEEDS.length} strokes and ${LOOP_SEEDS.length} loops × 2 themes, ${css.length} bytes`)

@@ -116,9 +116,34 @@
   }
 
   code, pre, kbd, samp {
-    font-family: var(--font-mono), ui-monospace, monospace;
+    /* Menlo, as installed with macOS; elsewhere the self-hosted JetBrains Mono, with R Mono
+       filling in the symbols JetBrains Mono lacks. Menlo is Apple's and licensed for Apple
+       systems only, so it is named, never served. */
+    font-family: Menlo, var(--font-mono), var(--font-mono-symbols), ui-monospace, monospace;
     font-feature-settings: normal;
-    font-variant-ligatures: none; /* R Mono joins `--` into a dash */
+    /* JetBrains Mono's ligatures (calt) keep every character's cell width, so columns
+       still align and copied code is unchanged */
+    font-variant-ligatures: contextual;
+  }
+
+  /* Maths: KaTeX's MathML, laid out by the browser in TeX Gyre Pagella Math. 1.15em brings
+     its x-height (0.469) level with R Sans's (0.551). */
+  .katex {
+    font-size: 1.15em;
+    line-height: normal;
+    text-indent: 0;
+  }
+  .katex math {
+    font-family: var(--font-math), math;
+  }
+  /* Display maths (BlockMath): centred, with a step of space above and below */
+  .math-block {
+    margin: 24px 0;
+    text-align: center;
+  }
+  .math-block math {
+    display: block math;
+    margin-inline: auto;
   }
 
   /* Superscripts: Google Sans Flex at 0.66em, raised 0.5em, adding nothing to the line */
@@ -185,6 +210,21 @@
   .pen-block:hover .pen-title,
   .pen-block:focus-visible .pen-title {
     background-image: var(--pen-hover);
+  }
+
+  /* A selected control (the archive's sort and tags): circled in red pencil, the way an
+     editor rings the word they mean. The loop overhangs the word without moving it. */
+  .circled,
+  .tag.circled {
+    position: relative;
+    color: var(--ink);
+  }
+  .circled::before {
+    content: "";
+    position: absolute;
+    inset: -6px -10px -5px -10px;
+    background: var(--loop) center / 100% 100% no-repeat;
+    pointer-events: none;
   }
 
   /* Navigation and controls: no stroke; ink-2, ink on hover */

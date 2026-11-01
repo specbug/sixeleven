@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import { PostListItem } from "./PostListItem"
 import { ChevronIcon, CloseIcon, SearchIcon } from "./icons"
+import { loopFor } from "@/lib/pencil"
 
 interface Post {
   slug: string
@@ -26,8 +27,8 @@ const SORTS: { value: SortOption; label: string }[] = [
 
 const norm = (tag: string) => tag.toLowerCase().trim()
 
-// A selected control is the reader's own state: ink, with an ultramarine mark beneath
-const selected = "text-[var(--ink)] underline decoration-[var(--ultramarine)] decoration-[1.5px] underline-offset-[5px]"
+// A selected control is circled in red pencil (.circled), each loop drawn from its label
+const circled = (key: string) => ({ className: "circled", "data-loop": loopFor(key) })
 
 export default function SearchPosts({ posts }: { posts: Post[] }) {
   const [query, setQuery] = useState("")
@@ -77,7 +78,7 @@ export default function SearchPosts({ posts }: { posts: Post[] }) {
   return (
     <div>
       {/* Search */}
-      <label className="relative flex items-center border-b border-[var(--rule)] focus-within:border-[var(--ultramarine)] transition-colors">
+      <label className="relative flex items-center border-b border-[var(--rule)] focus-within:border-[var(--ink-2)] transition-colors">
         <span className="text-[var(--ink-3)]">
           <SearchIcon />
         </span>
@@ -104,7 +105,7 @@ export default function SearchPosts({ posts }: { posts: Post[] }) {
         </button>
         <div className="flex gap-4" role="group" aria-label="Sort">
           {SORTS.map((s) => (
-            <button key={s.value} onClick={() => setSort(s.value)} aria-pressed={sort === s.value} className={sort === s.value ? selected : "nav-link"}>
+            <button key={s.value} onClick={() => setSort(s.value)} aria-pressed={sort === s.value} {...(sort === s.value ? circled(s.value) : { className: "nav-link" })}>
               {s.label}
             </button>
           ))}
@@ -114,7 +115,7 @@ export default function SearchPosts({ posts }: { posts: Post[] }) {
       {showTags && (
         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 font-flex text-[0.8125rem]">
           {allTags.map((tag) => (
-            <button key={tag} onClick={() => toggleTag(tag)} aria-pressed={tags.includes(tag)} className={tags.includes(tag) ? selected : "nav-link"}>
+            <button key={tag} onClick={() => toggleTag(tag)} aria-pressed={tags.includes(tag)} {...(tags.includes(tag) ? circled(tag) : { className: "nav-link" })}>
               {tag}
             </button>
           ))}
@@ -154,7 +155,7 @@ export default function SearchPosts({ posts }: { posts: Post[] }) {
                       <ul className="flex flex-wrap gap-x-3 gap-y-1 -mt-0">
                         {post.tags.map((tag) => (
                           <li key={tag}>
-                            <button onClick={() => toggleTag(tag)} aria-pressed={tags.includes(norm(tag))} className={`tag ${tags.includes(norm(tag)) ? selected : "hover:text-[var(--ink)] transition-colors"}`}>
+                            <button onClick={() => toggleTag(tag)} aria-pressed={tags.includes(norm(tag))} {...(tags.includes(norm(tag)) ? { ...circled(norm(tag)), className: "tag circled" } : { className: "tag hover:text-[var(--ink)] transition-colors" })}>
                               {tag}
                             </button>
                           </li>
