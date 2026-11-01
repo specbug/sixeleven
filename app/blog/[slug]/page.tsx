@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getPostBySlug, getAllPosts, parseHeadings } from "@/lib/mdx"
-import TableOfContents, { TocRail } from "@/components/TableOfContents"
-import ReadingProgressBar from "@/components/ReadingProgressBar"
+import TableOfContents from "@/components/TableOfContents"
+import Rule from "@/components/Rule"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import BlogPostSchema from "@/components/blog-schema"
 import PostCover from "@/components/PostCover"
+import { fullDate, smartQuotes } from "@/lib/typography"
 
 interface BlogPostPageProps {
   params: {
@@ -92,63 +93,33 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         slug={post.slug}
         image={post.cover ? `${baseUrl}${post.cover}` : undefined}
       />
-      <article className="max-w-none relative">
-        <ReadingProgressBar />
+      <article className="relative">
+        <Rule headings={headings} readingTime={post.readingTime ? Number.parseInt(post.readingTime, 10) : undefined} />
 
-        <header className="mb-8">
-          {/* Date and reading time - uppercase meta */}
-          <div className="uppercase-meta text-[var(--foreground-subtle)] mb-3">
-            <time dateTime={post.date}>
-              {new Date(post.date).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              }).toLowerCase()}
-            </time>
-            {post.readingTime && <span> · {post.readingTime} min read</span>}
-          </div>
+        <header className="mb-10">
+          <p className="meta mb-4">
+            <time dateTime={post.date}>{fullDate(post.date)}</time>
+            {post.readingTime && <> · {post.readingTime}&nbsp;min read</>}
+          </p>
 
-          {/* Title - Title Case, as authored in frontmatter */}
-          <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] leading-[1.08] font-bold tracking-[-0.015em] mb-4">
-            {post.title}
-          </h1>
+          {/* Title Case, as authored */}
+          <h1 className="title text-[clamp(2rem,9vw,2.375rem)] sm:text-[2.75rem] md:text-[3.25rem] [overflow-wrap:break-word] mb-4">{smartQuotes(post.title)}</h1>
 
-          {/* Lede - the excerpt, so the post opens with what it is about */}
+          {/* The excerpt as a lede, so the post opens with what it is about */}
           {post.excerpt && (
-            <p className="text-[1.1875rem] md:text-[1.3125rem] leading-[1.45] text-[var(--foreground-muted)] mb-4">
-              {post.excerpt}
-            </p>
-          )}
-
-          {/* Tags - plain text, lowercase like identifiers */}
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-x-3 gap-y-1">
-              {post.tags.map((tag: string) => (
-                <span key={tag} className="tag">
-                  {tag}
-                </span>
-              ))}
-            </div>
+            <p className="text-[1.1875rem] md:text-[1.3125rem] leading-[1.45] text-[var(--ink-2)]">{smartQuotes(post.excerpt)}</p>
           )}
         </header>
 
-        {/* Cover - sits between the title block and the text, on the same plate as
-            the post's figures, with its credit beneath */}
+        {/* The cover: the post's first figure, on the same plate as the rest */}
         {post.cover && <PostCover src={post.cover} alt={post.coverAlt} credit={post.coverCredit} />}
 
-        {/* Contents - a toggle in the column; on wide screens, a sticky rail in the margin */}
         <div className="xl:hidden">
           <TableOfContents headings={headings} />
         </div>
 
-        <div className="relative">
-          <TocRail headings={headings} />
-
-          {/* Article content - inherits the 17px/1.6 body; long URLs and identifiers
-              wrap instead of overflowing on phones */}
-          <div className="max-w-none break-words">
-            <EnhancedMarkdown content={post.content} />
-          </div>
+        <div data-post-body className="relative break-words">
+          <EnhancedMarkdown content={post.content} />
         </div>
       </article>
     </>

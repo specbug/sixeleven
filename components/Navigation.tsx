@@ -4,44 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-
-// Minimal, geometric icons inspired by Braun/Rams design
-// Simple circles and lines - no unnecessary detail
-function SunIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-    </svg>
-  )
-}
-
-function MoonIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-    </svg>
-  )
-}
-
-function MenuIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-  )
-}
-
-function CloseIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  )
-}
+import { SunIcon, MoonIcon, MenuIcon, CloseIcon } from "./icons"
 
 export default function Navigation() {
   const [isDarkMode, setIsDarkMode] = useState(false)
@@ -107,80 +70,66 @@ export default function Navigation() {
     { href: "/about", label: "About" },
   ]
 
+  const current = (href: string) => (pathname === href || pathname.startsWith(href + "/") ? "page" : undefined)
+  const iconButton = "p-2 -m-2 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 h-16 bg-[var(--background)] border-b transition-[transform,border-color] duration-300 ${
+      aria-label="Site"
+      className={`fixed top-0 left-0 right-0 z-50 h-16 bg-[var(--ground)] border-b transition-[transform,border-color] duration-300 ${
         !isVisible ? "-translate-y-full" : "translate-y-0"
-      } ${isScrolled || mobileMenuOpen ? "border-[var(--border)]" : "border-transparent"}`}
+      } ${isScrolled || mobileMenuOpen ? "border-[var(--rule)]" : "border-transparent"}`}
     >
       <div className="h-full max-w-[640px] mx-auto px-6 md:px-0 flex justify-between items-center">
-        {/* Logo with image and text */}
-        <Link href="/" className="flex items-center gap-2 font-logo hover:opacity-80 transition-opacity">
-          <Image src="/logo.png" alt="sixeleven logo" width={20} height={20} className="w-5 h-5" />
-          <span className="text-xl font-bold tracking-tight text-[var(--foreground)] lowercase">
-            sixeleven
-          </span>
+        {/* The wordmark: Et Book Bold */}
+        <Link href="/" className="flex items-center gap-2 font-logo text-[var(--ink)]">
+          <Image src="/logo.png" alt="" width={20} height={20} className="w-5 h-5" />
+          <span className="text-[2rem] font-bold tracking-tight lowercase leading-none">sixeleven</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-sm transition-colors ${
-                pathname === link.href
-                  ? "text-[var(--braun-orange)]"
-                  : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
-              }`}
-            >
+            <Link key={link.href} href={link.href} aria-current={current(link.href)} className="nav-link font-flex text-[0.875rem]">
               {link.label}
             </Link>
           ))}
-
-          {/* Dark mode toggle */}
           <button
             onClick={toggleDarkMode}
-            className="p-2 text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+            className={iconButton}
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {isDarkMode ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+            {isDarkMode ? <SunIcon /> : <MoonIcon />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        <div className="md:hidden flex items-center space-x-2">
+        <div className="md:hidden flex items-center gap-6">
           <button
             onClick={toggleDarkMode}
-            className="p-2 text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
+            className={iconButton}
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {isDarkMode ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+            {isDarkMode ? <SunIcon /> : <MoonIcon />}
           </button>
-
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[var(--foreground-muted)] hover:text-[var(--braun-orange)] transition-colors"
-            aria-label="Toggle mobile menu"
+            className={iconButton}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <CloseIcon size={18} /> : <MenuIcon size={18} />}
+            {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
         </div>
       </div>
 
-      {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-[var(--background)] border-b border-[var(--border)] py-2">
+        <div className="md:hidden absolute top-16 left-0 right-0 bg-[var(--ground)] border-b border-[var(--rule)] py-2">
           <div className="max-w-[640px] mx-auto px-6 flex flex-col">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block py-3 text-base transition-colors ${
-                  pathname === link.href
-                    ? "text-[var(--braun-orange)]"
-                    : "text-[var(--foreground-muted)] hover:text-[var(--braun-orange)]"
-                }`}
+                aria-current={current(link.href)}
+                className="nav-link font-flex block py-3 text-base"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}

@@ -2,125 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dieter Rams inspired design system
-   "Less, but better" - every element must justify its existence */
+/* The editor's desk: a clean proof, ink, and four pigments with one meaning each. */
 
 @layer base {
   :root {
-    /* Braun orange - interactive accents and quiet quote rules */
-    --braun-orange: #ed8008;
-    --braun-orange-hover: #d67307;
-    --braun-orange-muted: rgba(237, 128, 8, 0.12);
-    --quote-border: color-mix(in srgb, var(--primary) 55%, transparent);
+    /* Paper and ink: a near-white proof with a trace of warmth */
+    --ground: oklch(0.983 0.003 95);
+    --sheet: oklch(0.995 0.002 95); /* a plate or panel on the ground */
+    --ink: oklch(0.17 0.004 60);
+    --ink-2: oklch(0.45 0.005 60); /* secondary text, notes, readouts */
+    --ink-3: oklch(0.6 0.005 60); /* tertiary: tags, folios, line numbers */
+    --rule: oklch(0.87 0.004 80); /* hairlines */
+    --grid: oklch(0.925 0.003 80); /* chart gridlines, the inline-code wash */
 
-    /* Dieter Rams / Braun callout palette */
-    --braun-grey: #d9d2c6;
-    --braun-grey-muted: #f5f3ef;
-    --braun-cream: #bf7c2a;
-    --braun-cream-muted: #faf6ed;
-    --braun-red: #ad1d1d;
-    --braun-red-muted: #faf0f0;
+    /* Pigments: the signal code. Ink does everything else. */
+    --cinnabar: oklch(0.56 0.2 30); /* something you can follow */
+    --ochre: oklch(0.68 0.14 70); /* notes: footnote and sidenote numerals */
+    --viridian: oklch(0.48 0.09 172); /* measured or computed values */
+    --ultramarine: oklch(0.48 0.17 262); /* you: your position, your selection */
 
-    /* Light mode — warm paper, graphite ink (never pure #fff / #000) */
-    --background: oklch(0.985 0.004 85);
-    --surface: oklch(0.962 0.007 85);
-    --plate: oklch(0.945 0.010 85); /* behind figures: a step darker than code */
-    --foreground: oklch(0.20 0.008 265);
-    --foreground-muted: oklch(0.47 0.008 265);
-    --foreground-subtle: oklch(0.55 0.008 265); /* ≥4.5:1 on paper, safe for 12px meta */
-    --foreground-body: oklch(0.20 0.008 265); /* near-ink, 17.4:1 on paper */
     --body-weight: 450;
-    --border: oklch(0.905 0.008 85);
-    --input: oklch(0.905 0.008 85);
-    --ring: #ed8008;
-
-    /* Syntax — ink tones plus the orange family; one cool neutral for keywords */
-    --code-bg: var(--surface);
-    --code-fg: oklch(0.30 0.008 265);
-    --code-comment: oklch(0.58 0.008 265);
-    --code-punct: oklch(0.52 0.008 265);
-    --code-keyword: oklch(0.42 0.05 255);
-    --code-string: oklch(0.48 0.10 60);
-    --code-number: oklch(0.56 0.15 48);
-    --code-function: oklch(0.22 0.008 265);
-    --code-tag: oklch(0.47 0.11 35);
-    --code-line-number: oklch(0.72 0.006 85);
-
-    /* Motion — stolid kinetics */
-    --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
-
-    /* Legacy variables for compatibility */
-    --card: var(--background);
-    --card-foreground: var(--foreground);
-    --popover: var(--background);
-    --popover-foreground: var(--foreground);
-    --primary: #ed8008;
-    --primary-foreground: #ffffff;
-    --secondary: var(--surface);
-    --secondary-foreground: var(--foreground);
-    --muted: var(--surface);
-    --muted-foreground: var(--foreground-muted);
-    --accent: #ed8008;
-    --accent-foreground: #ffffff;
-    --destructive: #dc2626;
-    --destructive-foreground: #ffffff;
-
-    /* No rounded corners */
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     --radius: 0;
+
+    /* Names the shadcn primitives in components/ui still read */
+    --background: var(--ground);
+    --foreground: var(--ink);
+    --border: var(--rule);
+    --input: var(--rule);
+    --ring: var(--ultramarine);
 
     color-scheme: light;
   }
 
   .dark {
+    /* Warm graphite */
+    --ground: oklch(0.18 0.004 60);
+    --sheet: oklch(0.205 0.004 60);
+    --ink: oklch(0.92 0.004 85);
+    --ink-2: oklch(0.7 0.004 70);
+    --ink-3: oklch(0.55 0.004 70);
+    --rule: oklch(0.3 0.004 60);
+    --grid: oklch(0.25 0.004 60);
+
+    --cinnabar: oklch(0.68 0.17 32);
+    --ochre: oklch(0.78 0.13 75);
+    --viridian: oklch(0.72 0.1 172);
+    --ultramarine: oklch(0.7 0.13 262);
+
+    /* Light text on a dark ground blooms; a step lighter */
+    --body-weight: 425;
+
     color-scheme: dark;
-
-    /* Dark mode — warm graphite, not inverted black */
-    --background: oklch(0.18 0.004 75);
-    --surface: oklch(0.215 0.005 75);
-    --plate: oklch(0.225 0.005 75);
-    --foreground: oklch(0.93 0.006 85);
-    --foreground-muted: oklch(0.71 0.006 85);
-    --foreground-subtle: oklch(0.60 0.006 85);
-    --foreground-body: oklch(0.92 0.006 85);
-    --body-weight: 425; /* light text on dark blooms; a step lighter */
-    --border: oklch(0.29 0.005 75);
-    --input: oklch(0.29 0.005 75);
-
-    --code-fg: oklch(0.86 0.006 85);
-    --code-comment: oklch(0.58 0.006 85);
-    --code-punct: oklch(0.66 0.006 85);
-    --code-keyword: oklch(0.76 0.05 250);
-    --code-string: oklch(0.78 0.09 75);
-    --code-number: oklch(0.74 0.14 52);
-    --code-function: oklch(0.94 0.006 85);
-    --code-tag: oklch(0.72 0.11 40);
-    --code-line-number: oklch(0.40 0.005 75);
-
-    /* Dieter Rams / Braun callout palette - dark mode */
-    --braun-grey: #736356;
-    --braun-grey-muted: rgba(115, 99, 86, 0.15);
-    --braun-cream: #bf7c2a;
-    --braun-cream-muted: rgba(191, 124, 42, 0.12);
-    --braun-red: #ad1d1d;
-    --braun-red-muted: rgba(173, 29, 29, 0.12);
-
-    /* Legacy variables for compatibility */
-    --card: var(--surface);
-    --card-foreground: var(--foreground);
-    --popover: var(--surface);
-    --popover-foreground: var(--foreground);
-    --primary: #ed8008;
-    --primary-foreground: #ffffff;
-    --secondary: var(--surface);
-    --secondary-foreground: var(--foreground);
-    --muted: var(--surface);
-    --muted-foreground: var(--foreground-muted);
-    --accent: #ed8008;
-    --accent-foreground: #ffffff;
   }
 
   * {
-    border-color: var(--border);
+    border-color: var(--rule);
   }
 
   html {
@@ -130,72 +67,71 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--ground);
+    color: var(--ink);
     font-weight: var(--body-weight);
-    font-size: 1.0625rem;
-    line-height: 1.6;
+    font-size: 1.15625rem; /* 18.5px */
+    line-height: 1.62;
   }
 
-  /* Headings - Google Sans (Text design); R Sans stays the reading face. The face's own
-     defaults, not the R Sans character variants set on html. */
+  /* Titles and headings: Literata. Sizes and optical sizes are set where they are used. */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading), var(--font-rsans), system-ui, sans-serif;
-    font-feature-settings: normal;
-    color: var(--foreground);
+    font-family: var(--font-literata), Georgia, serif;
+    font-feature-settings: "kern" 1, "liga" 1;
+    font-weight: 560;
+    font-variation-settings: "opsz" 24;
+    color: var(--ink);
     text-wrap: balance;
   }
 
-  /* No orphans or ragged last lines in reading text */
   p, li, blockquote, figcaption {
     text-wrap: pretty;
   }
 
-  h1 {
-    font-weight: 600;
-    letter-spacing: -0.02em;
+  p {
+    hanging-punctuation: first;
   }
 
-  h2, h3 {
-    font-weight: 600;
-    letter-spacing: -0.01em;
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 
-  h4, h5, h6 {
+  strong, b {
+    font-weight: 620;
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-feature-settings: normal;
+    font-variant-ligatures: none; /* R Mono joins `--` into a dash */
+  }
+
+  /* Superscripts: Google Sans Flex at 0.66em, raised 0.5em, adding nothing to the line */
+  sup {
+    font-family: var(--font-flex), system-ui, sans-serif;
+    font-feature-settings: "tnum" 1;
+    font-size: 0.66em;
+    line-height: 0;
+    vertical-align: baseline;
+    position: relative;
+    top: -0.758em; /* 0.5em of the surrounding text */
     font-weight: 500;
   }
 
-  /* Links - orange accent, underline on hover */
-  a {
-    color: var(--braun-orange);
-    text-decoration: none;
-    transition: color 0.18s var(--ease-out);
+  /* Focus is a position: ultramarine */
+  :focus-visible {
+    outline: 1.5px solid var(--ultramarine);
+    outline-offset: 3px;
   }
 
-  a:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
-  }
-
-  /* Code */
-  code, pre, kbd {
-    font-family: var(--font-mono), ui-monospace, monospace;
-  }
-
-  /* Focus states - orange ring */
-  *:focus-visible {
-    outline: 2px solid var(--braun-orange);
-    outline-offset: 2px;
-  }
-
-  /* Selection */
   ::selection {
-    background-color: var(--braun-orange-muted);
-    color: var(--foreground);
+    background-color: color-mix(in oklch, var(--cinnabar) 14%, transparent);
+    color: inherit;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -208,106 +144,102 @@
   }
 }
 
-@layer utilities {
-  /* Block links that should not underline on hover */
-  .no-underline,
-  .no-underline:hover {
-    text-decoration: none !important;
+@layer components {
+  /* The red pencil. Ink text over a hand-drawn cinnabar stroke a hair below the baseline;
+     the stroke is a background, cloned onto every line the link wraps across. Hover
+     thickens it to full strength; the text never changes colour. The stroke's variant
+     comes from data-pen (lib/pencil.ts); --pen-drop places it for the face in use. */
+  .pen {
+    --pen-drop: 0.2em;
+    color: inherit;
+    background-image: var(--pen);
+    background-repeat: no-repeat;
+    background-size: 100% 5px;
+    background-position: left 0 bottom calc(var(--pen-drop) - 2.5px);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .pen:hover {
+    background-image: var(--pen-hover);
   }
 
-  /* Lowercase utility for UI elements */
-  .lowercase-ui {
+  /* A block link (a list entry): the stroke appears under its title on hover only */
+  .pen-block .pen-title {
+    --pen-drop: 0.13em;
+    background-repeat: no-repeat;
+    background-size: 100% 5px;
+    background-position: left 0 bottom calc(var(--pen-drop) - 2.5px);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .pen-block:hover .pen-title,
+  .pen-block:focus-visible .pen-title {
+    background-image: var(--pen-hover);
+  }
+
+  /* Navigation and controls: no stroke; ink-2, ink on hover */
+  .nav-link {
+    color: var(--ink-2);
+    transition: color 200ms var(--ease);
+  }
+  .nav-link:hover,
+  .nav-link[aria-current="page"],
+  .nav-link[aria-current="location"] {
+    color: var(--ink);
+  }
+
+  /* Small text and numbers: Google Sans Flex */
+  .meta {
+    font-family: var(--font-flex), system-ui, sans-serif;
+    font-feature-settings: "tnum" 1;
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.4;
+    font-weight: 450;
+    color: var(--ink-2);
+  }
+
+  .tag {
+    font-family: var(--font-flex), system-ui, sans-serif;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    font-weight: 450;
+    color: var(--ink-3);
     text-transform: lowercase;
   }
 
-  /* Uppercase for meta text */
-  /* Meta (dates, durations) - the monospace signal: this is data, not prose */
-  .uppercase-meta {
-    font-family: var(--font-mono), ui-monospace, monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.6875rem;
-    font-variant-numeric: tabular-nums;
+  /* Display: Literata at its largest optical size */
+  .title {
+    font-family: var(--font-literata), Georgia, serif;
+    font-variation-settings: "opsz" 72;
+    font-weight: 470;
+    letter-spacing: -0.012em;
+    line-height: 1.06;
+    text-wrap: balance;
   }
 
-  /* No border-radius override */
-  .no-radius {
-    border-radius: 0 !important;
+  /* Notes and captions */
+  .note-text {
+    font-size: 0.84375rem; /* 13.5px */
+    line-height: 1.48;
+    color: var(--ink-2);
+    font-weight: var(--body-weight);
   }
 
-  /* Hide browser's default clear button */
-  input[type="search"]::-webkit-search-cancel-button,
-  input[type="text"]::-webkit-search-cancel-button {
-    -webkit-appearance: none;
+  .note-num {
+    font-family: var(--font-flex), system-ui, sans-serif;
+    font-feature-settings: "tnum" 1;
+    font-weight: 500;
+    color: var(--ochre);
+  }
+
+  /* The end-of-post footnote list is replaced by notes beside (or under) their lines */
+  section[data-footnotes] {
     display: none;
   }
-}
 
-@layer components {
-  /* Braun orange button */
-  .btn-braun {
-    background-color: var(--braun-orange);
-    color: white;
-    font-weight: 500;
-    padding: 0.5rem 1.25rem;
-    border: none;
-    transition: background-color 0.18s var(--ease-out);
-  }
-
-  .btn-braun:hover {
-    background-color: var(--braun-orange-hover);
-    text-decoration: none;
-  }
-
-  /* Ghost button */
-  .btn-ghost {
-    background-color: transparent;
-    color: var(--foreground);
-    border: 1px solid var(--border);
-    font-weight: 500;
-    padding: 0.5rem 1.25rem;
-    transition: border-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
-  }
-
-  .btn-ghost:hover {
-    border-color: var(--braun-orange);
-    color: var(--braun-orange);
-    text-decoration: none;
-  }
-
-  /* GFM footnotes - the notes close the post under a hairline in the caption size.
-     On wide screens they appear as sidenotes beside their paragraph instead, so the
-     block is hidden there. */
-  section[data-footnotes] {
-    margin-top: 3rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--border);
-    font-size: 0.875rem;
-    line-height: 1.55;
-    color: var(--foreground-muted);
-  }
-  section[data-footnotes] ol { margin-bottom: 0; color: var(--foreground-muted); }
-  section[data-footnotes] p { margin-bottom: 0.5rem; color: var(--foreground-muted); }
-  section[data-footnotes] a[data-footnote-backref] { text-decoration: none; }
-  @media (min-width: 1280px) {
-    section[data-footnotes] { display: none; }
-  }
-
-  /* Tag - plain text, no pill styling; lowercase because tags are identifiers */
-  .tag {
-    font-size: 0.75rem;
-    color: var(--foreground-subtle);
-    text-transform: lowercase;
-  }
-
-  .tag-interactive {
-    color: var(--foreground-subtle);
-    cursor: pointer;
-    transition: color 0.18s var(--ease-out);
-  }
-
-  .tag-interactive:hover,
-  .tag-interactive.active {
-    color: var(--braun-orange);
+  /* Hide the browser's own clear button in search fields */
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    display: none;
   }
 }

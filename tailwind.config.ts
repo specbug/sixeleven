@@ -1,224 +1,52 @@
 import type { Config } from "tailwindcss"
 
+// Tokens live in app/globals.css; this maps them to utilities. No stock palette, no
+// radius, no shadows.
 const config: Config = {
   darkMode: ["class"],
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "*.{js,ts,jsx,tsx,mdx}"],
+  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "./lib/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      // Dieter Rams / Braun inspired color palette
       colors: {
-        // The iconic Braun orange - interactive accents and quiet quote rules
-        braun: {
-          orange: "#ed8008",
-          "orange-hover": "#d67307",
-          "orange-muted": "rgba(237, 128, 8, 0.12)",
-        },
-        // Light mode neutrals
-        rams: {
-          white: "#ffffff",
-          "off-white": "#f8f8f8",
-          "near-black": "#1a1a1a",
-          "dark-gray": "#666666",
-          "light-gray": "#e0e0e0",
-          "muted-gray": "#999999",
-          // Dark mode
-          "dark-bg": "#0a0a0a",
-          "dark-surface": "#141414",
-          "dark-text": "#f0f0f0",
-          "dark-muted": "#888888",
-        },
-        // Legacy color mappings for compatibility
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring)",
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        primary: {
-          DEFAULT: "#ed8008",
-          foreground: "#ffffff",
-        },
-        secondary: {
-          DEFAULT: "#f8f8f8",
-          foreground: "#1a1a1a",
-        },
-        muted: {
-          DEFAULT: "#f8f8f8",
-          foreground: "#666666",
-        },
-        accent: {
-          DEFAULT: "#ed8008",
-          foreground: "#ffffff",
-        },
-        destructive: {
-          DEFAULT: "#dc2626",
-          foreground: "#ffffff",
-        },
-        popover: {
-          DEFAULT: "#ffffff",
-          foreground: "#1a1a1a",
-        },
-        card: {
-          DEFAULT: "#ffffff",
-          foreground: "#1a1a1a",
-        },
+        ground: "var(--ground)",
+        sheet: "var(--sheet)",
+        ink: { DEFAULT: "var(--ink)", 2: "var(--ink-2)", 3: "var(--ink-3)" },
+        rule: "var(--rule)",
+        grid: "var(--grid)",
+        cinnabar: "var(--cinnabar)",
+        ochre: "var(--ochre)",
+        viridian: "var(--viridian)",
+        ultramarine: "var(--ultramarine)",
+        // Names the shadcn primitives in components/ui still use
+        border: "var(--rule)",
+        input: "var(--rule)",
+        ring: "var(--ultramarine)",
+        background: "var(--ground)",
+        foreground: "var(--ink)",
+        primary: { DEFAULT: "var(--ink)", foreground: "var(--ground)" },
+        secondary: { DEFAULT: "var(--sheet)", foreground: "var(--ink)" },
+        muted: { DEFAULT: "var(--sheet)", foreground: "var(--ink-2)" },
+        accent: { DEFAULT: "var(--sheet)", foreground: "var(--ink)" },
+        destructive: { DEFAULT: "var(--cinnabar)", foreground: "var(--ground)" },
+        popover: { DEFAULT: "var(--sheet)", foreground: "var(--ink)" },
+        card: { DEFAULT: "var(--sheet)", foreground: "var(--ink)" },
       },
-      // No rounded corners - Rams aesthetic
-      borderRadius: {
-        lg: "0",
-        md: "0",
-        sm: "0",
-        DEFAULT: "0",
-      },
-      // R Sans as primary font
+      borderRadius: { lg: "0", md: "0", sm: "0", DEFAULT: "0" },
+      boxShadow: { sm: "none", DEFAULT: "none", md: "none", lg: "none" },
       fontFamily: {
         sans: ["var(--font-rsans)", "system-ui", "sans-serif"],
+        display: ["var(--font-literata)", "Georgia", "serif"],
+        flex: ["var(--font-flex)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
-        logo: ["var(--font-logo)", "var(--font-rsans)", "system-ui", "sans-serif"],
+        logo: ["var(--font-logo)", "var(--font-literata)", "serif"],
       },
-      // Type scale based on 1.333 perfect fourth
-      fontSize: {
-        "xs": ["0.75rem", { lineHeight: "1.5", letterSpacing: "0.05em" }],
-        "sm": ["0.875rem", { lineHeight: "1.5" }],
-        "base": ["1.0625rem", { lineHeight: "1.6" }],
-        "lg": ["1.5rem", { lineHeight: "1.4" }],
-        "xl": ["2rem", { lineHeight: "1.2" }],
-        "2xl": ["2.5rem", { lineHeight: "1.15" }],
-        "3xl": ["3rem", { lineHeight: "1.1" }],
-        "4xl": ["4rem", { lineHeight: "1.05" }],
-      },
-      // Stolid kinetics - confident, weighty easing; never the browser default
       transitionTimingFunction: {
         DEFAULT: "cubic-bezier(0.2, 0.7, 0.2, 1)",
         out: "cubic-bezier(0.2, 0.7, 0.2, 1)",
       },
-      // 8px base spacing system
-      spacing: {
-        "18": "4.5rem",
-        "22": "5.5rem",
-      },
-      // Prose / Typography plugin configuration
-      typography: {
-        DEFAULT: {
-          css: {
-            maxWidth: "640px",
-            color: "var(--foreground-body)",
-            fontFamily: "var(--font-rsans), system-ui, sans-serif",
-            fontSize: "1.0625rem",
-            fontWeight: "inherit",
-            lineHeight: "1.6",
-            letterSpacing: "0",
-            "--tw-prose-body": "var(--foreground-body)",
-            "--tw-prose-headings": "var(--foreground)",
-            "--tw-prose-links": "var(--foreground)",
-            "--tw-prose-bold": "var(--foreground)",
-            "--tw-prose-quotes": "var(--foreground-muted)",
-            "--tw-prose-code": "var(--foreground)",
-            "--tw-prose-pre-bg": "var(--code-bg)",
-            "--tw-prose-bullets": "var(--foreground-subtle)",
-            "--tw-prose-counters": "var(--foreground-subtle)",
-            "--tw-prose-hr": "var(--border)",
-            p: {
-              marginTop: "1em",
-              marginBottom: "1em",
-            },
-            // Blog content headings stay normal case
-            h1: {
-              fontWeight: "600",
-              letterSpacing: "-0.02em",
-              marginTop: "0",
-              marginBottom: "0.5em",
-            },
-            h2: {
-              fontWeight: "600",
-              letterSpacing: "-0.01em",
-              marginTop: "2em",
-              marginBottom: "0.5em",
-            },
-            h3: {
-              fontWeight: "600",
-              letterSpacing: "0",
-              marginTop: "1.5em",
-              marginBottom: "0.5em",
-            },
-            h4: {
-              fontWeight: "500",
-              marginTop: "1.25em",
-              marginBottom: "0.5em",
-            },
-            // Links - orange, underline on hover
-            // Links - ink with an orange hairline; color is a guest, not a host
-            a: {
-              color: "var(--foreground)",
-              textDecorationLine: "underline",
-              textDecorationColor: "var(--braun-orange)",
-              textDecorationThickness: "1px",
-              textUnderlineOffset: "0.2em",
-              fontWeight: "inherit",
-              "&:hover": {
-                color: "var(--braun-orange)",
-              },
-            },
-            strong: {
-              fontWeight: "600",
-            },
-            // Blockquote - left border, no italics (Rams preferred clean type)
-            blockquote: {
-              borderLeftWidth: "2px",
-              borderLeftColor: "var(--quote-border)",
-              paddingLeft: "1.5rem",
-              fontStyle: "normal",
-              color: "var(--foreground-muted)",
-              quotes: "none",
-            },
-            // Code - 4px blocks, 2px inline (matches the markdown renderer)
-            code: {
-              fontFamily: "var(--font-mono)",
-              fontWeight: "400",
-              // R Mono x-height 0.520 vs R Sans 0.525: 0.89em keeps code's
-              // x-height at 0.88 of the surrounding text
-              fontSize: "0.89em",
-              backgroundColor: "var(--surface)",
-              padding: "0.1em 0.3em",
-              borderRadius: "2px",
-              "&::before": { content: "none" },
-              "&::after": { content: "none" },
-            },
-            pre: {
-              fontFamily: "var(--font-mono)",
-              backgroundColor: "var(--code-bg)",
-              borderRadius: "4px",
-              padding: "1.25rem 1.5rem",
-              overflow: "auto",
-            },
-            // Images - no rounded corners
-            img: {
-              borderRadius: "0",
-            },
-            // Lists
-            "ul > li": {
-              paddingLeft: "0.25em",
-            },
-            "ol > li": {
-              paddingLeft: "0.25em",
-            },
-          },
-        },
-        // Dark mode prose - tokens already flip under .dark
-        invert: {
-          css: {
-            "--tw-prose-body": "var(--foreground-body)",
-            "--tw-prose-headings": "var(--foreground)",
-            "--tw-prose-links": "var(--foreground)",
-            "--tw-prose-bold": "var(--foreground)",
-            "--tw-prose-quotes": "var(--foreground-muted)",
-            "--tw-prose-code": "var(--foreground)",
-            "--tw-prose-pre-bg": "var(--code-bg)",
-          },
-        },
-      },
     },
   },
-  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")],
 }
 
 export default config

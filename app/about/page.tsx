@@ -16,15 +16,14 @@ export default async function AboutPage() {
 
   return (
     <div>
-      {/* No heading - URL provides context (Rams: no unnecessary elements) */}
-      <article className="prose dark:prose-invert max-w-none">
+      {/* No heading: the page is the text. break-words lets the key fingerprint wrap on phones. */}
+      <article className="break-words">
         <EnhancedMarkdown content={content} />
       </article>
 
       <SpecialCode />
 
-      {/* Subtle separator before social links */}
-      <div className="mt-6 pt-6 border-t border-[var(--border)]">
+      <div className="mt-8 pt-6 border-t border-[var(--rule)]">
         <SocialLinks />
       </div>
     </div>

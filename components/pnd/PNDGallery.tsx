@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
+import { useState } from "react"
 import Image from "next/image"
+import { PLATE, PLATE_OUTER } from "../plate"
 
 // ---------------------------------------------------------------------------
 // Data
@@ -91,248 +92,74 @@ const entries: Entry[] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Hooks
+// Page
 // ---------------------------------------------------------------------------
 
-function useReveal(threshold = 0.12) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    // Respect prefers-reduced-motion
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-    if (prefersReduced) {
-      setVisible(true)
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.unobserve(el)
-        }
-      },
-      { threshold, rootMargin: "0px 0px -40px 0px" }
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [threshold])
-
-  return { ref, visible }
-}
-
-function useMounted() {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-    if (prefersReduced) {
-      setMounted(true)
-      return
-    }
-    const id = setTimeout(() => setMounted(true), 100)
-    return () => clearTimeout(id)
-  }, [])
-  return mounted
-}
-
-// ---------------------------------------------------------------------------
-// Shared reveal primitive
-// ---------------------------------------------------------------------------
-
-function Reveal({
-  children,
-  visible,
-  delay = 0,
-  className = "",
-}: {
-  children: ReactNode
-  visible: boolean
-  delay?: number
-  className?: string
-}) {
-  return (
-    <div
-      className={`transition-all duration-700 ease-out ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-      } ${className}`}
-      style={{ transitionDelay: `${delay}ms` } as CSSProperties}
-    >
-      {children}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Hero
-// ---------------------------------------------------------------------------
-
+// Everything is on the page from the first paint: no reveals, no drawn-in rules.
 function Hero() {
-  const mounted = useMounted()
-
   return (
-    <section className="min-h-[50vh] flex flex-col justify-end pb-20">
-      <Reveal visible={mounted} delay={200}>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-[-0.015em] leading-[1.08]">
-          Post Narrative Depression
-        </h1>
-      </Reveal>
-
-      <Reveal visible={mounted} delay={350}>
-        <p className="text-[var(--foreground-subtle)] text-sm italic mt-3 max-w-[520px]">
-          The cognitive overhang of re-entering reality after deep immersion in
-          a fictional world.
-        </p>
-      </Reveal>
-
-      {/* Orange divider line — draws left-to-right */}
-      <div
-        className={`h-px bg-[var(--braun-orange)] mt-6 mb-6 origin-left transition-transform duration-700 ease-out ${
-          mounted ? "scale-x-100" : "scale-x-0"
-        }`}
-        style={{ transitionDelay: "500ms" } as CSSProperties}
-      />
-
-      <Reveal visible={mounted} delay={600}>
-        <p className="text-[var(--foreground-muted)] leading-relaxed max-w-[520px]">
-          Some stories don&apos;t just end. They leave a space where they used
-          to be.
-          <span className="block mt-1 text-[var(--foreground-subtle)]">
-            This is that space.
-          </span>
-        </p>
-      </Reveal>
-
-      <Reveal visible={mounted} delay={800}>
-        <p className="text-[var(--foreground-subtle)] text-sm leading-relaxed mt-8 max-w-[520px]">
-          These are not mere favorites, but an index of temporal watermarks.
-          These works carried enough cognitive overhang to make
-          context-switching back to reality highly difficult. The resulting
-          baseline update acts as a permanent, irreversible partition in my
-          timeline.
-        </p>
-      </Reveal>
-    </section>
+    <header className="pt-16 md:pt-24 pb-16">
+      <h1 className="title text-[2.375rem] md:text-[3.25rem]">Post Narrative Depression</h1>
+      <p className="italic text-[var(--ink-2)] mt-4">
+        The cognitive overhang of re-entering reality after deep immersion in a fictional world.
+      </p>
+      <p className="mt-8">
+        Some stories don&apos;t just end. They leave a space where they used to be.
+        <span className="block text-[var(--ink-2)]">This is that space.</span>
+      </p>
+      <p className="mt-6 text-[var(--ink-2)]">
+        These are not mere favorites, but an index of temporal watermarks. These works carried enough cognitive overhang
+        to make context-switching back to reality highly difficult. The resulting baseline update acts as a permanent,
+        irreversible partition in my timeline.
+      </p>
+    </header>
   )
 }
 
-// ---------------------------------------------------------------------------
-// Entry card
-// ---------------------------------------------------------------------------
-
-function EntryCard({ entry, index }: { entry: Entry; index: number }) {
-  const { ref, visible } = useReveal(0.08)
+function EntryCard({ entry }: { entry: Entry }) {
   const [imgError, setImgError] = useState(false)
 
   return (
-    <article ref={ref}>
-      {/* Index + Experience year */}
-      <Reveal visible={visible} delay={0}>
-        <div className="flex items-baseline justify-between">
-          <span
-            className="text-sm tracking-wide tabular-nums"
-            style={{
-              fontFamily: "var(--font-mono), ui-monospace, monospace",
-              color: "var(--braun-orange)",
-            }}
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span
-            className="text-sm tracking-wide tabular-nums"
-            style={{
-              fontFamily: "var(--font-mono), ui-monospace, monospace",
-              color: "var(--foreground-subtle)",
-            }}
-          >
-            {entry.experienced}
-          </span>
-        </div>
-      </Reveal>
-
-      {/* Title */}
-      <Reveal visible={visible} delay={80}>
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-[-0.01em] mt-3 leading-tight">
+    <article>
+      <div className="flex items-baseline justify-between gap-6">
+        <h2 className="font-display text-[1.625rem] md:text-[1.875rem] leading-[1.15] font-[500] tracking-[-0.01em] [font-variation-settings:'opsz'_48]">
           {entry.title}
         </h2>
-      </Reveal>
+        {/* The year it was experienced */}
+        <span className="meta text-[var(--ink-3)] shrink-0">{entry.experienced}</span>
+      </div>
+      <p className="text-[var(--ink-2)] mt-1">{entry.creator}</p>
+      <p className="meta mt-1">
+        {entry.medium} · {entry.year}
+      </p>
 
-      {/* Creator */}
-      <Reveal visible={visible} delay={140}>
-        <p className="text-[var(--foreground-muted)] mt-1">{entry.creator}</p>
-      </Reveal>
-
-      {/* Medium · Year */}
-      <Reveal visible={visible} delay={180}>
-        <span className="uppercase-meta text-[var(--foreground-subtle)] mt-2 block">
-          {entry.medium} &middot; {entry.year}
-        </span>
-      </Reveal>
-
-      {/* Image / Placeholder */}
-      <Reveal visible={visible} delay={260} className="mt-8">
-        <div className="aspect-[3/2] overflow-hidden relative group">
-          {!imgError ? (
-            <Image
-              src={entry.image}
-              alt={entry.title}
-              fill
-              className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-end p-6 md:p-8">
-              <span className="text-4xl md:text-5xl font-semibold text-[var(--foreground)] opacity-[0.04] tracking-tight leading-none select-none">
-                {entry.title}
-              </span>
+      {!imgError && (
+        <div className={PLATE_OUTER}>
+          <div className={PLATE}>
+            <div className="relative aspect-[3/2]">
+              <Image src={entry.image} alt={entry.title} fill sizes="(min-width: 1024px) 720px, 100vw" className="object-contain" onError={() => setImgError(true)} />
             </div>
-          )}
+          </div>
         </div>
-      </Reveal>
+      )}
 
-      {/* Reflection */}
-      <Reveal visible={visible} delay={360} className="mt-8">
-        <p className="text-[var(--foreground-muted)] leading-relaxed border-l-[2px] border-[var(--border)] pl-5">
-          {entry.reflection}
-        </p>
-      </Reveal>
+      <p className={`${imgError ? "mt-8" : ""} border-l border-[var(--rule)] pl-6`}>{entry.reflection}</p>
     </article>
   )
 }
-
-// ---------------------------------------------------------------------------
-// Gallery
-// ---------------------------------------------------------------------------
 
 export default function PNDGallery() {
   return (
     <div>
       <Hero />
 
-      <div className="space-y-24 md:space-y-32">
-        {[...entries].reverse().map((entry, i) => (
-          <EntryCard key={entry.title} entry={entry} index={entries.length - 1 - i} />
+      <div className="space-y-24">
+        {[...entries].reverse().map((entry) => (
+          <EntryCard key={entry.title} entry={entry} />
         ))}
       </div>
 
-      {/* Closing */}
-      <footer className="mt-32 mb-8 text-center">
-        <div className="w-10 h-px bg-[var(--border)] mx-auto mb-8" />
-        <span
-          className="uppercase-meta text-[var(--foreground-subtle)] block opacity-50"
-          style={{ fontSize: "0.65rem" }}
-        >
-          last updated march 2026
-        </span>
-      </footer>
+      <p className="meta text-[var(--ink-3)] mt-24">Last updated March 2026</p>
     </div>
   )
 }

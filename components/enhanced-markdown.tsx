@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Image from "next/image"
@@ -10,11 +10,13 @@ import React, { Fragment } from "react"
 import { CreativeCommons } from "./ui/CreativeCommons"
 import { ClaudeDisclaimer } from "./ui/ClaudeDisclaimer"
 import { PLATE, PLATE_CAPTION, PLATE_OUTER } from "./plate"
+import { penFor, rehypePencil } from "@/lib/pencil"
+import { remarkSmartQuotes } from "@/lib/typography"
 
-
-// Links - ink with an orange hairline underline. Orange text alone fails contrast on
-// paper (2.6:1); the hairline keeps the accent while the words stay readable.
-const MarkdownLink = ({ href, children, node, ...props }: any) => {
+// Links: the red pencil. Ink text over a hand-drawn cinnabar stroke (see .pen in
+// globals.css). The stroke variant arrives as data-pen from rehypePencil; links rendered
+// outside a document (a lone caption) hash their own.
+export const MarkdownLink = ({ href, children, node, ...props }: any) => {
   if (!href) return <span>{children}</span>
 
   const isExternal = href.startsWith("http")
@@ -24,8 +26,9 @@ const MarkdownLink = ({ href, children, node, ...props }: any) => {
       href={href}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className="text-[var(--foreground)] underline decoration-[var(--braun-orange)] decoration-1 underline-offset-[0.2em] hover:text-[var(--braun-orange)] transition-colors"
+      data-pen={penFor(href)}
       {...props}
+      className="pen"
     >
       {children}
     </a>
@@ -33,32 +36,80 @@ const MarkdownLink = ({ href, children, node, ...props }: any) => {
 }
 
 // Inline markdown (links, emphasis, code) for text that arrives as a raw string:
-// captions, callouts, video captions. Bare URLs autolink via GFM.
+// captions, callouts, notes. Bare URLs autolink via GFM.
 export const Inline = ({ text }: { text: string }) => (
-  <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ p: ({ children }: any) => <>{children}</>, a: MarkdownLink }}>
+  <ReactMarkdown
+    remarkPlugins={[remarkGfm, remarkSmartQuotes]}
+    rehypePlugins={[rehypePencil]}
+    components={{ p: ({ children }: any) => <>{children}</>, a: MarkdownLink }}
+  >
     {text}
   </ReactMarkdown>
 )
 
-// Callouts - set off by hairlines and a mono label, not a tinted box with a
-// colored stripe. Type is carried by the label's word and hue.
+// Callouts: set off by hairlines, with a small label. Pigments each mean one thing and
+// none of them means "caution", so the label's word carries the type, in ink.
 const Callout = ({ type, label: custom, text }: { type: "info" | "warning" | "error"; label?: string; text: string }) => {
-  const label = custom || { info: "note", warning: "caution", error: "important" }[type]
-  const labelColor = {
-    info: "text-[var(--braun-orange)]",
-    warning: "text-[var(--braun-cream)]",
-    error: "text-[var(--braun-red)]",
-  }[type]
+  const label = custom || { info: "Note", warning: "Caution", error: "Important" }[type]
 
   return (
-    <aside className="my-8 py-5 border-y border-[var(--border)]" role="note">
-      <span className={`uppercase-meta block mb-2 ${labelColor}`}>{label}</span>
-      <p className="m-0 text-[var(--foreground)] leading-[1.6]">
+    <aside className="my-8 py-5 border-y border-[var(--rule)]" role="note">
+      <span className="font-flex block mb-2 text-[0.8125rem] leading-[1.4] font-[560] text-[var(--ink)]">{label}</span>
+      <p className="m-0">
         <Inline text={text} />
       </p>
     </aside>
   )
 }
+
+// Text of a hast node, for reading a footnote marker's number
+const hastText = (node: any): string =>
+  node?.value ?? (node?.children ?? []).map(hastText).join("")
+
+// Footnote markers cited inside a hast node, in order
+const citedNotes = (node: any): string[] => {
+  const found: string[] = []
+  const walk = (n: any) => {
+    if (n?.type === "element" && n.tagName === "sup" && n.children?.[0]?.properties?.dataFootnoteRef !== undefined) {
+      found.push(hastText(n).trim())
+    }
+    n?.children?.forEach(walk)
+  }
+  walk(node)
+  return found
+}
+
+// Below 1280px there is no margin, so a paragraph's notes follow it
+const NotesAfter = ({ markers, footnotes }: { markers: string[]; footnotes: Record<string, string> }) => {
+  const notes = markers.filter((m) => footnotes[m])
+  if (notes.length === 0) return null
+  return (
+    <aside className="xl:hidden note-text -mt-2 mb-6 pl-4 border-l border-[var(--rule)] space-y-2">
+      {notes.map((m) => (
+        <p key={m} className="m-0">
+          <span className="note-num mr-1.5">{m}</span>
+          <Inline text={footnotes[m]} />
+        </p>
+      ))}
+    </aside>
+  )
+}
+
+const PARAGRAPH = "relative mt-0 mb-6"
+
+// The notes margin: 104px off the column (clear of the 80px plate bleed by 24px), 200px
+// wide, 216px from 1440px. Shared by sidenotes and figure captions.
+export const MARGIN = "hidden xl:block absolute left-full top-0 ml-[104px] w-[200px] min-[1440px]:w-[216px]"
+
+// Heading ids, matching parseHeadings in lib/mdx
+const slug = (children: any) =>
+  React.Children.toArray(children)
+    .map((c: any) => (typeof c === "string" ? c : hastText(c?.props?.node) || ""))
+    .join("")
+    .toLowerCase()
+    .replace(/[\u2018\u2019\u201c\u201d]/g, "")
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
 
 // Inline `$...$` math in any run of text: list items and table cells get the same
 // treatment as paragraphs
@@ -89,10 +140,6 @@ const mathify = (children: any): any => {
     return <Fragment key={`t-${index}`}>{parts}</Fragment>
   })
 }
-
-// Text of a hast node, for reading a footnote marker's number
-const hastText = (node: any): string =>
-  node?.value ?? (node?.children ?? []).map(hastText).join("")
 
 // Custom components for ReactMarkdown - Dieter Rams inspired styling
 const createCustomComponents = (
@@ -178,7 +225,12 @@ const createCustomComponents = (
         return child
       })
 
-      return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{processedChildren}</p>
+      return (
+        <>
+          <p className={PARAGRAPH} {...props}>{processedChildren}</p>
+          <NotesAfter markers={citedNotes(node)} footnotes={footnotes} />
+        </>
+      )
     }
 
     const text = children ? String(children) : ""
@@ -231,7 +283,7 @@ const createCustomComponents = (
                 ></iframe>
               </div>
               {caption && (
-                <span className={PLATE_CAPTION}>
+                <span className={PLATE_CAPTION} data-margin>
                   <Inline text={caption} />
                 </span>
               )}
@@ -289,10 +341,20 @@ const createCustomComponents = (
         parts.push(text.substring(lastIndex))
       }
 
-      return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{parts}</p>
+      return (
+        <>
+          <p className={PARAGRAPH} {...props}>{parts}</p>
+          <NotesAfter markers={citedNotes(node)} footnotes={footnotes} />
+        </>
+      )
     }
 
-    return <p className="relative mt-0 mb-4 text-[var(--foreground-body)]" {...props}>{children}</p>
+    return (
+      <>
+        <p className={PARAGRAPH} {...props}>{children}</p>
+        <NotesAfter markers={citedNotes(node)} footnotes={footnotes} />
+      </>
+    )
   },
 
   img: ({ src, alt, ...props }: any) => {
@@ -348,7 +410,7 @@ const createCustomComponents = (
           />
         </span>
         {caption && (
-          <span className={PLATE_CAPTION}>
+          <span className={PLATE_CAPTION} data-margin>
             <Inline text={caption} />
           </span>
         )}
@@ -356,108 +418,69 @@ const createCustomComponents = (
     )
   },
 
-  // Headings - rendered as authored (sentence case in posts)
-  // Scale steps down from the 52px post title so sections read as sections, not
-  // rival titles; 32px above, 8px below binds each heading to its text.
+  // Headings: Literata at opsz 24, as authored. Ids match parseHeadings in lib/mdx.
   h1: ({ children, node, ...props }: any) => (
-    <h1 className="text-[1.75rem] md:text-[2rem] leading-[1.15] font-semibold mt-10 mb-2 tracking-[-0.012em]" {...props}>
+    <h1 className="text-[1.75rem] leading-[1.15] [font-variation-settings:'opsz'_36] font-[520] tracking-[-0.01em] mt-12 mb-3" {...props}>
       {children}
     </h1>
   ),
-  h2: ({ children, node, ...props }: any) => {
-    const id = children
-      ?.toString()
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-
-    return (
-      <h2 id={id} className="text-[1.375rem] md:text-[1.5625rem] leading-[1.2] font-semibold mt-8 mb-2 tracking-[-0.01em] scroll-mt-24" {...props}>
-        {children}
-      </h2>
-    )
-  },
-  h3: ({ children, node, ...props }: any) => {
-    const id = children
-      ?.toString()
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-
-    return (
-      <h3 id={id} className="text-[1.1875rem] leading-[1.25] font-semibold mt-8 mb-2 tracking-[-0.005em] scroll-mt-24" {...props}>
-        {children}
-      </h3>
-    )
-  },
-  h4: ({ children, node, ...props }: any) => {
-    const id = children
-      ?.toString()
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-
-    return (
-      <h4 id={id} className="text-[1.0625rem] leading-[1.35] font-semibold mt-6 mb-2 scroll-mt-24" {...props}>
-        {children}
-      </h4>
-    )
-  },
+  h2: ({ children, node, ...props }: any) => (
+    <h2 id={slug(children)} className="text-[1.3125rem] md:text-[1.375rem] leading-[1.25] font-[560] mt-12 mb-2 scroll-mt-24" {...props}>
+      {children}
+    </h2>
+  ),
+  h3: ({ children, node, ...props }: any) => (
+    <h3 id={slug(children)} className="text-[1.1875rem] leading-[1.3] font-[560] mt-10 mb-2 scroll-mt-24" {...props}>
+      {children}
+    </h3>
+  ),
+  h4: ({ children, node, ...props }: any) => (
+    <h4 id={slug(children)} className="text-[1.0625rem] leading-[1.35] font-[600] mt-8 mb-2 scroll-mt-24" {...props}>
+      {children}
+    </h4>
+  ),
 
   a: MarkdownLink,
 
-  // Footnotes (GFM `[^1]`): an orange superscript marker in the text. On wide screens
-  // the note itself sits in the right margin beside its paragraph, mirroring the
-  // contents rail on the left; narrower screens get the notes under a hairline at
-  // the end of the post.
+  // Footnotes (GFM `[^1]`): an ochre numeral in the text, not a link. From 1280px the note
+  // sits in the right margin, its first baseline on the baseline of the line that cites it
+  // (alignMarginNotes, from the two zero-size anchors); narrower, it follows its paragraph.
   sup: ({ children, node, ...props }: any) => {
     const marker = hastText(node).trim()
     const isRef = node?.children?.[0]?.properties?.dataFootnoteRef !== undefined
-    const note = isRef ? footnotes[marker] : undefined
+    if (!isRef) return <sup {...props}>{children}</sup>
+    const note = footnotes[marker]
     return (
       <>
-        <sup className="text-[0.7em] leading-none [&>a]:no-underline [&>a]:text-[var(--braun-orange)]" {...props}>
-          {children}
-        </sup>
+        {note && <span data-note-anchor={marker} className="inline-block w-0 h-0" aria-hidden="true" />}
+        <sup className="note-num">{marker}</sup>
         {note && (
-          <span
-            role="note"
-            className="hidden xl:block absolute left-full top-0 ml-[112px] w-[180px] text-[0.8125rem] leading-[1.45] text-[var(--foreground-muted)] [text-wrap:pretty]"
-          >
-            <span className="text-[var(--braun-orange)] mr-1.5">{marker}</span>
+          <span role="note" data-note={marker} className={`note-text ${MARGIN} [text-wrap:pretty]`}>
+            <span data-note-baseline className="inline-block w-0 h-0" aria-hidden="true" />
+            <span className="note-num mr-1.5">{marker}</span>
             <Inline text={note} />
           </span>
         )}
       </>
     )
   },
-  // (The end-of-post footnote section itself is styled in globals.css via
-  // `section[data-footnotes]`, and hidden where the sidenotes take over.)
 
-  // Blockquote - a quiet 2px rule (matching /pnd), no italics (Rams preferred clean type)
+  // Blockquote: a hairline, upright, in the secondary ink
   blockquote: ({ children, node, ...props }: any) => (
-    <blockquote
-      className="border-l-2 border-[var(--quote-border)] pl-6 mt-0 mb-6 text-[var(--foreground-muted)] [&>p]:text-[var(--foreground-muted)]"
-      {...props}
-    >
+    <blockquote className="border-l border-[var(--rule)] pl-6 mt-0 mb-6 text-[var(--ink-2)]" {...props}>
       {children}
     </blockquote>
   ),
 
-  // Inline code - no rounded corners
-  // Note: In react-markdown v9+, `inline` prop is removed. Code blocks have language-* class.
+  // Inline code sits on a faint wash; fenced code (```lang) goes to CodeBlock
   code: ({ node, className, children, ...props }: any) => {
     const content = String(children).trim()
     const match = /language-(\w+)/.exec(className || "")
 
-    // If it has a language class, it's a code block (from ```lang ... ```)
-    // Otherwise it's inline code (from `...`)
-    const isCodeBlock = match !== null
-
-    if (!isCodeBlock) {
+    if (!match) {
       return (
         <code
-          className="bg-[var(--surface)] text-[var(--foreground)] rounded-[2px] px-[0.3em] py-[0.1em] font-mono text-[0.89em] [font-variant-ligatures:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] before:content-none after:content-none"
+          className="bg-[var(--grid)] px-[0.3em] py-[0.08em] text-[0.89em] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]"
           {...props}
         >
           {children}
@@ -465,52 +488,75 @@ const createCustomComponents = (
       )
     }
 
-    const language = match ? match[1] : ""
-
-    return <CodeBlock code={content.replace(/\n$/, "")} language={language || "text"} />
+    return <CodeBlock code={content.replace(/\n$/, "")} language={match[1] || "text"} />
   },
 
-  pre: ({ children }: any) => {
-    return <Fragment>{children}</Fragment>
-  },
+  pre: ({ children }: any) => <Fragment>{children}</Fragment>,
 
   ul: ({ children, node, ...props }: any) => (
-    <ul className="list-disc pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)]" {...props}>
+    <ul className="list-disc pl-6 mt-0 mb-6 marker:text-[var(--ink-3)]" {...props}>
       {children}
     </ul>
   ),
   ol: ({ children, node, ...props }: any) => (
-    <ol className="list-decimal pl-6 mt-0 mb-4 text-[var(--foreground-body)] marker:text-[var(--foreground-subtle)] marker:tabular-nums" {...props}>
+    <ol className="list-decimal pl-6 mt-0 mb-6 marker:text-[var(--ink-3)] marker:[font-family:var(--font-flex)] marker:[font-variant-numeric:tabular-nums]" {...props}>
       {children}
     </ol>
   ),
   li: ({ children, node, ...props }: any) => (
-    <li className="my-1 pl-1" {...props}>
+    <li className="relative my-1.5 pl-1" {...props}>
       {mathify(children)}
+      {/* In a loose list the item's paragraphs place their own notes */}
+      {!node?.children?.some((c: any) => c.tagName === "p") && <NotesAfter markers={citedNotes(node)} footnotes={footnotes} />}
     </li>
   ),
 
-  // Tables - mono font for data alignment
+  // Tables: figures in Google Sans Flex, tabular; hairlines between rows
   table: ({ children, node, ...props }: any) => (
-    <div className="my-6 overflow-x-auto">
-      <table className="w-full text-sm border-collapse tabular-nums" style={{ fontFamily: "var(--font-mono), ui-monospace, monospace" }} {...props}>
+    <div className="my-8 overflow-x-auto">
+      <table className="w-full font-flex text-[0.875rem] leading-[1.45] border-collapse [font-variant-numeric:tabular-nums]" {...props}>
         {children}
       </table>
     </div>
   ),
   thead: ({ children, node, ...props }: any) => (
-    <thead className="border-b border-[var(--foreground-subtle)]" {...props}>{children}</thead>
+    <thead className="border-b border-[var(--ink-3)]" {...props}>{children}</thead>
   ),
-  th: ({ children, node, ...props }: any) => (
-    <th className="text-left py-2 pr-4 font-semibold whitespace-nowrap text-[var(--foreground)]" {...props}>{children}</th>
+  th: ({ children, node, style, ...props }: any) => (
+    <th className="text-left py-2 pr-4 font-[560] whitespace-nowrap" style={style} {...props}>{children}</th>
   ),
-  td: ({ children, node, ...props }: any) => (
-    <td className="py-2 pr-4 whitespace-nowrap text-[var(--foreground-body)] border-b border-[var(--border)]" {...props}>{mathify(children)}</td>
+  td: ({ children, node, style, ...props }: any) => (
+    <td className="py-2 pr-4 whitespace-nowrap border-b border-[var(--rule)]" style={style} {...props}>{mathify(children)}</td>
   ),
 
-  // Horizontal rule - subtle
-  hr: ({ node, ...props }: any) => <hr className="my-8 border-t border-[var(--border)]" {...props} />,
+  hr: ({ node, ...props }: any) => <hr className="my-12 border-t border-[var(--rule)]" {...props} />,
 })
+
+// Puts each sidenote's first baseline on the baseline of the line that cites it. Both
+// baselines come from zero-size inline-blocks, whose bottom edge is the baseline of their
+// line: one just before the citing numeral, one at the start of the note. A note that
+// would overlap the note or caption above it moves down just far enough to clear it.
+function alignMarginNotes() {
+  document.querySelectorAll<HTMLElement>("[data-note]").forEach((note) => {
+    const anchor = document.querySelector<HTMLElement>(`[data-note-anchor="${note.dataset.note}"]`)
+    const own = note.querySelector<HTMLElement>("[data-note-baseline]")
+    const parent = note.offsetParent as HTMLElement | null
+    if (!anchor || !own || !parent || note.offsetWidth === 0) return
+    note.style.top = "0px"
+    const parentTop = parent.getBoundingClientRect().top
+    const noteBox = note.getBoundingClientRect()
+    let top = anchor.getBoundingClientRect().bottom - parentTop - (own.getBoundingClientRect().bottom - noteBox.top)
+    // The lowest margin item that starts above this note and reaches into it
+    let floor = -Infinity
+    document.querySelectorAll<HTMLElement>("[data-note], [data-margin]").forEach((other) => {
+      if (other === note || other.offsetWidth === 0) return
+      const r = other.getBoundingClientRect()
+      if (Math.abs(r.left - noteBox.left) < 4 && r.top < parentTop + top) floor = Math.max(floor, r.bottom)
+    })
+    if (floor + 8 > parentTop + top) top = floor + 8 - parentTop
+    note.style.top = `${top}px`
+  })
+}
 
 interface EnhancedMarkdownProps {
   content: string
@@ -687,6 +733,19 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
     }
   }, [content])
 
+  useEffect(() => {
+    alignMarginNotes()
+    document.fonts?.ready.then(alignMarginNotes)
+    window.addEventListener("resize", alignMarginNotes)
+    // Images and math change line positions as they load
+    const ro = new ResizeObserver(() => alignMarginNotes())
+    ro.observe(document.body)
+    return () => {
+      window.removeEventListener("resize", alignMarginNotes)
+      ro.disconnect()
+    }
+  }, [content])
+
   const customComponents = useMemo(
     () => createCustomComponents(blockMathExpressions, callouts, footnotes),
     [blockMathExpressions, callouts, footnotes],
@@ -694,7 +753,7 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
 
   return (
     <Fragment>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={customComponents}>
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkSmartQuotes]} rehypePlugins={[rehypePencil]} components={customComponents}>
         {processedContent}
       </ReactMarkdown>
 
@@ -709,14 +768,16 @@ export function EnhancedMarkdown({ content }: EnhancedMarkdownProps) {
               height={img.height}
               unoptimized={img.src.startsWith("http") || img.src.toLowerCase().endsWith(".gif")}
             />
-            <p className="text-center text-sm leading-snug text-[var(--foreground-muted)] mt-3">{img.caption}</p>
           </div>
+          <span className={PLATE_CAPTION} data-margin>
+            <Inline text={img.caption} />
+          </span>
         </div>
       ))}
 
       {/* Side-by-side images */}
       {sideBySideImages.map((group, groupIndex) => (
-        <div key={groupIndex} className="my-8 flex flex-col md:flex-row gap-4">
+        <div key={groupIndex} className={`${PLATE_OUTER} flex flex-col md:flex-row gap-4`}>
           {group.images.map((img, imgIndex) => (
             <div key={imgIndex} className="flex-1 flex items-center justify-center">
               <Image

@@ -1,8 +1,3 @@
 export default function SpecialCode() {
-  return (
-    <div className="text-left mt-4">
-      <span className="text-[0.6rem] text-[var(--foreground-subtle)] font-mono">STH: 0x73706563627567</span>
-    </div>
-  )
+  return <p className="mt-6 font-mono text-[0.6875rem] text-[var(--ink-3)]">STH: 0x73706563627567</p>
 }
-
