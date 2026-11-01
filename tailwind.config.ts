@@ -36,7 +36,7 @@ const config: Config = {
         sans: ["var(--font-rsans)", "system-ui", "sans-serif"],
         display: ["var(--font-heading)", "var(--font-rsans)", "system-ui", "sans-serif"],
         flex: ["var(--font-flex)", "system-ui", "sans-serif"],
-        mono: ["Menlo", "var(--font-mono)", "ui-monospace", "monospace"],
+        mono: ["Menlo", "var(--font-mono)", "var(--font-mono-symbols)", "ui-monospace", "monospace"],
         logo: ["var(--font-logo)", "Georgia", "serif"],
       },
       transitionTimingFunction: {

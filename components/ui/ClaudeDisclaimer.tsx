@@ -2,73 +2,42 @@
 
 import { useState, useEffect } from "react"
 
-// Claude Code spinner: the morphing starburst animation, after the characters
-// · ✻ ✽ ✶ ✳ ✢ (https://medium.com/@kyletmartinez/reverse-engineering-claudes-ascii-spinner-animation-eec2804626e0).
-// Drawn as SVG, not text: no face the site ships has these dingbats, and a font fallback
-// would draw them differently on every system.
+// Claude Code spinner - the morphing starburst animation
+// Characters: · ✻ ✽ ✶ ✳ ✢
+// Source: https://medium.com/@kyletmartinez/reverse-engineering-claudes-ascii-spinner-animation-eec2804626e0
+const SPINNER_FRAMES = ["·", "✻", "✽", "✶", "✳", "✢"]
 const SPINNER_INTERVAL = 120
-
-// n spokes around the centre, each a teardrop-ish quadrilateral from r0 to r1, w wide at
-// its widest; rot turns the whole figure (degrees)
-function spokes(n: number, r0: number, r1: number, w: number, rot = 0) {
-  return Array.from({ length: n }, (_, i) => {
-    const t = ((rot + (360 / n) * i) * Math.PI) / 180
-    const [c, s] = [Math.cos(t), Math.sin(t)]
-    const at = (r: number, off: number) => `${(10 + c * r - s * off).toFixed(2)},${(10 + s * r + c * off).toFixed(2)}`
-    const mid = r0 + (r1 - r0) * 0.62
-    return `M${at(r0, 0)}L${at(mid, w / 2)}L${at(r1, 0)}L${at(mid, -w / 2)}Z`
-  }).join("")
-}
-
-// A six-pointed star (✶)
-function star(points: number, rIn: number, rOut: number) {
-  return (
-    "M" +
-    Array.from({ length: points * 2 }, (_, i) => {
-      const r = i % 2 ? rIn : rOut
-      const t = ((-90 + (180 / points) * i) * Math.PI) / 180
-      return `${(10 + Math.cos(t) * r).toFixed(2)},${(10 + Math.sin(t) * r).toFixed(2)}`
-    }).join("L") +
-    "Z"
-  )
-}
-
-const FRAMES = [
-  "M8.6,10a1.4,1.4 0 1,0 2.8,0a1.4,1.4 0 1,0 -2.8,0Z", // ·
-  spokes(8, 1.2, 8.5, 2.6, 22.5), // ✻
-  spokes(8, 0.6, 8.5, 3.6, 22.5), // ✽
-  star(6, 3.4, 8.5), // ✶
-  spokes(8, 0.8, 8.5, 1.8, 0), // ✳
-  spokes(4, 1, 8.5, 3.4, 45), // ✢
-]
 
 function ClaudeSpinner() {
   const [frame, setFrame] = useState(0)
 
   useEffect(() => {
-    // Hold on a single frame for readers who prefer less motion
+    // Hold on a single glyph for readers who prefer less motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setFrame(1)
       return
     }
 
     const interval = setInterval(() => {
-      setFrame((prev) => (prev + 1) % FRAMES.length)
+      setFrame((prev) => (prev + 1) % SPINNER_FRAMES.length)
     }, SPINNER_INTERVAL)
     return () => clearInterval(interval)
   }, [])
 
   return (
-    <svg width="18" height="18" viewBox="0 0 20 20" className="block text-[var(--cinnabar)]" aria-hidden="true">
-      <path d={FRAMES[frame]} fill="currentColor" />
-    </svg>
+    <span
+      className="font-mono text-lg leading-none inline-block w-5 text-center text-[var(--cinnabar)]"
+      aria-hidden="true"
+    >
+      {SPINNER_FRAMES[frame]}
+    </span>
   )
 }
 
 export function ClaudeDisclaimer({ children }: { children?: React.ReactNode }) {
   return (
     <aside className="callout my-8 flex items-start gap-3" role="note">
-      <div className="flex-shrink-0 pt-[0.3rem]">
+      <div className="flex-shrink-0 pt-[0.15rem]">
         <ClaudeSpinner />
       </div>
       <div className="flex-1">

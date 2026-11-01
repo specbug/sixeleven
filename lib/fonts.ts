@@ -43,6 +43,25 @@ export const monoFont = localFont({
   ],
   display: "swap",
   variable: "--font-mono",
+  // Not preloaded: a Mac renders Menlo and never needs this file, so it is fetched only
+  // where the browser actually falls back to it
+  preload: false,
+  // No metric-matched Arial stand-in: it would sit between this face and R Mono below
+  // and catch the symbols R Mono is there for
+  adjustFontFallback: false,
+})
+
+// Symbols JetBrains Mono lacks: R Mono, Rishit's own, fills in Misc Symbols and Dingbats
+// (the Claude disclaimer's spinner stars, for one) after JetBrains Mono. The unicode-range means browsers fetch it only on a page that uses one
+// of those characters, and not at all on a Mac, where Menlo has them. File unchanged.
+export const monoSymbols = localFont({
+  src: "../public/fonts/RMono-Regular.woff2",
+  weight: "400",
+  display: "swap",
+  variable: "--font-mono-symbols",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+2600-27BF" }],
 })
 
 // The wordmark: Et Book Bold, line figures.

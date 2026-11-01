@@ -116,9 +116,10 @@
   }
 
   code, pre, kbd, samp {
-    /* Menlo, as installed with macOS; elsewhere the self-hosted JetBrains Mono. Menlo is
-       Apple's and licensed for Apple systems only, so it is named, never served. */
-    font-family: Menlo, var(--font-mono), ui-monospace, monospace;
+    /* Menlo, as installed with macOS; elsewhere the self-hosted JetBrains Mono, with R Mono
+       filling in the symbols JetBrains Mono lacks. Menlo is Apple's and licensed for Apple
+       systems only, so it is named, never served. */
+    font-family: Menlo, var(--font-mono), var(--font-mono-symbols), ui-monospace, monospace;
     font-feature-settings: normal;
     /* JetBrains Mono's ligatures (calt) keep every character's cell width, so columns
        still align and copied code is unchanged */
