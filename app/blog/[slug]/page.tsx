@@ -7,6 +7,7 @@ import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import BlogPostSchema from "@/components/blog-schema"
 import PostCover from "@/components/PostCover"
 import { fullDate, smartQuotes } from "@/lib/typography"
+import { ledeFont } from "@/lib/lede-font"
 
 interface BlogPostPageProps {
   params: {
@@ -107,7 +108,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* The excerpt as a lede, so the post opens with what it is about */}
           {post.excerpt && (
-            <p className="text-[1.1875rem] md:text-[1.3125rem] leading-[1.45] text-[var(--ink-2)]">{smartQuotes(post.excerpt)}</p>
+            <p className={`lede ${ledeFont.className}`}>{smartQuotes(post.excerpt)}</p>
           )}
         </header>
 

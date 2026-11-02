@@ -2,6 +2,7 @@ import Link from "next/link"
 import type { ReactNode } from "react"
 import { penFor } from "@/lib/pencil"
 import { monthYear, smartQuotes } from "@/lib/typography"
+import { ledeFont } from "@/lib/lede-font"
 
 interface PostListItemProps {
   post: {
@@ -33,7 +34,7 @@ export function PostListItem({ post, tags }: PostListItemProps) {
         <h2 className="font-display text-[1.5rem] md:text-[1.625rem] leading-[1.2] font-semibold tracking-[-0.01em] mb-2">
           <span className="pen-title">{smartQuotes(post.title)}</span>
         </h2>
-        {post.excerpt && <p className="text-[var(--ink-2)] mb-2">{smartQuotes(post.excerpt)}</p>}
+        {post.excerpt && <p className={`lede lede-list ${ledeFont.className} mb-2`}>{smartQuotes(post.excerpt)}</p>}
         {!tags && post.tags && post.tags.length > 0 && (
           <ul className="flex flex-wrap gap-x-3 gap-y-1">
             {post.tags.map((tag) => (

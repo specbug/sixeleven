@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { PLATE, PLATE_OUTER } from "../plate"
+import { ledeFont } from "@/lib/lede-font"
 
 // ---------------------------------------------------------------------------
 // Data
@@ -100,7 +101,7 @@ function Hero() {
   return (
     <header className="pt-16 md:pt-24 pb-16">
       <h1 className="title text-[2.375rem] md:text-[3.25rem]">Post Narrative Depression</h1>
-      <p className="italic text-[var(--ink-2)] mt-4">
+      <p className={`lede ${ledeFont.className} mt-4`}>
         The cognitive overhang of re-entering reality after deep immersion in a fictional world.
       </p>
       <p className="mt-8">
