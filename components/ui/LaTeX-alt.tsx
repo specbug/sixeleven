@@ -98,7 +98,7 @@ function useMath<T extends HTMLElement>(tex: string, displayMode: boolean) {
 
 export function BlockMath({ children }: { children: string }) {
   const ref = useMath<HTMLDivElement>(children, true)
-  return <div ref={ref} className="math-block overflow-x-auto" />
+  return <div ref={ref} className="math-block" />
 }
 
 export function InlineMath({ children }: { children: string }) {

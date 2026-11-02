@@ -137,9 +137,19 @@
     font-family: var(--font-math), math;
   }
   /* Display maths (BlockMath): centred, with a step of space above and below */
+  /* Text runs inside MathML keep the font's full ascent and descent, a few pixels past the
+     maths itself; with overflow-x: auto making the other axis auto too, that gave each
+     block a vertical scrollbar. Clip vertically (8px of padding keeps every glyph's ink
+     clear) and keep sideways scrolling, with a hairline scrollbar, for equations wider
+     than the column. 16px margin + 8px padding keeps the 24px step above and below. */
   .math-block {
-    margin: 24px 0;
+    margin: 16px 0;
+    padding-block: 8px;
     text-align: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
   }
   .math-block math {
     display: block math;
