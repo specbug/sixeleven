@@ -280,6 +280,28 @@
     }
   }
 
+  /* The subheading under a page title: Literata italic in the secondary ink, a voice
+     between the sans title and the sans body. The family comes from ledeFont's class. */
+  .lede {
+    font-style: italic;
+    font-weight: 400;
+    font-feature-settings: normal; /* not R Sans's ss03 */
+    font-optical-sizing: auto;
+    font-size: 1.1875rem; /* 19px */
+    line-height: 1.45;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+  @media (min-width: 768px) {
+    .lede {
+      font-size: 1.3125rem; /* 21px */
+    }
+  }
+  /* In a list of posts the excerpt plays the same part at entry scale */
+  .lede.lede-list {
+    font-size: 1.125rem; /* 18px */
+  }
+
   /* Small text and numbers: Google Sans Flex */
   .meta {
     font-family: var(--font-flex), system-ui, sans-serif;
