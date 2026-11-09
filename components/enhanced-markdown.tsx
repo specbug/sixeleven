@@ -422,17 +422,17 @@ const createCustomComponents = (
   // down from the post title so sections read as sections; 48px above, 8px below binds
   // each heading to its text.
   h1: ({ children, node, ...props }: any) => (
-    <h1 className="text-[1.75rem] md:text-[2rem] leading-[1.15] font-semibold tracking-[-0.012em] mt-12 mb-3" {...props}>
+    <h1 className="text-[1.625rem] md:text-[1.875rem] leading-[1.15] font-semibold tracking-[-0.012em] mt-12 mb-3" {...props}>
       {children}
     </h1>
   ),
   h2: ({ children, node, ...props }: any) => (
-    <h2 id={slug(children)} className="text-[1.375rem] md:text-[1.5625rem] leading-[1.2] font-semibold tracking-[-0.01em] mt-12 mb-2 scroll-mt-24" {...props}>
+    <h2 id={slug(children)} className="text-[1.3125rem] md:text-[1.5rem] leading-[1.2] font-semibold tracking-[-0.01em] mt-12 mb-2 scroll-mt-24" {...props}>
       {children}
     </h2>
   ),
   h3: ({ children, node, ...props }: any) => (
-    <h3 id={slug(children)} className="text-[1.1875rem] leading-[1.25] font-semibold tracking-[-0.005em] mt-10 mb-2 scroll-mt-24" {...props}>
+    <h3 id={slug(children)} className="text-[1.125rem] leading-[1.25] font-semibold tracking-[-0.005em] mt-10 mb-2 scroll-mt-24" {...props}>
       {children}
     </h3>
   ),
