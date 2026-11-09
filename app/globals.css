@@ -26,6 +26,13 @@
     --code-number: oklch(0.5 0.13 15);
     --code-tag: oklch(0.5 0.14 32);
 
+    /* Type sizes, in rem so they follow the reader's font-size setting. Only text scales:
+       the 8px grid, plates and the notes margin keep their geometry. Phones read a half step
+       smaller; on desktop 17.5px sets about 75 characters to the 640px measure. */
+    --text-body: 1.0625rem; /* 17px */
+    --text-lede: 1.125rem; /* 18px */
+    --text-lede-list: 1.0625rem; /* 17px, an excerpt in a list of posts */
+
     --body-weight: 450;
     --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     --radius: 0;
@@ -38,6 +45,12 @@
     --ring: var(--ultramarine);
 
     color-scheme: light;
+  }
+  @media (min-width: 768px) {
+    :root {
+      --text-body: 1.09375rem; /* 17.5px */
+      --text-lede: 1.25rem; /* 20px */
+    }
   }
 
   .dark {
@@ -83,7 +96,7 @@
     background-color: var(--ground);
     color: var(--ink);
     font-weight: var(--body-weight);
-    font-size: 1.15625rem; /* 18.5px */
+    font-size: var(--text-body);
     line-height: 1.62;
   }
 
@@ -297,19 +310,14 @@
     font-weight: 400;
     font-feature-settings: normal; /* not R Sans's ss03 */
     font-optical-sizing: auto;
-    font-size: 1.1875rem; /* 19px */
+    font-size: var(--text-lede);
     line-height: 1.45;
     color: var(--ink-2);
     text-wrap: pretty;
   }
-  @media (min-width: 768px) {
-    .lede {
-      font-size: 1.3125rem; /* 21px */
-    }
-  }
   /* In a list of posts the excerpt plays the same part at entry scale */
   .lede.lede-list {
-    font-size: 1.125rem; /* 18px */
+    font-size: var(--text-lede-list);
   }
 
   /* Small text and numbers: Google Sans Flex */
