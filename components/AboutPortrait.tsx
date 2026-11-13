@@ -85,7 +85,7 @@ export default function AboutPortrait() {
           ))}
         </svg>
       </span>
-      <figcaption className={`${ledeFont.className} mt-9 italic text-[0.96875rem] leading-[1.45] text-[var(--ink-2)] text-center [text-wrap:balance]`}>{QUOTE}</figcaption>
+      <figcaption className={`${ledeFont.className} mt-9 italic text-[0.8125rem] leading-[1.45] text-[var(--ink-2)] text-center [text-wrap:balance]`}>{QUOTE}</figcaption>
     </figure>
   )
 }
