@@ -421,6 +421,14 @@ const createCustomComponents = (
   // Headings: Google Sans, as authored. Ids match parseHeadings in lib/mdx. The scale steps
   // down from the post title so sections read as sections; 48px above, 8px below binds
   // each heading to its text.
+  // The site's name, written _sixeleven_, is set as the wordmark: ET Book, as in the
+  // header. Any other emphasis stays italic.
+  em: ({ children, node, ...props }: any) => {
+    const text = typeof children === "string" ? children : Array.isArray(children) && children.length === 1 && typeof children[0] === "string" ? children[0] : null
+    if (text?.trim().toLowerCase() === "sixeleven")
+      return <span className="font-logo font-bold tracking-tight text-[1.14em] leading-none">sixeleven</span>
+    return <em {...props}>{children}</em>
+  },
   h1: ({ children, node, ...props }: any) => (
     <h1 className="text-[1.625rem] md:text-[1.875rem] leading-[1.15] font-semibold tracking-[-0.012em] mt-12 mb-3" {...props}>
       {children}
