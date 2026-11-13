@@ -3,6 +3,10 @@ import { ledeFont } from "@/lib/lede-font"
 
 const QUOTE = "endless frontier, entangled beliefs, eternal life 🚀"
 const ALT = "Rishit Vora, in sunglasses, laughing against a cloudy sky"
+// The file name carries a hash of the image, so a new crop gets a new URL and no browser,
+// CDN or image-optimizer cache can serve the old one. Crop of the original (1795×1819):
+// x 688, y 169, 988px square.
+const SRC = "/images/about/rishit-8f4ce758.jpg"
 
 // A seeded generator, so the server and every visit draw the same marks
 function rng(seed: number) {
@@ -77,7 +81,7 @@ export default function AboutPortrait() {
       </svg>
       <span className="relative block" style={{ transform: "rotate(-3deg)" }}>
         <span className="block" style={{ clipPath: "url(#about-cushion)" }}>
-          <Image src="/images/about/rishit.jpg" alt={ALT} width={800} height={800} priority sizes="208px" className="block w-full h-auto" />
+          <Image src={SRC} alt={ALT} width={800} height={800} priority sizes="208px" className="block w-full h-auto" />
         </span>
         <svg aria-hidden viewBox="0 0 100 100" className="absolute -inset-[14%] w-[128%] h-[128%] overflow-visible pointer-events-none">
           {MARKS.map((d, i) => (
