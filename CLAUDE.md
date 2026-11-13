@@ -59,6 +59,7 @@ The app uses Next.js 15 App Router:
 - `TableOfContents.tsx` - Collapsed "Contents" toggle below 1280px
 - `plate.ts` - Classes for figure plates and their captions (captions move to the notes margin at ≥1280px)
 - `icons.tsx` - 20×20 line icons, 1.5px stroke
+- `AboutPortrait.tsx` - The About page portrait: a tilted cushion (superellipse clip), broken red-pencil marks drawn from a seed, the tagline as its caption
 
 **UI Components:**
 Located in `components/ui/` - Radix UI-based components styled with Tailwind CSS (accordion, alert-dialog, avatar, button, card, dialog, dropdown-menu, etc.)

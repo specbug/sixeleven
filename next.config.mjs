@@ -19,6 +19,14 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {},
+  // Old URLs that search engines and links still carry: the renamed homelab post, and the
+  // PND post whose gallery now lives at /pnd.
+  async redirects() {
+    return [
+      { source: '/blog/old-macbook-new-tricks', destination: '/blog/homelab-jellyfin-proxmox', permanent: true },
+      { source: '/blog/post-narrative-depression', destination: '/pnd', permanent: true },
+    ]
+  },
   turbopack: {
     root: resolve(__dirname),
   },

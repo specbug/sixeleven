@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 import PNDGallery from "@/components/pnd/PNDGallery"
 
+// Unlisted: reachable by direct link and shareable, but kept out of search results and the
+// sitemap. Links on the page are still followed.
 export const metadata: Metadata = {
-  alternates: { canonical: "/pnd" },
+  robots: { index: false, follow: true },
   title: "Post Narrative Depression — sixeleven",
   description:
     "A hall of fame for the works of art that left a void. The stories, games, and worlds that changed everything.",
