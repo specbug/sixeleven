@@ -113,7 +113,7 @@ export default function Rule({ headings, readingTime }: { headings: TOCItem[]; r
   const y = progress * height
   const minutes = readingTime ? Math.max(0, readingTime * (1 - progress)) : null
   const readout =
-    minutes === null ? null : progress >= 0.995 ? "end" : minutes < 1 ? "under 1 min left" : `${Math.ceil(minutes)} min left`
+    minutes === null ? null : progress >= 0.995 ? "fin" : minutes < 1 ? "under 1 min left" : `${Math.ceil(minutes)} min left`
 
   return (
     <nav
