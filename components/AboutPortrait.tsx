@@ -70,10 +70,11 @@ function marks(seed: number, count: number) {
 const MARKS = marks(11, 4)
 
 // The About page's portrait: a tilted cushion, ringed in broken pencil, with Rishit's line
-// as its caption. Beside the opening paragraphs from 768px, above them on phones.
+// as its caption. From 768px it floats left and the text wraps it, running full width
+// once past the caption; on phones it sits centred above the text.
 export default function AboutPortrait() {
   return (
-    <figure className="mx-auto mb-10 w-[208px] md:m-0 md:mt-2 md:w-full">
+    <figure className="mx-auto mb-10 w-[208px] md:float-left md:mx-0 md:mt-2 md:mr-12 md:mb-6 md:w-[200px]">
       <svg width="0" height="0" className="absolute" aria-hidden>
         <clipPath id="about-cushion" clipPathUnits="objectBoundingBox">
           <path d={SHAPE} />
