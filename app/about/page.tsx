@@ -21,8 +21,7 @@ export default async function AboutPage() {
 
   return (
     <div>
-      {/* No heading: the portrait and the text are the page. break-words lets the key
-          fingerprint wrap on phones. */}
+      {/* No heading: the portrait and the text are the page. */}
       <div className="md:grid md:grid-cols-[200px_minmax(0,1fr)] md:gap-x-12 md:items-start">
         <AboutPortrait />
         <article className="break-words">
