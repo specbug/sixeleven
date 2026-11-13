@@ -3,6 +3,10 @@ import { ledeFont } from "@/lib/lede-font"
 
 const QUOTE = "endless frontier, entangled beliefs, eternal life 🚀"
 const ALT = "Rishit Vora, in sunglasses, laughing against a cloudy sky"
+// The file name carries a hash of the image, so a new crop gets a new URL and no browser,
+// CDN or image-optimizer cache can serve the old one. Crop of the original (1795×1819):
+// x 688, y 169, 988px square.
+const SRC = "/images/about/rishit-8f4ce758.jpg"
 
 // A seeded generator, so the server and every visit draw the same marks
 function rng(seed: number) {
@@ -66,10 +70,11 @@ function marks(seed: number, count: number) {
 const MARKS = marks(11, 4)
 
 // The About page's portrait: a tilted cushion, ringed in broken pencil, with Rishit's line
-// as its caption. Beside the opening paragraphs from 768px, above them on phones.
+// as its caption. From 768px it floats left and the text wraps it, running full width
+// once past the caption; on phones it sits centred above the text.
 export default function AboutPortrait() {
   return (
-    <figure className="mx-auto mb-10 w-[208px] md:m-0 md:mt-2 md:w-full">
+    <figure className="mx-auto mb-10 w-[208px] md:float-left md:mx-0 md:mt-2 md:mr-12 md:mb-6 md:w-[200px]">
       <svg width="0" height="0" className="absolute" aria-hidden>
         <clipPath id="about-cushion" clipPathUnits="objectBoundingBox">
           <path d={SHAPE} />
@@ -77,7 +82,7 @@ export default function AboutPortrait() {
       </svg>
       <span className="relative block" style={{ transform: "rotate(-3deg)" }}>
         <span className="block" style={{ clipPath: "url(#about-cushion)" }}>
-          <Image src="/images/about/rishit.jpg" alt={ALT} width={800} height={800} priority sizes="208px" className="block w-full h-auto" />
+          <Image src={SRC} alt={ALT} width={800} height={800} priority sizes="208px" className="block w-full h-auto" />
         </span>
         <svg aria-hidden viewBox="0 0 100 100" className="absolute -inset-[14%] w-[128%] h-[128%] overflow-visible pointer-events-none">
           {MARKS.map((d, i) => (
@@ -85,7 +90,7 @@ export default function AboutPortrait() {
           ))}
         </svg>
       </span>
-      <figcaption className={`${ledeFont.className} mt-9 italic text-[0.96875rem] leading-[1.45] text-[var(--ink-2)] text-center [text-wrap:balance]`}>{QUOTE}</figcaption>
+      <figcaption className={`${ledeFont.className} mt-9 italic text-[0.8125rem] leading-[1.45] text-[var(--ink-2)] text-center [text-wrap:balance]`}>{QUOTE}</figcaption>
     </figure>
   )
 }

@@ -14,23 +14,13 @@ export const metadata: Metadata = {
 export default async function AboutPage() {
   const aboutData = await getAboutContent()
   const content = aboutData?.content || ""
-  // The first two paragraphs sit beside the portrait from 768px; the rest runs full width
-  const blocks = content.split(/\n{2,}/)
-  const intro = blocks.slice(0, 2).join("\n\n")
-  const rest = blocks.slice(2).join("\n\n")
 
   return (
     <div>
-      {/* No heading: the portrait and the text are the page. break-words lets the key
-          fingerprint wrap on phones. */}
-      <div className="md:grid md:grid-cols-[200px_minmax(0,1fr)] md:gap-x-12 md:items-start">
-        <AboutPortrait />
-        <article className="break-words">
-          <EnhancedMarkdown content={intro} />
-        </article>
-      </div>
+      {/* No heading: the portrait and the text are the page. */}
       <article className="break-words">
-        <EnhancedMarkdown content={rest} />
+        <AboutPortrait />
+        <EnhancedMarkdown content={content} />
       </article>
 
       <SpecialCode />
