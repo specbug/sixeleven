@@ -57,6 +57,7 @@ The app uses Next.js 15 App Router:
 - `PostListItem.tsx` - One post entry, shared by home, blog and archive
 - `Rule.tsx` - The reading instrument in the left margin of posts (≥1280px): minute and section ticks, distance read, current position, minutes left. Full strength at the top of the page, 55% once scrolled, full again on hover or focus
 - `TableOfContents.tsx` - Collapsed "Contents" toggle below 1280px
+- `RunningHead.tsx` - Below 1280px, a slim strip at the top once past the title: current section and minutes left (the Rule's readout), over a hairline that fills with the distance read
 - `plate.ts` - Classes for figure plates and their captions (captions move to the notes margin at ≥1280px)
 - `icons.tsx` - 20×20 line icons, 1.5px stroke
 - `Doodle.tsx` - Line drawings in the notes margin (≥1280px), in red pencil; `{{doodle:NAME}}` on its own line puts one beside the next paragraph
