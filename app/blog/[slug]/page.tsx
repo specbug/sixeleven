@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { getPostBySlug, getAllPosts, parseHeadings } from "@/lib/mdx"
 import TableOfContents from "@/components/TableOfContents"
 import Rule from "@/components/Rule"
+import RunningHead from "@/components/RunningHead"
 import { EnhancedMarkdown } from "@/components/enhanced-markdown"
 import BlogPostSchema from "@/components/blog-schema"
 import PostCover from "@/components/PostCover"
@@ -96,6 +97,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       />
       <article className="relative">
         <Rule headings={headings} readingTime={post.readingTime ? Number.parseInt(post.readingTime, 10) : undefined} />
+        <RunningHead headings={headings} readingTime={post.readingTime ? Number.parseInt(post.readingTime, 10) : undefined} />
 
         <header className="mb-10">
           <p className="meta mb-4">
