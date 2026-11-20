@@ -8,6 +8,7 @@ import { CodeBlock } from "./code-block"
 import { BlockMath, InlineMath } from "./ui/LaTeX-alt"
 import React, { Fragment } from "react"
 import { CreativeCommons } from "./ui/CreativeCommons"
+import { Doodle } from "./Doodle"
 import { ClaudeDisclaimer } from "./ui/ClaudeDisclaimer"
 import { PLATE, PLATE_CAPTION, PLATE_OUTER } from "./plate"
 import { penFor, rehypePencil } from "@/lib/pencil"
@@ -243,7 +244,8 @@ const createCustomComponents = (
       text.includes("{{side-by-side:") ||
       text.includes("{{callout-ref:") ||
       text.includes("{{creativecommons}}") ||
-      text.includes("{{claude-disclaimer}}")
+      text.includes("{{claude-disclaimer}}") ||
+      text.includes("{{doodle:")
     ) {
       if (text.includes("{{block-math:")) {
         const match = text.match(/\{\{block-math:(\d+)\}\}/)
@@ -302,6 +304,12 @@ const createCustomComponents = (
 
       if (text.includes("{{claude-disclaimer}}")) {
         return <ClaudeDisclaimer />
+      }
+
+      // `{{doodle:NAME}}` on its own line: a line drawing in the margin beside the next paragraph
+      if (text.includes("{{doodle:")) {
+        const match = text.match(/\{\{doodle:([a-z-]+)\}\}/)
+        if (match) return <Doodle name={match[1]} />
       }
 
       // Callouts were lifted out before parsing (see EnhancedMarkdown), so their

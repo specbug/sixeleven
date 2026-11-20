@@ -59,6 +59,7 @@ The app uses Next.js 15 App Router:
 - `TableOfContents.tsx` - Collapsed "Contents" toggle below 1280px
 - `plate.ts` - Classes for figure plates and their captions (captions move to the notes margin at ≥1280px)
 - `icons.tsx` - 20×20 line icons, 1.5px stroke
+- `Doodle.tsx` - Line drawings in the notes margin (≥1280px), in red pencil; `{{doodle:NAME}}` on its own line puts one beside the next paragraph
 - `AboutPortrait.tsx` - The About page portrait: a tilted cushion (superellipse clip), broken red-pencil marks drawn from a seed, the tagline as its caption
 
 **UI Components:**
@@ -122,3 +123,4 @@ Custom markdown features available in posts:
 - YouTube: `{{youtube:VIDEO_ID}}`
 - Callouts: `{{callout:info|Your message}}` or `{{callout:warning|Your message}}`
 - Colored text: `{{color:#FF0000|Red text}}`
+- Margin doodle: `{{doodle:triceratops}}` on its own line, before the paragraph it belongs to
